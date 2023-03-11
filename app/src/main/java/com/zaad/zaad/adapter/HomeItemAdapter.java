@@ -1,0 +1,164 @@
+package com.zaad.zaad.adapter;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.zaad.zaad.R;
+import com.zaad.zaad.activity.ShortsActivity;
+import com.zaad.zaad.VideoType;
+import com.zaad.zaad.activity.YoutubeShortsActivity;
+import com.zaad.zaad.activity.YoutubeVideoPlayerActivity;
+import com.zaad.zaad.model.Video;
+
+import java.util.List;
+
+import coil.Coil;
+import coil.ImageLoader;
+import coil.request.ImageRequest;
+
+public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private List<Video> videoList;
+    private Context context;
+
+    private String category;
+
+    HomeItemAdapter(List<Video> videoList, Context context, String category) {
+        this.videoList = videoList;
+        this.context = context;
+        this.category = category;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+
+        if (category.equals(VideoType.YOUTUBE_VIDEO.name())) {
+            View view = LayoutInflater
+                    .from(viewGroup.getContext())
+                    .inflate(R.layout.home_child_item,
+                            viewGroup, false);
+
+            return new VideoViewHolder(view);
+        } else if (category.equals("OFFLINE_STORE") || category.equals("ONLINE_STORE")) {
+            View view = LayoutInflater
+                    .from(viewGroup.getContext())
+                    .inflate(R.layout.home_store_item,
+                            viewGroup, false);
+
+            return new StoreViewHolder(view);
+        } else {
+            View view = LayoutInflater
+                    .from(viewGroup.getContext())
+                    .inflate(R.layout.shorts_item,
+                            viewGroup, false);
+
+            return new ShortsViewHolder(view);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+
+        Log.i("HomeItemAdapterCategory", category + " Position "+ String.valueOf(position));
+        if (category.equals(VideoType.YOUTUBE_VIDEO.name())) {
+            VideoViewHolder childViewHolder = (VideoViewHolder) viewHolder;
+            Video childItem = videoList.get(position);
+
+            ImageLoader imageLoader = Coil.imageLoader(context);
+
+            childViewHolder.imageView.setOnClickListener(view -> {
+                Intent intent = new Intent(context, YoutubeVideoPlayerActivity.class);
+                intent.putExtra("VIDEO_ID", childItem.getVideoUrl());
+                context.startActivity(intent);
+            });
+
+            ImageRequest request = new ImageRequest.Builder(context)
+                    .data(childItem.getImageUrl())
+                    .crossfade(true)
+                    .target(childViewHolder.imageView)
+                    .build();
+            imageLoader.enqueue(request);
+        } else if (category.equals(VideoType.YOUTUBE_SHORTS.name())){
+            ShortsViewHolder shortsViewHolder = (ShortsViewHolder) viewHolder;
+            Video childItem = videoList.get(position);
+
+            ImageLoader imageLoader = Coil.imageLoader(context);
+
+            shortsViewHolder.imageView.setOnClickListener(view -> {
+                Intent intent = new Intent(context, YoutubeShortsActivity.class);
+                context.startActivity(intent);
+            });
+
+            ImageRequest request = new ImageRequest.Builder(context)
+                    .data(childItem.getImageUrl())
+                    .crossfade(true)
+                    .target(shortsViewHolder.imageView)
+                    .build();
+            imageLoader.enqueue(request);
+        } else if (category.equals("OFFLINE_STORE") || category.equals("ONLINE_STORE")) {
+            StoreViewHolder storeViewHolder = (StoreViewHolder) viewHolder;
+
+        } else {
+            ShortsViewHolder shortsViewHolder = (ShortsViewHolder) viewHolder;
+            Video childItem = videoList.get(position);
+
+            ImageLoader imageLoader = Coil.imageLoader(context);
+
+            shortsViewHolder.imageView.setOnClickListener(view -> {
+                Intent intent = new Intent(context, ShortsActivity.class);
+                context.startActivity(intent);
+            });
+
+            ImageRequest request = new ImageRequest.Builder(context)
+                    .data(childItem.getImageUrl())
+                    .crossfade(true)
+                    .target(shortsViewHolder.imageView)
+                    .build();
+            imageLoader.enqueue(request);
+        }
+     }
+
+    @Override
+    public int getItemCount() {
+        return videoList.size();
+    }
+
+    class VideoViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView imageView;
+
+        VideoViewHolder(View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.img_child_item);
+        }
+    }
+
+    class StoreViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView imageView;
+
+        StoreViewHolder(View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.store_image);
+        }
+    }
+
+    class ShortsViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+
+        ShortsViewHolder(View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.img_child_item);
+        }
+    }
+}
+

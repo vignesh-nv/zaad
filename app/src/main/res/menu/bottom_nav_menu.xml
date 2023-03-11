@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_selector"
+        android:checked="true"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_daily_task"
+        android:icon="@drawable/ic_daily_task"
+        android:title="@string/title_daily_task" />
+
+    <item
+        android:id="@+id/navigation_wallet"
+        android:icon="@drawable/ic_wallet"
+        android:title="@string/title_wallet" />
+
+    <item
+        android:id="@+id/navigation_rewards"
+        android:icon="@drawable/ic_rewards"
+        android:title="@string/title_rewards" />
+
+    <item
+        android:id="@+id/navigation_music"
+        android:icon="@drawable/ic_music"
+        android:title="@string/title_music" />
+
+</menu>
