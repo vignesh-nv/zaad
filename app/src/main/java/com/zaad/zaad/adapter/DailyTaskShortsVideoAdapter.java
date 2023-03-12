@@ -1,12 +1,9 @@
 package com.zaad.zaad.adapter;
 
-import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,16 +15,19 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFram
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.zaad.zaad.R;
 import com.zaad.zaad.listeners.ShortsPlayCompletedListener;
+import com.zaad.zaad.model.DailyTaskVideo;
 import com.zaad.zaad.model.Video;
 
 import java.util.List;
 
-public class YoutubeShortsVideoAdapter extends RecyclerView.Adapter<YoutubeShortsVideoAdapter.YoutubeShortsViewHolder> {
+public class DailyTaskShortsVideoAdapter extends RecyclerView.Adapter<DailyTaskShortsVideoAdapter.YoutubeShortsViewHolder> {
 
-    List<Video> videoList;
+    List<DailyTaskVideo> videoList;
+    ShortsPlayCompletedListener completedListener;
 
-    public YoutubeShortsVideoAdapter(final List<Video> videoList) {
+    public DailyTaskShortsVideoAdapter(final List<DailyTaskVideo> videoList, final ShortsPlayCompletedListener completedListener) {
         this.videoList = videoList;
+        this.completedListener = completedListener;
 
     }
 
@@ -63,7 +63,7 @@ public class YoutubeShortsVideoAdapter extends RecyclerView.Adapter<YoutubeShort
             youTubePlayerView = itemView.findViewById(R.id.youtube_player_view);
         }
 
-        public void setVideoData(Video video) {
+        public void setVideoData(DailyTaskVideo video) {
 
             IFramePlayerOptions iFramePlayerOptions = new IFramePlayerOptions.Builder()
                     .controls(0)
@@ -85,6 +85,7 @@ public class YoutubeShortsVideoAdapter extends RecyclerView.Adapter<YoutubeShort
                 public void onStateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerState state) {
                     super.onStateChange(youTubePlayer, state);
                     if (state == PlayerConstants.PlayerState.ENDED) {
+                        completedListener.onCompleted(video);
                     }
                 }
             });

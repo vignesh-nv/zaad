@@ -44,4 +44,14 @@ public class DailyTaskViewModel extends AndroidViewModel {
     public LiveData<List<String>> getCompletedTasksIds() {
         return databaseRepository.getAllCompletedTaskIds();
     }
+
+    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskShorts() {
+        return firestoreRepository.getDailyTaskShorts();
+    }
+
+    public void insertCompletedTask(DailyTaskVideo video) {
+        DailyTask dailyTask = new DailyTask();
+        dailyTask.taskId = video.getTaskId();
+        databaseRepository.insert(dailyTask);
+    }
 }

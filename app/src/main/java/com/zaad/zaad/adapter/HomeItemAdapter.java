@@ -55,6 +55,13 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewGroup, false);
 
             return new StoreViewHolder(view);
+        } else if (category.equals(VideoType.IMAGE_AD.name())) {
+            View view = LayoutInflater
+                    .from(viewGroup.getContext())
+                    .inflate(R.layout.home_ad_item,
+                            viewGroup, false);
+
+            return new VideoViewHolder(view);
         } else {
             View view = LayoutInflater
                     .from(viewGroup.getContext())
@@ -78,6 +85,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             childViewHolder.imageView.setOnClickListener(view -> {
                 Intent intent = new Intent(context, YoutubeVideoPlayerActivity.class);
                 intent.putExtra("VIDEO_ID", childItem.getVideoUrl());
+                intent.putExtra("CATEGORY", childItem.getCategory());
                 context.startActivity(intent);
             });
 
@@ -106,6 +114,20 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imageLoader.enqueue(request);
         } else if (category.equals("OFFLINE_STORE") || category.equals("ONLINE_STORE")) {
             StoreViewHolder storeViewHolder = (StoreViewHolder) viewHolder;
+
+        } else if (category.equals(VideoType.IMAGE_AD.name())){
+
+            VideoViewHolder childViewHolder = (VideoViewHolder) viewHolder;
+            Video childItem = videoList.get(position);
+
+            ImageLoader imageLoader = Coil.imageLoader(context);
+
+            ImageRequest request = new ImageRequest.Builder(context)
+                    .data(childItem.getImageUrl())
+                    .crossfade(true)
+                    .target(childViewHolder.imageView)
+                    .build();
+            imageLoader.enqueue(request);
 
         } else {
             ShortsViewHolder shortsViewHolder = (ShortsViewHolder) viewHolder;

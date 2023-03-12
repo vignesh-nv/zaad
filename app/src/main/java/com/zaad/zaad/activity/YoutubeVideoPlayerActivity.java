@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,13 +21,14 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.ui.DefaultPlayerUiController;
 import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.YoutubeSuggestionVideosAdapter;
+import com.zaad.zaad.listeners.OnSuggestionVideoClick;
 import com.zaad.zaad.model.Video;
 import com.zaad.zaad.viewmodel.YoutubeVideosViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class YoutubeVideoPlayerActivity extends AppCompatActivity {
+public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnSuggestionVideoClick {
 
     String youtubeVideoID;
 
@@ -36,7 +38,9 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity {
     private YoutubeVideosViewModel youtubeVideosViewModel;
 
     private List<Video> suggestionVideos = new ArrayList<>();
-    YoutubeSuggestionVideosAdapter youtubeSuggestionVideosAdapter;
+    private YoutubeSuggestionVideosAdapter youtubeSuggestionVideosAdapter;
+
+    private String collection, category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +49,18 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity {
 
         youtubeVideosViewModel = new ViewModelProvider(this).get(YoutubeVideosViewModel.class);
 
-        youtubeVideoID = this.getIntent().getStringExtra("VIDEO_ID");
+        collection = getIntent().getStringExtra("COLLECTION");
+        category = getIntent().getStringExtra("CATEGORY");
+
+        youtubeVideoID = getIntent().getStringExtra("VIDEO_ID");
+
         youTubePlayerView = findViewById(R.id.youtube_player_view);
         suggestionRecyclerview = findViewById(R.id.suggestion_recyclerview);
 
         initYouTubePlayerView();
 
 
-        youtubeSuggestionVideosAdapter = new YoutubeSuggestionVideosAdapter(suggestionVideos, this);
+        youtubeSuggestionVideosAdapter = new YoutubeSuggestionVideosAdapter(suggestionVideos, this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         suggestionRecyclerview.setAdapter(youtubeSuggestionVideosAdapter);
@@ -103,5 +111,13 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity {
             suggestionVideos.addAll(data);
             youtubeSuggestionVideosAdapter.notifyDataSetChanged();
         });
+    }
+
+    @Override
+    public void onClick(Video video) {
+        Intent intent = new Intent(this, YoutubeVideoPlayerActivity.class);
+        intent.putExtra("VIDEO_ID", video.getVideoUrl());
+        startActivity(intent);
+        finish();
     }
 }

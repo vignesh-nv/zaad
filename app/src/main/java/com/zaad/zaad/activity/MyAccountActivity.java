@@ -3,8 +3,11 @@ package com.zaad.zaad.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.zaad.zaad.R;
@@ -16,6 +19,7 @@ public class MyAccountActivity extends AppCompatActivity {
     private User user;
     TextView userNameTxt, phoneNumberTxt, bankNameTxt, customerNameTxt, accountNumberTxt;
     TextView ifscCodeTxt, upiTxt, addressTxt;
+    ImageButton editProfileBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class MyAccountActivity extends AppCompatActivity {
         accountNumberTxt = findViewById(R.id.accountNumberTxt);
         upiTxt = findViewById(R.id.upiTxt);
         addressTxt = findViewById(R.id.address);
+        editProfileBtn = findViewById(R.id.edit_profile_btn);
 
         MyAccountViewModel accountViewModel =
                 new ViewModelProvider(this).get(MyAccountViewModel.class);
@@ -37,15 +42,21 @@ public class MyAccountActivity extends AppCompatActivity {
             updateUI();
             Log.i("MyAccountActivity", "userData: " + user);
         });
+
+        editProfileBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(MyAccountActivity.this, EditProfileActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void updateUI() {
         userNameTxt.setText(user.getName());
         if (user.getAccountDetails() != null) {
             accountNumberTxt.setText(user.getAccountDetails().getAccountNumber());
-            bankNameTxt.setText(user.getAccountDetails().getBankName());
+            customerNameTxt.setText(user.getAccountDetails().getAccountHolderName());
             bankNameTxt.setText(user.getAccountDetails().getBankName());
             addressTxt.setText(user.getAddress());
+            upiTxt.setText(user.getAccountDetails().getUpi());
         }
     }
 }

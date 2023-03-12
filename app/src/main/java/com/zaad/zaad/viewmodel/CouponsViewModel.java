@@ -30,4 +30,8 @@ public class CouponsViewModel extends AndroidViewModel {
     public void redeemCoupon(Coupon coupon) {
         userRepository.redeemCoupon(coupon);
     }
+
+    public MutableLiveData<List<Coupon>> getOnlineCouponsByCategory(final String category) {
+        return repository.getOnlineCouponsByCategory(category);
+    }
 }

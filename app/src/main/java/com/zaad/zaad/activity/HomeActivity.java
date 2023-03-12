@@ -41,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     AppBarConfiguration appBarConfiguration;
     private Toolbar toolbar;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         findData.data("https://www.instagram.com/reel/CoAiTpdtmvJ/");
-        BottomNavigationView navView = findViewById(R.id.bottomNavView);
+        bottomNavigationView = findViewById(R.id.bottomNavView);
 
         setSupportActionBar(toolbar);
 
@@ -73,7 +74,7 @@ public class HomeActivity extends AppCompatActivity {
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        NavigationUI.setupWithNavController(navView, navController);
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
 //        binding.navView.getMenu().findItem(R.id.logout_button).getActionView().setOnClickListener(view -> {
@@ -88,7 +89,6 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
     }
 
     @Override

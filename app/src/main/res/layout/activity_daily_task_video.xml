@@ -22,7 +22,8 @@
         android:text="Next Videos"
         android:fontFamily="@font/montserrat_medium"
         android:textColor="@color/white"
-        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:layout_marginTop="30dp"
         android:layout_marginStart="20dp"/>
 
     <androidx.recyclerview.widget.RecyclerView

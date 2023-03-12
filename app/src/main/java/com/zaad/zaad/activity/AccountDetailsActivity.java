@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,7 +17,7 @@ import com.zaad.zaad.viewmodel.LoginRegisterViewModel;
 
 public class AccountDetailsActivity extends AppCompatActivity {
 
-    Button signupBtn;
+    Button signupBtn, backBtn;
     TextInputEditText accountNumberTxt, accountHolderNameTxt, ifscCodeTxt, upiNumberTxt, bankNameTxt;
     TextView skipTxt;
     LoginRegisterViewModel loginRegisterViewModel;
@@ -34,6 +35,8 @@ public class AccountDetailsActivity extends AppCompatActivity {
         user = (User) getIntent().getSerializableExtra("USER");
 
         signupBtn = findViewById(R.id.signupBtn);
+        backBtn = findViewById(R.id.backBtn);
+
 //        loginRegisterViewModel = ViewModelProviders.of(this).get(LoginRegisterViewModel.class);
         loginRegisterViewModel = new ViewModelProvider(this).get(LoginRegisterViewModel.class);
 
@@ -48,6 +51,11 @@ public class AccountDetailsActivity extends AppCompatActivity {
             saveAccountDetails();
             Intent intent = new Intent(AccountDetailsActivity.this, PaymentDetailActivity.class);
             intent.putExtra("USER", user);
+            startActivity(intent);
+        });
+
+        backBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(AccountDetailsActivity.this, PersonalDetailsActivity.class);
             startActivity(intent);
         });
 

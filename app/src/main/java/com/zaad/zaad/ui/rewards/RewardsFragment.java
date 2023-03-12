@@ -38,8 +38,6 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
 
     private RewardsViewModel mViewModel;
 
-    private Button click;
-
     private RecyclerView availableCouponsRecyclerView, redeemedCouponsRecyclerView;
 
     private RedeemedCouponsAdapter redeemedCouponsAdapter;
@@ -52,16 +50,10 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_rewards, container, false);
-        click = view.findViewById(R.id.coupon_button);
         availableCouponsRecyclerView = view.findViewById(R.id.available_coupons_recyclerView);
         redeemedCouponsRecyclerView = view.findViewById(R.id.redeemed_coupons_recyclerView);
 
         mViewModel = new ViewModelProvider(getActivity()).get(RewardsViewModel.class);
-
-        click.setOnClickListener(view1 -> {
-            Intent intent = new Intent(getContext(), CouponsActivity.class);
-            startActivity(intent);
-        });
 
         mViewModel.getUser().observe(getActivity(), data -> {
             user = data;

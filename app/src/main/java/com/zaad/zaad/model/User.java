@@ -1,6 +1,7 @@
 package com.zaad.zaad.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class User implements Serializable {
     private String name;
@@ -17,6 +18,10 @@ public class User implements Serializable {
     private int amount;
 
     private int availableCoupons;
+
+    private String gender;
+
+    private Date dob;
 
     public User() {
     }
@@ -99,6 +104,22 @@ public class User implements Serializable {
 
     public void setAvailableCoupons(int availableCoupons) {
         this.availableCoupons = availableCoupons;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 
     @Override

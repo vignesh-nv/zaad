@@ -8,6 +8,8 @@ public class AccountDetails implements Serializable {
     private String bankName;
     private String ifsc;
 
+    private String upi;
+
     public AccountDetails() {
     }
 
@@ -41,6 +43,14 @@ public class AccountDetails implements Serializable {
 
     public void setBankName(String bankName) {
         this.bankName = bankName;
+    }
+
+    public String getUpi() {
+        return upi;
+    }
+
+    public void setUpi(String upi) {
+        this.upi = upi;
     }
 
     @Override

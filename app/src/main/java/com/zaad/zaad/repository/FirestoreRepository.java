@@ -35,9 +35,14 @@ public class FirestoreRepository {
     MutableLiveData<List<DailyTaskVideo>> dailyTaskVideosListMutableLiveData = new MutableLiveData<>();
 
     MutableLiveData<List<Coupon>> couponsListMutableLiveData = new MutableLiveData<>();
+    MutableLiveData<List<Coupon>> onlineCouponsByCategoryListMutableLiveData = new MutableLiveData<>();
     MutableLiveData<List<Shop>> shopListMutableLiveData = new MutableLiveData<>();
 
     MutableLiveData<List<Video>> youtubeVideosMutableLiveData = new MutableLiveData<>();
+
+    MutableLiveData<List<Video>> youtubeVideosByCollectionMutableLiveData = new MutableLiveData<>();
+
+    MutableLiveData<List<DailyTaskVideo>> dailyTaskShortsMutableLiveData = new MutableLiveData<>();
 
     MutableLiveData<Video> videoMutableLiveData;
 
@@ -134,6 +139,19 @@ public class FirestoreRepository {
         return couponsListMutableLiveData;
     }
 
+    public MutableLiveData<List<Coupon>> getOnlineCouponsByCategory(final String category) {
+        mFirestore.collection("coupons").whereEqualTo("category", category).get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<Coupon> coupons = new ArrayList<>();
+            for (QueryDocumentSnapshot queryDocumentSnapshot: queryDocumentSnapshots) {
+                if (queryDocumentSnapshot != null) {
+                    coupons.add(queryDocumentSnapshot.toObject(Coupon.class));
+                }
+            }
+            onlineCouponsByCategoryListMutableLiveData.postValue(coupons);
+        });
+        return onlineCouponsByCategoryListMutableLiveData;
+    }
+
     public MutableLiveData<List<Video>> getYoutubeVideosByCategory(final String category) {
         mFirestore.collection("youtube").whereEqualTo("category", category).get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<Video> videos = new ArrayList<>();
@@ -145,5 +163,31 @@ public class FirestoreRepository {
             youtubeVideosMutableLiveData.postValue(videos);
         });
         return youtubeVideosMutableLiveData;
+    }
+
+    public MutableLiveData<List<Video>> getYoutubeVideosByCollectionAndCategory(final String collections, final String category) {
+        mFirestore.collection(collections).whereEqualTo("category", category).get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<Video> videos = new ArrayList<>();
+            for (QueryDocumentSnapshot queryDocumentSnapshot: queryDocumentSnapshots) {
+                if (queryDocumentSnapshot != null) {
+                    videos.add(queryDocumentSnapshot.toObject(Video.class));
+                }
+            }
+            youtubeVideosByCollectionMutableLiveData.postValue(videos);
+        });
+        return youtubeVideosByCollectionMutableLiveData;
+    }
+
+    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskShorts() {
+        mFirestore.collection("dailyTasks").whereEqualTo("type", "shorts").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<DailyTaskVideo> videos = new ArrayList<>();
+            for (QueryDocumentSnapshot queryDocumentSnapshot: queryDocumentSnapshots) {
+                if (queryDocumentSnapshot != null) {
+                    videos.add(queryDocumentSnapshot.toObject(DailyTaskVideo.class));
+                }
+            }
+            dailyTaskShortsMutableLiveData.postValue(videos);
+        });
+        return dailyTaskShortsMutableLiveData;
     }
 }

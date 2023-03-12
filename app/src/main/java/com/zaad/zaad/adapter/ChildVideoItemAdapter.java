@@ -12,9 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zaad.zaad.R;
-import com.zaad.zaad.VideoType;
-import com.zaad.zaad.activity.ShortsActivity;
-import com.zaad.zaad.activity.YoutubeShortsActivity;
 import com.zaad.zaad.activity.YoutubeVideoPlayerActivity;
 import com.zaad.zaad.model.Video;
 
@@ -61,6 +58,8 @@ public class ChildVideoItemAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         childViewHolder.imageView.setOnClickListener(view -> {
             Intent intent = new Intent(context, YoutubeVideoPlayerActivity.class);
             intent.putExtra("VIDEO_ID", childItem.getVideoUrl());
+            intent.putExtra("CATEGORY", childItem.getCategory());
+            intent.putExtra("COLLECTION", "");
             context.startActivity(intent);
         });
 

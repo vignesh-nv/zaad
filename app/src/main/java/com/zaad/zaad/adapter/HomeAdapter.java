@@ -93,6 +93,21 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 intent.putExtra("SHOP_TYPE", parentItem.getCategory());
                 context.startActivity(intent);
             });
+        } else if (type == 4) {
+            VideoViewHolder videoViewHolder = (VideoViewHolder) viewHolder;
+            HomeItem parentItem = itemList.get(position);
+            videoViewHolder.title.setText(parentItem.getTitle());
+            videoViewHolder.moreBtn.setVisibility(View.GONE);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,
+                    false);
+            layoutManager.setInitialPrefetchItemCount(parentItem.getVideos().size());
+            HomeItemAdapter childItemAdapter = new HomeItemAdapter(parentItem.getVideos(), context, parentItem.getCategory());
+            videoViewHolder.ChildRecyclerView.setLayoutManager(layoutManager);
+            videoViewHolder.ChildRecyclerView.setAdapter(childItemAdapter);
+            videoViewHolder.ChildRecyclerView.setRecycledViewPool(viewPool);
+            videoViewHolder.moreBtn.setOnClickListener(view -> {
+
+            });
         }
     }
 
@@ -118,8 +133,10 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return 2;
         } else if (category.equals("ONLINE_STORE") || category.equals("OFFLINE_STORE")) {
             return 3;
+        } else if (category.equals(VideoType.IMAGE_AD.name())) {
+            return 4;
         }
-        return 4;
+        return 5;
     }
 
     class VideoViewHolder extends RecyclerView.ViewHolder {

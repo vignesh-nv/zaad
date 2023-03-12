@@ -1,5 +1,9 @@
 package com.zaad.zaad.activity;
 
+import static com.zaad.zaad.constants.AppConstant.CHILD_MODE;
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
+import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -7,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -38,10 +44,6 @@ import java.util.Set;
 public class DailyTaskVideoActivity extends AppCompatActivity {
 
     YouTubePlayerView youTubePlayerView;
-    AppDatabase db;
-
-    public String DATABASE_NAME = "zaad-db";
-
     private DailyTaskVideo dailyTaskVideo;
 
     private DailyTaskViewModel dailyTaskViewModel;
@@ -63,58 +65,12 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
 
         dailyTaskVideo = (DailyTaskVideo) getIntent().getSerializableExtra("TASK");
 
-        db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
-
         dailyTaskViewModel = new ViewModelProvider(this).get(DailyTaskViewModel.class);
-//        DailyTask dailyTask = new DailyTask();
-//        dailyTask.taskId = dailyTaskVideo.getTaskId();
-
-//        db.dailyTaskDAO().insertTask(dailyTask);
 
         youTubePlayerView = findViewById(R.id.youtube_player_view);
-//        IFramePlayerOptions iFramePlayerOptions = new IFramePlayerOptions.Builder()
-//                .controls(0)
-//                .build();
-//        youTubePlayerView.initialize(new AbstractYouTubePlayerListener() {
-//            @Override
-//            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-//                super.onReady(youTubePlayer);
-//            }
-//        }, true, iFramePlayerOptions);
-
         loadYoutubePlayer();
         getUncompletedTaskVideos();
         loadSuggestedVideos();
-
-//        youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
-//            @Override
-//            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-//                youTubePlayer.loadVideo(dailyTaskVideo.getVideoUrl(), 0);
-//            }
-//
-//            @Override
-//            public void onStateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerState state) {
-//                Log.i("YoutubeVideoPlayer", state.toString());
-//                switch (state) {
-//                    case UNKNOWN:
-//                    case UNSTARTED:
-//                    case VIDEO_CUED:
-//                    case BUFFERING:
-//                        break;
-//                    case ENDED:
-//                        videoEnded();
-//                        break;
-//                    case PLAYING:
-//                        Log.i("YOUTUBE_VIDEO", "PLaYING");
-//                        break;
-//                    case PAUSED:
-//                        Log.i("YOUTUBE_VIDEO", "PAUSED");
-//                        break;
-//                }
-//                super.onStateChange(youTubePlayer, state);
-//            }
-//        });
     }
 
     private void loadYoutubePlayer() {
@@ -132,6 +88,17 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
                         0f
                 );
             }
+
+            @Override
+            public void onStateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerState state) {
+                super.onStateChange(youTubePlayer, state);
+                if (state == PlayerConstants.PlayerState.ENDED) {
+                    if (!completedTaskIds.contains(dailyTaskVideo.getTaskId())) {
+                        incrementViewsCount();
+                        Toast.makeText(DailyTaskVideoActivity.this, "Completed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
         };
 
         // disable web ui
@@ -146,11 +113,6 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
         suggestionVideoAdapter = new DailyTaskSuggestionVideoAdapter(dailyTaskVideos, this);
         recyclerView.setAdapter(suggestionVideoAdapter);
         recyclerView.setLayoutManager(layoutManager);
-    }
-
-    private void videoEnded() {
-        Log.i("YOUTUBE_VIDEO", "PLAYING COMPLETED");
-        Toast.makeText(this, "COMPLETED", Toast.LENGTH_SHORT).show();
     }
 
     private void getUncompletedTaskVideos() {
@@ -171,5 +133,19 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
             }
             suggestionVideoAdapter.notifyDataSetChanged();
         });
+    }
+
+    private void incrementViewsCount() {
+        SharedPreferences sharedPref = getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        int videoWatched = sharedPref.getInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        if (videoWatched == 9) {
+            editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
+            editor.apply();
+        } else {
+            editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, videoWatched + 1);
+            editor.apply();
+        }
     }
 }

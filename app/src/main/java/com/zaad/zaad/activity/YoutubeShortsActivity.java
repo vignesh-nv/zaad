@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.ShortsVideoAdapter;
 import com.zaad.zaad.adapter.YoutubeShortsVideoAdapter;
+import com.zaad.zaad.listeners.ShortsPlayCompletedListener;
 import com.zaad.zaad.model.Video;
 
 import java.util.ArrayList;
@@ -37,5 +39,4 @@ public class YoutubeShortsActivity extends AppCompatActivity {
         videos.add(video1);
         return videos;
     }
-
 }

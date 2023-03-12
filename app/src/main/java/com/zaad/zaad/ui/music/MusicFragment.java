@@ -72,10 +72,12 @@ public class MusicFragment extends Fragment {
         Video video = new Video();
         video.setVideoUrl("");
         video.setImageUrl("https://i.ytimg.com/vi/HfMTwkVQohM/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLD3nmJRxcdRybjXk9KURg-epULVdA");
+        video.setVideoUrl("");
 
         Video video1 = new Video();
         video1.setVideoUrl("");
         video1.setImageUrl("https://i.ytimg.com/vi/5BQQM4uvRkw/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAn1LHxREk816KdBcSjVbxpkITWbA");
+        video1.setVideoUrl("");
 
         cartoonVideos.add(video);
         cartoonVideos.add(video1);
@@ -87,6 +89,8 @@ public class MusicFragment extends Fragment {
 
         Video video3 = new Video();
         video3.setImageUrl("https://i.ytimg.com/vi/V5cV30yFXLA/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCfxRhM850Q3XEnvCzkFQu50viFyA");
+        video3.setVideoUrl("");
+
         trendingVideos.add(video2);
         trendingVideos.add(video3);
 
@@ -98,6 +102,7 @@ public class MusicFragment extends Fragment {
 
         Video video5 = new Video();
         video5.setImageUrl("https://i.ytimg.com/vi/XWqPjlDWtP0/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCAr1CYbxGOLlwuaVROMhbcQW6hcg");
+        video5.setVideoUrl("");
 
         teluguSongs.add(video4);
         teluguSongs.add(video5);

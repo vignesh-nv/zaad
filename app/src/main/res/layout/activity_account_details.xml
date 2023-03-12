@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:text="Zaad"
         android:textColor="@color/white"
-        android:textSize="52sp"
+        android:textSize="50sp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:fontFamily="@font/montserrat_bold"/>
@@ -37,6 +37,7 @@
         android:layout_below="@id/appTitle"
         android:layout_centerHorizontal="true"
         android:textSize="26dp"
+        android:fontFamily="@font/montserrat"
         android:layout_marginTop="20dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -52,7 +53,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/accountHolderNameTxt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,7 +71,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/accountNumberTxt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,7 +87,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/bankNameEditTxt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -101,7 +105,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ifscCodeTxt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -116,23 +121,43 @@
         android:hint="UPI Number">
 
         <com.google.android.material.textfield.TextInputEditText
+
             android:id="@+id/upiNumberTxt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/signupBtn"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/upiNumberTxtLayout"
-        android:text="Next"
-        style="@style/Widget.Material3.Button.ElevatedButton"
-        android:textColor="@android:color/holo_red_dark"
-        android:backgroundTint="@color/white"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:textColor="@color/light_black"
+            android:backgroundTint="@color/white"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"/>
+
+        <Button
+            android:id="@+id/signupBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/upiNumberTxtLayout"
+            android:text="Next"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:textColor="@android:color/holo_red_dark"
+            android:backgroundTint="@color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"/>
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/skipTxt"

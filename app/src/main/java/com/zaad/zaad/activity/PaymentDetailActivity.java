@@ -34,7 +34,6 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
     private String referralCode, myReferralCode;
     FirebaseFirestore firestore;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -28,6 +28,7 @@ import com.zaad.zaad.model.Withdrawal;
 import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class UserRepository {
 
@@ -57,7 +58,13 @@ public class UserRepository {
                 });
     }
 
-    public void updateUser(final User user) {
+    public void updateUser(final Map<String, Object> updateMap) {
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = firebaseUser.getPhoneNumber().substring(3);
+        mFirestore.collection("user").document(userId).update(updateMap).addOnSuccessListener(unused -> {
+
+        });
     }
 
     public MutableLiveData<User> getUser() {

@@ -19,6 +19,7 @@ import com.zaad.zaad.R;
 import com.zaad.zaad.VideoType;
 import com.zaad.zaad.activity.ChildVideoPlayerActivity;
 import com.zaad.zaad.activity.FullVideosActivity;
+import com.zaad.zaad.activity.YoutubeFullVideosActivity;
 import com.zaad.zaad.model.HomeItem;
 import com.zaad.zaad.model.Video;
 
@@ -66,8 +67,9 @@ public class ChildVideosAdapter extends RecyclerView.Adapter<ChildVideosAdapter.
         viewHolder.ChildRecyclerView.setAdapter(childItemAdapter);
         viewHolder.ChildRecyclerView.setRecycledViewPool(viewPool);
         viewHolder.moreBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(context, FullVideosActivity.class);
-            intent.putExtra("category", item.getCategory());
+            Intent intent = new Intent(context, YoutubeFullVideosActivity.class);
+            intent.putExtra("CATEGORY", item.getCategory());
+            intent.putExtra("COLLECTION", "music");
             context.startActivity(intent);
         });
     }

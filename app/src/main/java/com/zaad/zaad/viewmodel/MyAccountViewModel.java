@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.zaad.zaad.model.User;
 import com.zaad.zaad.repository.UserRepository;
 
+import java.util.Map;
+
 public class MyAccountViewModel extends AndroidViewModel {
 
     private UserRepository userRepository;
@@ -24,6 +26,10 @@ public class MyAccountViewModel extends AndroidViewModel {
 
     public MutableLiveData<User> getUser() {
         return userRepository.getUser();
+    }
+
+    public void updateUser(Map<String, Object> updateMap) {
+        userRepository.updateUser(updateMap);
     }
 }
 

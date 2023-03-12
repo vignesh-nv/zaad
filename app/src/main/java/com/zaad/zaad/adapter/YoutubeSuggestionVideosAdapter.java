@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zaad.zaad.R;
 import com.zaad.zaad.activity.YoutubeVideoPlayerActivity;
+import com.zaad.zaad.listeners.OnSuggestionVideoClick;
 import com.zaad.zaad.model.Video;
 
 import java.util.List;
@@ -25,10 +26,11 @@ public class YoutubeSuggestionVideosAdapter extends RecyclerView.Adapter<Youtube
 
     private List<Video> itemList;
     private Context context;
-
-    public YoutubeSuggestionVideosAdapter(List<Video> itemList, Context context) {
+    private OnSuggestionVideoClick onSuggestionVideoClick;
+    public YoutubeSuggestionVideosAdapter(List<Video> itemList, Context context, OnSuggestionVideoClick onSuggestionVideoClick) {
         this.itemList = itemList;
         this.context = context;
+        this.onSuggestionVideoClick = onSuggestionVideoClick;
     }
 
     @NonNull
@@ -60,10 +62,7 @@ public class YoutubeSuggestionVideosAdapter extends RecyclerView.Adapter<Youtube
         imageLoader.enqueue(request);
 
         viewHolder.imageView.setOnClickListener(view -> {
-            Intent intent = new Intent(context, YoutubeVideoPlayerActivity.class);
-            intent.putExtra("VIDEO_ID", parentItem.getVideoUrl());
-            context.startActivity(intent);
-
+            onSuggestionVideoClick.onClick(parentItem);
         });
     }
 

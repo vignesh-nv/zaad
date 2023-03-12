@@ -35,12 +35,13 @@ public class CouponSelectFragment extends BottomSheetDialogFragment {
 
         offlineCard.setOnClickListener(view1 -> {
             Intent intent = new Intent(getActivity(), CouponsActivity.class);
+            intent.putExtra("CATEGORY", "OFFLINE");
             startActivity(intent);
         });
 
         onlineCard.setOnClickListener(view12 -> {
-
             Intent intent = new Intent(getActivity(), CouponsActivity.class);
+            intent.putExtra("CATEGORY", "ONLINE");
             startActivity(intent);
         });
         return view;

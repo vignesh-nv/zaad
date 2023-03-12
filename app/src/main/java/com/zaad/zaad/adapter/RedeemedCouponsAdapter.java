@@ -36,7 +36,7 @@ public class RedeemedCouponsAdapter extends RecyclerView.Adapter<RedeemedCoupons
 
         View view = LayoutInflater
                 .from(viewGroup.getContext())
-                .inflate(R.layout.coupons_item,
+                .inflate(R.layout.redeemed_coupons_item,
                         viewGroup, false);
 
         return new CouponsViewHolder(view);

@@ -100,6 +100,10 @@ public class HomeFragment extends Fragment {
         insta.setTitle("Instagram Reels");
         insta.setCategory(VideoType.INSTAGRAM_REEL.toString());
 
+        HomeItem imageAD = new HomeItem();
+        imageAD.setTitle("Ad");
+        imageAD.setCategory(VideoType.IMAGE_AD.toString());
+
         HomeItem stores = new HomeItem();
         stores.setTitle("Online Store");
         stores.setCategory("ONLINE_STORE");
@@ -119,6 +123,16 @@ public class HomeFragment extends Fragment {
         Video video2 = new Video();
         video2.setTitle("Video");
         video2.setImageUrl("https://i.ytimg.com/vi/5KZlvadN7Z4/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC8JrJKESjep_E2NtTW3pHZbkpNXQ");
+
+        Video adImage = new Video();
+        adImage.setImageUrl("https://wallpaperaccess.com/full/1558939.jpg");
+
+        Video adImage2 = new Video();
+        adImage2.setImageUrl("https://static.vecteezy.com/system/resources/previews/001/950/814/original/abstract-modern-shape-material-design-style-design-for-background-or-wallpaper-vector.jpg");
+
+        List<Video> adImages = new ArrayList<>();
+        adImages.add(adImage);
+        adImages.add(adImage2);
 
         List<Video> videoList = new ArrayList<>();
         videoList.add(video);
@@ -161,12 +175,14 @@ public class HomeFragment extends Fragment {
         insta.setVideos(instaReels);
         stores.setVideos(videoList);
         offlineStores.setVideos(videoList);
-
+        imageAD.setVideos(adImages);
+        
         homeItems.add(homeItem);
         homeItems.add(homeItem1);
         homeItems.add(homeItem2);
         homeItems.add(homeItem);
         homeItems.add(insta);
+        homeItems.add(imageAD);
         homeItems.add(stores);
         homeItems.add(offlineStores);
         return homeItems;

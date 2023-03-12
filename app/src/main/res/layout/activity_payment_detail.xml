@@ -4,43 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.PaymentDetailActivity"
-    android:orientation="vertical"
     android:layout_gravity="center_horizontal"
+    android:background="@color/black"
     android:gravity="center_horizontal"
-    android:background="@color/black">
+    android:orientation="vertical"
+    tools:context=".activity.PaymentDetailActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Payment Method"
-        android:textSize="28sp"
-        android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
         android:fontFamily="@font/montserrat_bold"
-        android:layout_marginTop="50dp"/>
+        android:text="Payment Method"
+        android:textColor="@color/white"
+        android:textSize="28sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Step 3 of 3"
-        android:fontFamily="@font/montserrat"
         android:layout_marginTop="10dp"
-        android:textSize="16sp"/>
+        android:fontFamily="@font/montserrat"
+        android:text="Step 3 of 3"
+        android:textSize="16sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/referralCodeLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/white"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_marginTop="50dp"
-        android:hint="Referral Code">
+        android:hint="Referral Code"
+        android:textColorHint="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/referralCodeTxt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.cardview.widget.CardView
@@ -48,135 +49,123 @@
         android:layout_height="200dp"
         android:layout_below="@id/referralCodeLayout"
         android:layout_margin="20dp"
-        app:cardCornerRadius="10dp"
-        android:elevation="4dp">
+        android:backgroundTint="@color/light_black"
+        android:elevation="4dp"
+        app:cardCornerRadius="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_margin="15dp">
+            android:layout_margin="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Zaad Subscription"
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Zaad Subscription"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/montserrat_bold"/>
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Amount"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Service Charge + Tax"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Discount"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_marginTop="5dp"
+                        android:text="Total Amount"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="70dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Rs. 99"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Rs. 17.82"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Rs. 1.82"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Rs 115"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Amount"
-                    android:textSize="16sp"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/montserrat_medium"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rs. 99"
-                    android:textSize="16sp"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/montserrat_medium"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Service Charge + Tax"
-                    android:textSize="16sp"
-                    android:layout_weight="0.1"
-                    android:fontFamily="@font/montserrat_medium"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rs. 17.82"
-                    android:textSize="16sp"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/montserrat_medium"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Discount"
-                    android:textSize="16sp"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/montserrat_medium"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rs 1.82"
-                    android:textSize="16sp"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/montserrat_medium"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Amount"
-                    android:textSize="16sp"
-                    android:layout_weight="0.3"
-                    android:fontFamily="@font/montserrat_medium"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rs 115"
-                    android:textSize="16sp"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/montserrat_medium"/>
-            </LinearLayout>
-
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/payButton"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        style="@style/Widget.Material3.Button.ElevatedButton"
-        android:text="Pay"
-        android:textSize="20sp"
-        android:textColor="@android:color/holo_red_dark"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="80dp"
         android:backgroundTint="@color/white"
         android:gravity="center_horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="80dp"/>
+        android:text="Pay"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="20sp" />
 </LinearLayout>

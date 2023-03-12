@@ -90,6 +90,10 @@ public class WalletFragment extends Fragment {
 
         walletViewModel.getWithdrawAmount().observe(getViewLifecycleOwner(), amount -> {
             if (getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+                if (amount > user.getAmount()) {
+                    Toast.makeText(getContext(), "Insufficient balance", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 makeWithdrawTransaction(amount);
             }
         });
@@ -99,6 +103,7 @@ public class WalletFragment extends Fragment {
         Withdrawal withdrawal = new Withdrawal();
         withdrawal.setAmount(amount);
         withdrawal.setRequestedDate(new Date());
+        withdrawal.setStatus("PENDING");
         walletViewModel.makeWithdrawTransaction(withdrawal);
         walletViewModel.reduceAmountFromUserAccount(user.getAmount() - amount);
     }

@@ -18,10 +18,22 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
-            android:name=".activity.CouponsActivity"
-            android:label="@string/title_coupons"
-            android:parentActivityName=".activity.HomeActivity"
+            android:name=".activity.EditProfileActivity"
+            android:label="Edit Profile"
+            android:parentActivityName=".activity.MyAccountActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.YoutubeFullVideosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.DailyTaskShortsPlayerActivity"
+            android:exported="false"
+            android:theme="@style/FullScreen" />
+        <activity
+            android:name=".activity.CouponsActivity"
+            android:exported="false"
+            android:label="@string/title_coupons"
+            android:parentActivityName=".activity.HomeActivity" />
         <activity
             android:name=".activity.FullYoutubeVideosActivity"
             android:exported="false"

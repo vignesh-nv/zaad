@@ -25,7 +25,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
         new Handler().postDelayed(this::checkChildMode, 2000);
     }
 
@@ -37,7 +36,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             Intent intent = new Intent(SplashScreenActivity.this, ChildModeActivity.class);
             startActivity(intent);
         } else if (firebaseUser != null){
-            Intent intent = new Intent(SplashScreenActivity.this, HomeActivity.class);
+            Intent intent = new Intent(SplashScreenActivity.this, PersonalDetailsActivity.class);
             startActivity(intent);
         } else {
             Intent intent = new Intent(SplashScreenActivity.this, SignupActivity.class);
