@@ -61,6 +61,7 @@ public class MusicFragment extends Fragment {
 
         HomeItem homeItem = new HomeItem();
         homeItem.setTitle("Latest Songs");
+        homeItem.setCategory("latest_songs");
 
         HomeItem homeItem1 = new HomeItem();
         homeItem1.setTitle("Tamil Songs");
@@ -93,7 +94,6 @@ public class MusicFragment extends Fragment {
 
         trendingVideos.add(video2);
         trendingVideos.add(video3);
-
 
         List<Video> teluguSongs = new ArrayList<>();
         Video video4 = new Video();

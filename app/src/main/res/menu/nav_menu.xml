@@ -6,7 +6,7 @@
         android:id="@+id/kid_mode_switch"
         app:actionViewClass="com.google.android.material.switchmaterial.SwitchMaterial"
         android:icon="@drawable/ic_kid"
-        android:title="Kid Mode"/>
+        android:title="Kid's Mode"/>
 
     <item
         android:id="@+id/my_account_activity"

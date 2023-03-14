@@ -10,10 +10,12 @@ import androidx.room.Room;
 
 import com.zaad.zaad.database.AppDatabase;
 import com.zaad.zaad.database.DailyTask;
+import com.zaad.zaad.database.VideoDetails;
 import com.zaad.zaad.model.DailyTaskVideo;
 import com.zaad.zaad.model.Video;
 import com.zaad.zaad.repository.DatabaseRepository;
 import com.zaad.zaad.repository.FirestoreRepository;
+import com.zaad.zaad.repository.UserRepository;
 
 import java.util.List;
 
@@ -25,12 +27,15 @@ public class DailyTaskViewModel extends AndroidViewModel {
 
     private DatabaseRepository databaseRepository;
 
+    private UserRepository userRepository;
+
     public DailyTaskViewModel(Application application) {
         super(application);
         mText = new MutableLiveData<>();
         dailyTasks = new MutableLiveData<>();
         firestoreRepository = new FirestoreRepository();
         databaseRepository = new DatabaseRepository(application);
+        userRepository = new UserRepository();
     }
 
     public MutableLiveData<List<DailyTaskVideo>> getDailyTaskVideos() {
@@ -53,5 +58,20 @@ public class DailyTaskViewModel extends AndroidViewModel {
         DailyTask dailyTask = new DailyTask();
         dailyTask.taskId = video.getTaskId();
         databaseRepository.insert(dailyTask);
+    }
+
+    public void incrementAvailableCoupons() {
+        userRepository.incrementAvailableCoupons(1);
+    }
+
+    public LiveData<Float> getWatchedSeconds(final String videoId) {
+        return databaseRepository.getVideoCurrentSecond(videoId);
+    }
+
+    public void updateWatchedSeconds(final String videoId, final float seconds) {
+        VideoDetails videoDetails = new VideoDetails();
+        videoDetails.videoId = videoId;
+        videoDetails.watchedSeconds = seconds;
+        databaseRepository.updateWatchedSeconds(videoDetails);
     }
 }

@@ -34,4 +34,8 @@ public class CouponsViewModel extends AndroidViewModel {
     public MutableLiveData<List<Coupon>> getOnlineCouponsByCategory(final String category) {
         return repository.getOnlineCouponsByCategory(category);
     }
+
+    public void decrementAvailableCoupons() {
+        userRepository.incrementAvailableCoupons(-1);
+    }
 }

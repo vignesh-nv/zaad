@@ -16,6 +16,16 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
         android:fontFamily="@font/montserrat_bold"
+        android:text="Khanzo"
+        android:textColor="@color/white"
+        android:textSize="50sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/montserrat_bold"
         android:text="Payment Method"
         android:textColor="@color/white"
         android:textSize="28sp" />
@@ -35,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:hint="Referral Code"
+        app:errorEnabled="true"
         android:textColorHint="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText

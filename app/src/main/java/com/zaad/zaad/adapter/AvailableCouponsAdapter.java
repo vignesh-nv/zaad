@@ -15,6 +15,7 @@ import com.zaad.zaad.R;
 import com.zaad.zaad.fragment.CouponSelectFragment;
 import com.zaad.zaad.listeners.CouponOnClickListener;
 import com.zaad.zaad.model.Coupon;
+import com.zaad.zaad.model.User;
 
 import org.checkerframework.checker.units.qual.C;
 
@@ -28,10 +29,11 @@ public class AvailableCouponsAdapter extends RecyclerView.Adapter<AvailableCoupo
     private Context context;
     private int availableCouponsCount;
 
+    private User user;
     private CouponOnClickListener onClickListener;
 
-    public AvailableCouponsAdapter(int availableCouponsCount, Context context, CouponOnClickListener onClickListener) {
-        this.availableCouponsCount = availableCouponsCount;
+    public AvailableCouponsAdapter(User user, Context context, CouponOnClickListener onClickListener) {
+        this.user = user;
         this.context = context;
         this.onClickListener = onClickListener;
     }
@@ -68,7 +70,7 @@ public class AvailableCouponsAdapter extends RecyclerView.Adapter<AvailableCoupo
 
     @Override
     public int getItemCount() {
-        return availableCouponsCount;
+        return user.getAvailableCoupons();
     }
 
     class AvailableCouponsViewHolder extends RecyclerView.ViewHolder {

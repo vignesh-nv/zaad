@@ -70,6 +70,7 @@ public class CouponsActivity extends AppCompatActivity implements CouponOnClickL
     @Override
     public void onclick(Coupon coupon) {
         couponsViewModel.redeemCoupon(coupon);
+        couponsViewModel.decrementAvailableCoupons();
         finish();
     }
 

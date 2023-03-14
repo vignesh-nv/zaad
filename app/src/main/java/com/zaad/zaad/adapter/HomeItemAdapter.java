@@ -48,6 +48,13 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewGroup, false);
 
             return new VideoViewHolder(view);
+        } else if (category.equals(VideoType.FACEBOOK_VIDEOS.name())) {
+            View view = LayoutInflater
+                    .from(viewGroup.getContext())
+                    .inflate(R.layout.home_child_item,
+                            viewGroup, false);
+
+            return new VideoViewHolder(view);
         } else if (category.equals("OFFLINE_STORE") || category.equals("ONLINE_STORE")) {
             View view = LayoutInflater
                     .from(viewGroup.getContext())
@@ -75,7 +82,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
-        Log.i("HomeItemAdapterCategory", category + " Position "+ String.valueOf(position));
+        Log.i("HomeItemAdapterCategory", category + " Position " + String.valueOf(position));
         if (category.equals(VideoType.YOUTUBE_VIDEO.name())) {
             VideoViewHolder childViewHolder = (VideoViewHolder) viewHolder;
             Video childItem = videoList.get(position);
@@ -95,7 +102,25 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .target(childViewHolder.imageView)
                     .build();
             imageLoader.enqueue(request);
-        } else if (category.equals(VideoType.YOUTUBE_SHORTS.name())){
+        } else if (category.equals(VideoType.FACEBOOK_VIDEOS.name())) {
+            VideoViewHolder childViewHolder = (VideoViewHolder) viewHolder;
+            Video childItem = videoList.get(position);
+            ImageLoader imageLoader = Coil.imageLoader(context);
+
+            childViewHolder.imageView.setOnClickListener(view -> {
+                Intent intent = new Intent(context, YoutubeVideoPlayerActivity.class);
+                intent.putExtra("VIDEO_ID", childItem.getVideoUrl());
+                intent.putExtra("CATEGORY", childItem.getCategory());
+                context.startActivity(intent);
+            });
+
+            ImageRequest request = new ImageRequest.Builder(context)
+                    .data(childItem.getImageUrl())
+                    .crossfade(true)
+                    .target(childViewHolder.imageView)
+                    .build();
+            imageLoader.enqueue(request);
+        } else if (category.equals(VideoType.YOUTUBE_SHORTS.name())) {
             ShortsViewHolder shortsViewHolder = (ShortsViewHolder) viewHolder;
             Video childItem = videoList.get(position);
 
@@ -115,7 +140,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else if (category.equals("OFFLINE_STORE") || category.equals("ONLINE_STORE")) {
             StoreViewHolder storeViewHolder = (StoreViewHolder) viewHolder;
 
-        } else if (category.equals(VideoType.IMAGE_AD.name())){
+        } else if (category.equals(VideoType.IMAGE_AD.name())) {
 
             VideoViewHolder childViewHolder = (VideoViewHolder) viewHolder;
             Video childItem = videoList.get(position);
@@ -147,7 +172,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .build();
             imageLoader.enqueue(request);
         }
-     }
+    }
 
     @Override
     public int getItemCount() {

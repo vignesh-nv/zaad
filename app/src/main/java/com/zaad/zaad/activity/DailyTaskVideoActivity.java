@@ -1,6 +1,5 @@
 package com.zaad.zaad.activity;
 
-import static com.zaad.zaad.constants.AppConstant.CHILD_MODE;
 import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 
@@ -9,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,22 +25,18 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTube
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import com.zaad.zaad.R;
-import com.zaad.zaad.VideoType;
 import com.zaad.zaad.adapter.DailyTaskSuggestionVideoAdapter;
-import com.zaad.zaad.adapter.HomeItemAdapter;
-import com.zaad.zaad.database.AppDatabase;
-import com.zaad.zaad.database.DailyTask;
+import com.zaad.zaad.listeners.DailyTaskSuggestionVideoClickListener;
 import com.zaad.zaad.model.DailyTaskVideo;
 import com.zaad.zaad.ui.dailytask.DailyTaskViewModel;
 import com.zaad.zaad.utils.DailyTaskYoutubePlayer;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class DailyTaskVideoActivity extends AppCompatActivity {
+public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTaskSuggestionVideoClickListener {
 
     YouTubePlayerView youTubePlayerView;
     private DailyTaskVideo dailyTaskVideo;
@@ -58,6 +53,8 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
 
     DailyTaskSuggestionVideoAdapter suggestionVideoAdapter;
 
+    float currentSecond = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +68,14 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
         loadYoutubePlayer();
         getUncompletedTaskVideos();
         loadSuggestedVideos();
+        dailyTaskViewModel.getWatchedSeconds(dailyTaskVideo.getTaskId()).observe(this, data -> {
+            if (data != null){
+                currentSecond = data;
+                Log.i("DailyTaskVideo S:", String.valueOf(currentSecond));
+            } else {
+                Log.i("DailyTaskVideo S:", "Null Value");
+            }
+        });
     }
 
     private void loadYoutubePlayer() {
@@ -85,7 +90,7 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
                         youTubePlayer,
                         getLifecycle(),
                         dailyTaskVideo.getVideoUrl(),
-                        0f
+                        currentSecond
                 );
             }
 
@@ -95,9 +100,16 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
                 if (state == PlayerConstants.PlayerState.ENDED) {
                     if (!completedTaskIds.contains(dailyTaskVideo.getTaskId())) {
                         incrementViewsCount();
+                        dailyTaskViewModel.insertCompletedTask(dailyTaskVideo);
                         Toast.makeText(DailyTaskVideoActivity.this, "Completed", Toast.LENGTH_SHORT).show();
                     }
                 }
+            }
+
+            @Override
+            public void onCurrentSecond(@NonNull YouTubePlayer youTubePlayer, float second) {
+                super.onCurrentSecond(youTubePlayer, second);
+                currentSecond = second;
             }
         };
 
@@ -110,7 +122,7 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.daily_task_suggestion_task_recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,
                 false);
-        suggestionVideoAdapter = new DailyTaskSuggestionVideoAdapter(dailyTaskVideos, this);
+        suggestionVideoAdapter = new DailyTaskSuggestionVideoAdapter(dailyTaskVideos, this, this);
         recyclerView.setAdapter(suggestionVideoAdapter);
         recyclerView.setLayoutManager(layoutManager);
     }
@@ -127,7 +139,7 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
 
             dailyTaskVideos.clear();
             for (DailyTaskVideo task : uncompletedTasks) {
-                if (!completedTaskIds.contains(task.getTaskId())) {
+                if (!completedTaskIds.contains(task.getTaskId()) && !task.getTaskId().equals(dailyTaskVideo.getTaskId())) {
                     dailyTaskVideos.add(task);
                 }
             }
@@ -143,9 +155,37 @@ public class DailyTaskVideoActivity extends AppCompatActivity {
         if (videoWatched == 9) {
             editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
             editor.apply();
+            incrementAvailableCoupons();
+            Toast.makeText(this, "You won a coupon!!!", Toast.LENGTH_SHORT).show();
         } else {
             editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, videoWatched + 1);
             editor.apply();
         }
+    }
+
+    private void incrementAvailableCoupons() {
+        dailyTaskViewModel.incrementAvailableCoupons();
+    }
+
+    @Override
+    public void onClick(DailyTaskVideo video) {
+        Intent intent = new Intent(this, DailyTaskVideoActivity.class);
+        intent.putExtra("VIDEO_ID", video.getVideoUrl());
+        intent.putExtra("TASK", video);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("DailyTaskVideo", "ActivityPaused");
+        dailyTaskViewModel.updateWatchedSeconds(dailyTaskVideo.getTaskId(), currentSecond);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("DailyTaskVideo", "ActivityResumed");
     }
 }

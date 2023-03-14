@@ -61,11 +61,13 @@ public class EditProfileActivity extends AppCompatActivity {
         emailTxt.setText(user.getEmail());
         phoneNumberTxt.setText(user.getPhoneNumber());
         addressTxt.setText(user.getAddress());
-        accountHolderNameTxt.setText(user.getAccountDetails().getAccountHolderName());
-        accountNumberTxt.setText(user.getAccountDetails().getAccountNumber());
-        bankNameTxt.setText(user.getAccountDetails().getBankName());
-        ifscTxt.setText(user.getAccountDetails().getIfsc());
-        upiTxt.setText(user.getAccountDetails().getUpi());
+        if (user.getAccountDetails() != null) {
+            accountHolderNameTxt.setText(user.getAccountDetails().getAccountHolderName());
+            accountNumberTxt.setText(user.getAccountDetails().getAccountNumber());
+            bankNameTxt.setText(user.getAccountDetails().getBankName());
+            ifscTxt.setText(user.getAccountDetails().getIfsc());
+            upiTxt.setText(user.getAccountDetails().getUpi());
+        }
     }
 
     private void updateUser() {
@@ -87,24 +89,24 @@ public class EditProfileActivity extends AppCompatActivity {
             updates.put("address", address);
         }
         String accountHolderName = accountHolderNameTxt.getText().toString();
-        if (!accountHolderName.equals(user.getAccountDetails().getAccountHolderName())) {
+        if (user.getAccountDetails()== null || !accountHolderName.equals(user.getAccountDetails().getAccountHolderName())) {
             updates.put("accountDetails.accountHolderName", accountHolderName);
         }
 
         String accountNumber = accountNumberTxt.getText().toString();
-        if (!accountNumber.equals(user.getAccountDetails().getAccountNumber())) {
+        if (user.getAccountDetails()== null || !accountNumber.equals(user.getAccountDetails().getAccountNumber())) {
             updates.put("accountDetails.accountNumber", accountNumber);
         }
         String bankName = bankNameTxt.getText().toString();
-        if (!bankName.equals(user.getAccountDetails().getBankName())) {
+        if (user.getAccountDetails() == null || !bankName.equals(user.getAccountDetails().getBankName())) {
             updates.put("accountDetails.bankName", bankName);
         }
         String ifsc = ifscTxt.getText().toString();
-        if (!ifsc.equals(user.getAccountDetails().getIfsc())) {
+        if (user.getAccountDetails() == null || !ifsc.equals(user.getAccountDetails().getIfsc())) {
             updates.put("accountDetails.ifsc", ifsc);
         }
         String upi = upiTxt.getText().toString();
-        if (!ifsc.equals(user.getAccountDetails().getUpi())) {
+        if (user.getAccountDetails() == null || !ifsc.equals(user.getAccountDetails().getUpi())) {
             updates.put("accountDetails.upi", upi);
         }
         myAccountViewModel.updateUser(updates);

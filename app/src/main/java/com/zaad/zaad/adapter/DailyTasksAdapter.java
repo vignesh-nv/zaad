@@ -2,6 +2,7 @@ package com.zaad.zaad.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,10 @@ public class DailyTasksAdapter extends RecyclerView.Adapter<DailyTasksAdapter.Da
         imageLoader.enqueue(request);
 
         if (completedTasks.contains(video.getTaskId())) {
+            Log.i("DailyTaskAdapter", "ID: " + video.getTaskId());
             viewHolder.completedTxt.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.completedTxt.setVisibility(View.GONE);
         }
         viewHolder.imageView.setOnClickListener(view -> {
             Intent intent = new Intent(context, DailyTaskVideoActivity.class);

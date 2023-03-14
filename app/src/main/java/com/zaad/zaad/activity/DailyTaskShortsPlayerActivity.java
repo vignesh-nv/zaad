@@ -1,9 +1,15 @@
 package com.zaad.zaad.activity;
 
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_SHORTS_COMPLETED_COUNT;
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
+import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -72,7 +78,23 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
     public void onCompleted(DailyTaskVideo video) {
         if (!completedTaskIds.contains(video.getTaskId())) {
             dailyTaskViewModel.insertCompletedTask(video);
-            Toast.makeText(this, "Completed", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(this, "Completed Task" + video.getTaskId(), Toast.LENGTH_SHORT).show();
+            incrementViewsCount();
+        }
+    }
+
+    private void incrementViewsCount() {
+        SharedPreferences sharedPref = getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        int videoWatched = sharedPref.getInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        if (videoWatched == 24) {
+            editor.putInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
+            editor.apply();
+        } else {
+            editor.putInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, videoWatched + 1);
+            editor.apply();
         }
     }
 }

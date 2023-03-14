@@ -11,7 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zaad.zaad.R;
+import com.zaad.zaad.activity.DailyTaskVideoActivity;
 import com.zaad.zaad.activity.YoutubeVideoPlayerActivity;
+import com.zaad.zaad.listeners.DailyTaskSuggestionVideoClickListener;
+import com.zaad.zaad.listeners.OnSuggestionVideoClick;
 import com.zaad.zaad.model.DailyTaskVideo;
 import com.zaad.zaad.model.Video;
 
@@ -26,9 +29,13 @@ public class DailyTaskSuggestionVideoAdapter extends RecyclerView.Adapter<Recycl
     private List<DailyTaskVideo> videoList;
     private Context context;
 
-    public DailyTaskSuggestionVideoAdapter(List<DailyTaskVideo> videoList, Context context) {
+    private DailyTaskSuggestionVideoClickListener suggestionVideoClickListener;
+
+    public DailyTaskSuggestionVideoAdapter(List<DailyTaskVideo> videoList, Context context,
+                                           DailyTaskSuggestionVideoClickListener onSuggestionVideoClick) {
         this.videoList = videoList;
         this.context = context;
+        this.suggestionVideoClickListener = onSuggestionVideoClick;
     }
 
     @NonNull
@@ -53,9 +60,7 @@ public class DailyTaskSuggestionVideoAdapter extends RecyclerView.Adapter<Recycl
         ImageLoader imageLoader = Coil.imageLoader(context);
 
         childViewHolder.imageView.setOnClickListener(view -> {
-            Intent intent = new Intent(context, YoutubeVideoPlayerActivity.class);
-            intent.putExtra("VIDEO_ID", childItem.getVideoUrl());
-            context.startActivity(intent);
+            this.suggestionVideoClickListener.onClick(childItem);
         });
 
         ImageRequest request = new ImageRequest.Builder(context)

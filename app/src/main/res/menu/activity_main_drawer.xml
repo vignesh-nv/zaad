@@ -9,7 +9,7 @@
             android:id="@+id/child_mode"
             android:icon="@drawable/ic_kid"
             app:actionViewClass="com.google.android.material.switchmaterial.SwitchMaterial"
-            android:title="Child Mode"/>
+            android:title="Kid's Mode"/>
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"

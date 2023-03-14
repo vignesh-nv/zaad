@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.zaad.zaad.model.User;
 import com.zaad.zaad.repository.UserRepository;
 
+import java.util.List;
+
 public class MyLevelViewModel extends AndroidViewModel {
 
     private UserRepository userRepository;
@@ -24,6 +26,10 @@ public class MyLevelViewModel extends AndroidViewModel {
 
     public MutableLiveData<User> getUser() {
         return userRepository.getUser();
+    }
+
+    public MutableLiveData<List<User>> getMyReferrals(final String referralCode) {
+        return userRepository.getMyReferrals(referralCode);
     }
 }
 

@@ -5,6 +5,8 @@ public enum VideoType {
     INSTAGRAM_REEL("INSTAGRAM_REEL"),
     YOUTUBE_SHORTS("YOUTUBE_SHORTS"),
 
+    FACEBOOK_VIDEOS("FACEBOOK_VIDEOS"),
+
     IMAGE_AD("IMAGE_AD");
     String type;
     VideoType(String type) {

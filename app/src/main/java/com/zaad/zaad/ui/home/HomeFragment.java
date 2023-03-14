@@ -1,12 +1,15 @@
 package com.zaad.zaad.ui.home;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import com.zaad.zaad.R;
 import com.zaad.zaad.VideoType;
 import com.zaad.zaad.adapter.HomeAdBannerVideosAdapter;
 import com.zaad.zaad.adapter.HomeAdapter;
@@ -21,6 +25,9 @@ import com.zaad.zaad.databinding.FragmentHomeBinding;
 import com.zaad.zaad.model.AdBanner;
 import com.zaad.zaad.model.HomeItem;
 import com.zaad.zaad.model.Video;
+import com.zaad.zaad.utils.CirclePagerIndicatorDecorator;
+import com.zaad.zaad.utils.DotsIndicatorDecoration;
+import com.zaad.zaad.utils.LinePagerIndicationDecoration;
 
 import org.checkerframework.checker.units.qual.A;
 
@@ -31,6 +38,9 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private RecyclerView recyclerView, adRecyclerView;
+    private String RV_SCROLL_POSITION = "RV_SCROLL_POSITION";
+    LinearLayoutManager layoutManager;
+    Parcelable listState;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,13 +52,20 @@ public class HomeFragment extends Fragment {
         recyclerView = binding.recyclerView;
         adRecyclerView = binding.adSliderRecyclerview;
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new LinearLayoutManager(getContext());
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
         HomeAdBannerVideosAdapter adBannerVideosAdapter = new HomeAdBannerVideosAdapter(generateAdBanners(), getContext());
         adRecyclerView.setAdapter(adBannerVideosAdapter);
         adRecyclerView.setHasFixedSize(true);
         adRecyclerView.setLayoutManager(horizontalLayoutManager);
+
+        final int radius = getResources().getDimensionPixelSize(R.dimen.radius);
+        final int dotsHeight = getResources().getDimensionPixelSize(R.dimen.dots_height);
+        final int color = ContextCompat.getColor(getContext(), R.color.white);
+//        adRecyclerView.addItemDecoration(new DotsIndicatorDecoration(radius, radius * 4, dotsHeight, color, color));
+        adRecyclerView.addItemDecoration(new CirclePagerIndicatorDecorator());
+//        adRecyclerView.addItemDecoration(new LinePagerIndicationDecoration());
 
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(adRecyclerView);
@@ -66,35 +83,69 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(RV_SCROLL_POSITION, layoutManager.onSaveInstanceState());
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            listState = savedInstanceState.getParcelable(RV_SCROLL_POSITION);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (listState != null) {
+            layoutManager.onRestoreInstanceState(listState);
+        }
+        setRetainInstance(true);
+    }
+
     private List<AdBanner> generateAdBanners() {
         List<AdBanner> adBanners = new ArrayList<>();
         AdBanner adBanner = new AdBanner();
-        adBanner.setVideoUrl("https://firebasestorage.googleapis.com/v0/b/zaad-cb167.appspot.com/o/videoplayback%20(1).webm?alt=media&token=f50251c4-dba8-4778-a29b-888f8c0122c8");
+        adBanner.setVideoUrl("https://firebasestorage.googleapis.com/v0/b/zaad-cb167.appspot.com/o/adBanner%2FHappy%20diwali%20from%20BAIRACORP%20%23diwali%20%23festival%20%23happy.mp4?alt=media&token=8a588596-cd1d-4f83-8035-94a8dcc60506");
         adBanner.setImageUrl("https://i.ytimg.com/vi/dYykpGxJMMs/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLD2MISYPSLmrFYAMJPxHsJlaOTbMw");
 
         AdBanner adBanner1 = new AdBanner();
-        adBanner1.setVideoUrl("https://firebasestorage.googleapis.com/v0/b/zaad-cb167.appspot.com/o/videoplayback.webm?alt=media&token=70ae0921-d3a4-48af-ab86-7da6191c8a49");
+        adBanner1.setVideoUrl("https://firebasestorage.googleapis.com/v0/b/zaad-cb167.appspot.com/o/adBanner%2Fdownload.mp4?alt=media&token=35f45f5c-cbd9-47b1-8e62-26b883850540");
         adBanner1.setImageUrl("https://i.ytimg.com/vi/nuGjrQ64J0U/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBDVvn9Y13JxD4NhDSXYn-xaSDvuA");
+
+        AdBanner adBanner2 = new AdBanner();
+        adBanner2.setVideoUrl("https://firebasestorage.googleapis.com/v0/b/zaad-cb167.appspot.com/o/adBanner%2Fvideoplayback.mp4?alt=media&token=43bd8b66-a0d2-43d3-bc91-d50c44886a9a");
+        adBanner2.setImageUrl("https://i.ytimg.com/vi/nuGjrQ64J0U/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBDVvn9Y13JxD4NhDSXYn-xaSDvuA");
 
         adBanners.add(adBanner);
         adBanners.add(adBanner1);
+        adBanners.add(adBanner2);
         adBanners.add(adBanner);
+
         return adBanners;
     }
+
     private List<HomeItem> generateList() {
         List<HomeItem> homeItems = new ArrayList<>();
 
-        HomeItem homeItem = new HomeItem();
-        homeItem.setTitle("Youtube Videos");
-        homeItem.setCategory(VideoType.YOUTUBE_VIDEO.toString());
+        HomeItem trendingMenu = new HomeItem();
+        trendingMenu.setTitle("Trending Videos");
+        trendingMenu.setCategory(VideoType.YOUTUBE_VIDEO.toString());
 
-        HomeItem homeItem1 = new HomeItem();
-        homeItem1.setTitle("Facebook Videos");
-        homeItem1.setCategory(VideoType.YOUTUBE_SHORTS.toString());
+        HomeItem youtubeVideosMenu = new HomeItem();
+        youtubeVideosMenu.setTitle("Youtube Videos");
+        youtubeVideosMenu.setCategory(VideoType.YOUTUBE_VIDEO.toString());
 
-        HomeItem homeItem2 = new HomeItem();
-        homeItem2.setTitle("Shorts");
-        homeItem2.setCategory(VideoType.YOUTUBE_SHORTS.toString());
+        HomeItem facebookVideosMenu = new HomeItem();
+        facebookVideosMenu.setTitle("Facebook Videos");
+        facebookVideosMenu.setCategory(VideoType.FACEBOOK_VIDEOS.toString());
+
+        HomeItem youtubeShortsMenu = new HomeItem();
+        youtubeShortsMenu.setTitle("Shorts");
+        youtubeShortsMenu.setCategory(VideoType.YOUTUBE_SHORTS.toString());
 
         HomeItem insta = new HomeItem();
         insta.setTitle("Instagram Reels");
@@ -114,21 +165,24 @@ public class HomeFragment extends Fragment {
 
         Video video = new Video();
         video.setTitle("Video");
-        video.setImageUrl("https://i.ytimg.com/vi/F0CIXNJplhY/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCzq65sft_XLnJfqyWIwnfRLweNJA");
+        video.setImageUrl("https://i.ytimg.com/vi/KbDQX1VU77A/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDB8fYDOiWnSi_ClWu89XlpyMVf-w");
+        video.setVideoUrl("KbDQX1VU77A");
 
         Video video1 = new Video();
         video1.setTitle("Video");
-        video1.setImageUrl("https://i.ytimg.com/vi/SFdGyt0V00M/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCbSJZ7wGrNOhf5Kwu06lH-lO8Fgg");
+        video1.setImageUrl("https://i.ytimg.com/vi/cZImVVQ8WNI/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCMl2tzFVWWACJ3WS3WMK5yftGg4A");
+        video1.setVideoUrl("cZImVVQ8WNI");
 
         Video video2 = new Video();
         video2.setTitle("Video");
-        video2.setImageUrl("https://i.ytimg.com/vi/5KZlvadN7Z4/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC8JrJKESjep_E2NtTW3pHZbkpNXQ");
+        video2.setImageUrl("https://i.ytimg.com/vi/JtPbk7WvHAQ/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDUUW5Uc4Aim_RZuXftq3a425AR1Q");
+        video2.setVideoUrl("JtPbk7WvHAQ");
 
         Video adImage = new Video();
-        adImage.setImageUrl("https://wallpaperaccess.com/full/1558939.jpg");
+        adImage.setImageUrl("https://firebasestorage.googleapis.com/v0/b/zaad-cb167.appspot.com/o/adBanner%2FSnapinsta.app_1080_296301010_841288773503739_1395188615003701265_n.jpg?alt=media&token=8c453e1a-4720-4eed-9a74-c3c2ce45134e");
 
         Video adImage2 = new Video();
-        adImage2.setImageUrl("https://static.vecteezy.com/system/resources/previews/001/950/814/original/abstract-modern-shape-material-design-style-design-for-background-or-wallpaper-vector.jpg");
+        adImage2.setImageUrl("https://firebasestorage.googleapis.com/v0/b/zaad-cb167.appspot.com/o/adBanner%2FSnapinsta.app_1080_298361927_457540369347458_5389873869384240667_n.jpg?alt=media&token=96a8a2c2-e5a7-4e6a-952a-4b6d32524f9f");
 
         List<Video> adImages = new ArrayList<>();
         adImages.add(adImage);
@@ -169,18 +223,19 @@ public class HomeFragment extends Fragment {
         shortsList.add(video5);
         shortsList.add(video6);
 
-        homeItem.setVideos(videoList);
-        homeItem1.setVideos(videoList);
-        homeItem2.setVideos(shortsList);
+        trendingMenu.setVideos(videoList);
+        youtubeVideosMenu.setVideos(videoList);
+        facebookVideosMenu.setVideos(videoList);
+        youtubeShortsMenu.setVideos(shortsList);
         insta.setVideos(instaReels);
         stores.setVideos(videoList);
         offlineStores.setVideos(videoList);
         imageAD.setVideos(adImages);
-        
-        homeItems.add(homeItem);
-        homeItems.add(homeItem1);
-        homeItems.add(homeItem2);
-        homeItems.add(homeItem);
+
+        homeItems.add(trendingMenu);
+        homeItems.add(youtubeVideosMenu);
+        homeItems.add(youtubeShortsMenu);
+        homeItems.add(facebookVideosMenu);
         homeItems.add(insta);
         homeItems.add(imageAD);
         homeItems.add(stores);

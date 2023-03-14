@@ -1,6 +1,8 @@
 package com.zaad.zaad.ui.dailytask;
 
 import static com.zaad.zaad.constants.AppConstant.CHILD_MODE;
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_SHORTS_COMPLETED_COUNT;
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 
 import android.content.Context;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -36,6 +39,8 @@ public class DailyTaskFragment extends Fragment {
     private List<DailyTaskVideo> dailyTasksList = new ArrayList<>();
     private Set<String> completedTaskIds = new HashSet<>();
 
+    private TextView shortsWatchedCount, videosWatchedCount;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         DailyTaskViewModel dailyTaskViewModel =
@@ -45,6 +50,8 @@ public class DailyTaskFragment extends Fragment {
         View root = binding.getRoot();
         recyclerView = binding.dailyTaskVideosRecyclerview;
         shortsRecyclerView = binding.dailyTaskShortsRecyclerview;
+        shortsWatchedCount = binding.shortsWatchedCount;
+        videosWatchedCount = binding.videosWatchedCount;
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager shortsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -81,6 +88,7 @@ public class DailyTaskFragment extends Fragment {
             dailyTasksAdapter.notifyDataSetChanged();
             shortsAdapter.notifyDataSetChanged();
         });
+        loadWatchedCount();
         return root;
     }
 
@@ -88,5 +96,19 @@ public class DailyTaskFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadWatchedCount();
+    }
+
+    private void loadWatchedCount() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        int videoWatched = sharedPreferences.getInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
+        int shortsWatched = sharedPreferences.getInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
+        videosWatchedCount.setText(String.valueOf(videoWatched));
+        shortsWatchedCount.setText(String.valueOf(shortsWatched));
     }
 }

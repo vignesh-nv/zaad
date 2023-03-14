@@ -31,8 +31,10 @@ public class ShoppingTimeActivity extends AppCompatActivity {
 
         if (category.equals("OFFLINE_STORE")) {
             shopType = "OFFLINE";
+            getSupportActionBar().setTitle("Offline Stores");
         } else {
             shopType = "ONLINE";
+            getSupportActionBar().setTitle("Online Stores");
         }
         ShopViewModel shopViewModel =
                 new ViewModelProvider(this).get(ShopViewModel.class);

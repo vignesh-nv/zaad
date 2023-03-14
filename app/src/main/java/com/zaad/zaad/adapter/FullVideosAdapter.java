@@ -57,6 +57,7 @@ public class FullVideosAdapter extends RecyclerView.Adapter<FullVideosAdapter.Vi
         viewHolder.imageView.setOnClickListener(view -> {
             Intent intent = new Intent(context, YoutubeVideoPlayerActivity.class);
             intent.putExtra("VIDEO_ID", parentItem.getVideoUrl());
+            intent.putExtra("CATEGORY", parentItem.getCategory());
             context.startActivity(intent);
         });
 

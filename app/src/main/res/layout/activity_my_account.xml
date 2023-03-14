@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:fontFamily="@font/montserrat_bold"
-                    android:text="Vignesh"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="24sp" />
 
@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_medium"
-                    android:text="6381511648"
+                    android:text=""
                     android:textColor="@color/white" />
 
             </LinearLayout>
@@ -94,15 +94,64 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="20dp">
+                    android:layout_margin="20dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="Airgead zaad Subscription"
+                        android:text="Khanzo Play Subscription"
                         android:textColor="@color/white"
                         android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/light_white"
+                            android:fontFamily="@font/montserrat"
+                            android:textSize="18sp"
+                            android:text="Joined Date: " />
+
+                        <TextView
+                            android:id="@+id/joinedDateTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/montserrat"
+                            android:textSize="18sp"
+                            android:text="" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/light_white"
+                            android:fontFamily="@font/montserrat"
+                            android:textSize="18sp"
+                            android:text="Expiry Date: " />
+
+                        <TextView
+                            android:id="@+id/expiryDateTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/montserrat"
+                            android:textSize="18sp"
+                            android:text="" />
+
+                    </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
@@ -134,17 +183,17 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
                     android:text="Bank Account"
                     android:textColor="@color/light_white"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/montserrat_medium"/>
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/bankNameTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_bold"
-                    android:text="State Bank of India"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="24sp" />
 
@@ -154,7 +203,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/montserrat_bold"
-                    android:text="Vignesh"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
@@ -164,7 +213,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/montserrat_bold"
-                    android:text="234987109753"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
@@ -191,17 +240,17 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
                     android:text="UPI Id"
                     android:textColor="@color/light_white"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/montserrat_medium"/>
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/upiTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_bold"
-                    android:text="vigneshnp@oksbi"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="24sp" />
 
@@ -220,30 +269,42 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
+                android:background="@color/deep_gray"
                 android:backgroundTint="@color/deep_gray"
-                android:background="@color/deep_gray">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Home Address"
-                    android:textSize="16sp"
                     android:layout_margin="10dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Home Address"
                     android:textColor="@color/light_white"
-                    android:fontFamily="@font/montserrat_medium"/>
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
                     android:layout_margin="10dp"
-                    android:text="14, saodisa sadsa"/>
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/logoutBtn"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="@color/white"
+            android:gravity="center_horizontal"
+            android:text="Logout"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="20sp" />
     </LinearLayout>
 </ScrollView>

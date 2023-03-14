@@ -23,6 +23,14 @@ public class User implements Serializable {
 
     private Date dob;
 
+    private String level;
+
+    private Date joinedDate;
+
+    private Date expiryDate;
+
+    private boolean paymentCompleted;
+
     public User() {
     }
 
@@ -122,6 +130,38 @@ public class User implements Serializable {
         this.dob = dob;
     }
 
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public Date getJoinedDate() {
+        return joinedDate;
+    }
+
+    public void setJoinedDate(Date joinedDate) {
+        this.joinedDate = joinedDate;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public boolean isPaymentCompleted() {
+        return paymentCompleted;
+    }
+
+    public void setPaymentCompleted(boolean paymentCompleted) {
+        this.paymentCompleted = paymentCompleted;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -132,6 +172,14 @@ public class User implements Serializable {
                 ", pincode='" + pincode + '\'' +
                 ", accountDetails=" + accountDetails +
                 ", referralCode='" + referralCode + '\'' +
+                ", referredByCode='" + referredByCode + '\'' +
+                ", amount=" + amount +
+                ", availableCoupons=" + availableCoupons +
+                ", gender='" + gender + '\'' +
+                ", dob=" + dob +
+                ", level='" + level + '\'' +
+                ", joinedDate=" + joinedDate +
+                ", expiryDate=" + expiryDate +
                 '}';
     }
 }

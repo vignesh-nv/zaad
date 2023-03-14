@@ -38,7 +38,6 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        Log.i("HomeAdapter", "onCreateViewHolder" + i);
         View view = LayoutInflater
                 .from(viewGroup.getContext())
                 .inflate(R.layout.home_item,
@@ -65,8 +64,10 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 childItemAdapter = new HomeItemAdapter(parentItem.getVideos(), context, VideoType.YOUTUBE_VIDEO.name());
             } else if (type == 1) {
                 Log.i("HomeAdapter", String.valueOf(type));
+                videoViewHolder.moreBtn.setVisibility(View.INVISIBLE);
                 childItemAdapter = new HomeItemAdapter(parentItem.getVideos(), context, VideoType.YOUTUBE_SHORTS.name());
             } else {
+                videoViewHolder.moreBtn.setVisibility(View.INVISIBLE);
                 childItemAdapter = new HomeItemAdapter(parentItem.getVideos(), context, VideoType.INSTAGRAM_REEL.name());
             }
             videoViewHolder.ChildRecyclerView.setLayoutManager(layoutManager);
@@ -74,6 +75,23 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             videoViewHolder.ChildRecyclerView.setRecycledViewPool(viewPool);
             videoViewHolder.moreBtn.setOnClickListener(view -> {
                 Intent intent = new Intent(context, FullYoutubeVideosActivity.class);
+                intent.putExtra("category", parentItem.getCategory());
+                context.startActivity(intent);
+            });
+        } else if (type == 5) {
+            VideoViewHolder videoViewHolder = (VideoViewHolder) viewHolder;
+            HomeItem parentItem = itemList.get(position);
+            videoViewHolder.title.setText(parentItem.getTitle());
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,
+                    false);
+            layoutManager.setInitialPrefetchItemCount(parentItem.getVideos().size());
+            HomeItemAdapter childItemAdapter;
+            childItemAdapter = new HomeItemAdapter(parentItem.getVideos(), context, VideoType.FACEBOOK_VIDEOS.name());
+            videoViewHolder.ChildRecyclerView.setLayoutManager(layoutManager);
+            videoViewHolder.ChildRecyclerView.setAdapter(childItemAdapter);
+            videoViewHolder.ChildRecyclerView.setRecycledViewPool(viewPool);
+            videoViewHolder.moreBtn.setOnClickListener(view -> {
+                Intent intent = new Intent(context, FullVideosActivity.class);
                 intent.putExtra("category", parentItem.getCategory());
                 context.startActivity(intent);
             });
@@ -97,7 +115,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             VideoViewHolder videoViewHolder = (VideoViewHolder) viewHolder;
             HomeItem parentItem = itemList.get(position);
             videoViewHolder.title.setText(parentItem.getTitle());
-            videoViewHolder.moreBtn.setVisibility(View.GONE);
+            videoViewHolder.moreBtn.setVisibility(View.INVISIBLE);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,
                     false);
             layoutManager.setInitialPrefetchItemCount(parentItem.getVideos().size());
@@ -106,7 +124,6 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             videoViewHolder.ChildRecyclerView.setAdapter(childItemAdapter);
             videoViewHolder.ChildRecyclerView.setRecycledViewPool(viewPool);
             videoViewHolder.moreBtn.setOnClickListener(view -> {
-
             });
         }
     }
@@ -135,8 +152,10 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return 3;
         } else if (category.equals(VideoType.IMAGE_AD.name())) {
             return 4;
+        } else if (category.equals(VideoType.FACEBOOK_VIDEOS.name())) {
+            return 5;
         }
-        return 5;
+        return 6;
     }
 
     class VideoViewHolder extends RecyclerView.ViewHolder {

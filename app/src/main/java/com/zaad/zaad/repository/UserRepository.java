@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -40,6 +41,8 @@ public class UserRepository {
 
     MutableLiveData<List<Coupon>> couponsMutableLiveData = new MutableLiveData<>();
 
+    MutableLiveData<List<User>> myReferralsMutableLiveData = new MutableLiveData<>();
+
     MutableLiveData<Boolean> isValidReferralCode = new MutableLiveData<>();
 
     public UserRepository() {
@@ -47,8 +50,7 @@ public class UserRepository {
     }
 
     public void saveUser(final User user) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = firebaseUser.getPhoneNumber().substring(3);
+        String userId = getUserId();
         mFirestore.collection("user").document(userId)
                 .set(user)
                 .addOnCompleteListener(task -> {
@@ -60,17 +62,14 @@ public class UserRepository {
 
     public void updateUser(final Map<String, Object> updateMap) {
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = firebaseUser.getPhoneNumber().substring(3);
+        String userId = getUserId();
         mFirestore.collection("user").document(userId).update(updateMap).addOnSuccessListener(unused -> {
 
         });
     }
 
     public MutableLiveData<User> getUser() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = firebaseUser.getPhoneNumber().substring(3);
-
+        String userId = getUserId();
         mFirestore.collection("user").document(userId).addSnapshotListener((value, error) -> {
             User user = value.toObject(User.class);
             userMutableLiveData.postValue(user);
@@ -80,8 +79,7 @@ public class UserRepository {
     }
 
     public MutableLiveData<List<Withdrawal>> getWithdrawalList() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = firebaseUser.getPhoneNumber().substring(3);
+        String userId = getUserId();
 
         mFirestore.collection("user").document(userId)
                 .collection("transactions").orderBy("requestedDate", Query.Direction.DESCENDING).addSnapshotListener((value, error) -> {
@@ -99,8 +97,7 @@ public class UserRepository {
     }
 
     public void makeWithdrawTransaction(final Withdrawal withdrawal) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = firebaseUser.getPhoneNumber().substring(3);
+        String userId = getUserId();
 
         mFirestore.collection("user").document(userId)
                 .collection("transactions").add(withdrawal);
@@ -133,9 +130,7 @@ public class UserRepository {
     }
 
     public void reduceUserAmount(final int amount) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = firebaseUser.getPhoneNumber().substring(3);
-
+        String userId = getUserId();
         mFirestore.collection("user").document(userId)
                 .update("amount", amount)
                 .addOnSuccessListener(unused -> {
@@ -145,30 +140,52 @@ public class UserRepository {
 
     public MutableLiveData<List<Coupon>> getMyCoupons() {
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = firebaseUser.getPhoneNumber().substring(3);
-
+        String userId = getUserId();
         mFirestore.collection("user").document(userId)
-                .collection("coupons").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .collection("coupons").addSnapshotListener((value, error) -> {
                     List<Coupon> coupons = new ArrayList<>();
-                    for (QueryDocumentSnapshot data : queryDocumentSnapshots) {
+                    for (QueryDocumentSnapshot data : value) {
                         coupons.add(data.toObject(Coupon.class));
                     }
                     couponsMutableLiveData.postValue(coupons);
                 });
-
         return couponsMutableLiveData;
 
     }
 
     public void redeemCoupon(final Coupon coupon) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = firebaseUser.getPhoneNumber().substring(3);
+        String userId = getUserId();
 
         mFirestore.collection("user").document(userId).collection("coupons")
                 .add(coupon).addOnSuccessListener(documentReference -> {
                     Log.i(TAG, "Coupon Added");
                 });
+    }
+
+    public MutableLiveData<List<User>> getMyReferrals(final String referralCode) {
+        String userId = getUserId();
+        mFirestore.collection("user").whereEqualTo("referredByCode", referralCode)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<User> users = new ArrayList<>();
+                    for (QueryDocumentSnapshot data : queryDocumentSnapshots) {
+                        users.add(data.toObject(User.class));
+                    }
+                    myReferralsMutableLiveData.postValue(users);
+                });
+        return myReferralsMutableLiveData;
+    }
+
+    public void incrementAvailableCoupons(final int value) {
+        String userId = getUserId();
+        mFirestore.collection("user").document(userId)
+                .update("availableCoupons", FieldValue.increment(value))
+                .addOnSuccessListener(unused -> {
+                });
+    }
+
+    private String getUserId() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        return firebaseUser.getEmail();
     }
 }

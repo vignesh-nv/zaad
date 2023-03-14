@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 import com.zaad.zaad.database.AppDatabase;
 import com.zaad.zaad.database.DailyTask;
 import com.zaad.zaad.database.DailyTaskDAO;
+import com.zaad.zaad.database.VideoDetails;
+import com.zaad.zaad.database.VideoDetailsDao;
 
 import java.util.List;
 
@@ -14,11 +16,14 @@ public class DatabaseRepository {
     private DailyTaskDAO dailyTaskDAO;
     private LiveData<List<DailyTask>> allTasks;
 
+    private VideoDetailsDao videoDetailsDao;
+
     private LiveData<List<String>> completedTaskIds;
 
     public DatabaseRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         dailyTaskDAO = db.dailyTaskDAO();
+        videoDetailsDao = db.videoDetailsDao();
         allTasks = dailyTaskDAO.getAll();
         completedTaskIds = dailyTaskDAO.getAllCompletedTaskIds();
     }
@@ -38,6 +43,16 @@ public class DatabaseRepository {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             dailyTaskDAO.insertTask(dailyTask);
         });
+    }
+
+    public void updateWatchedSeconds(final VideoDetails videoDetails) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            videoDetailsDao.insertVideoDetails(videoDetails);
+        });
+    }
+
+    public LiveData<Float> getVideoCurrentSecond(final String videoId) {
+        return videoDetailsDao.getWatchedSeconds(videoId);
     }
 }
 

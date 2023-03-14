@@ -18,10 +18,33 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
+            android:name=".activity.PasswordResetActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+        <activity
+            android:name=".activity.EmailSignupAcitivity"
+            android:exported="true"
+            android:theme="@style/FullScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="zaad-cb167.firebaseapp.com"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SignupHomeActivity"
+            android:exported="false"
+            android:theme="@style/FullScreen" />
+        <activity
             android:name=".activity.EditProfileActivity"
+            android:exported="false"
             android:label="Edit Profile"
-            android:parentActivityName=".activity.MyAccountActivity"
-            android:exported="false" />
+            android:parentActivityName=".activity.MyAccountActivity" />
         <activity
             android:name=".activity.YoutubeFullVideosActivity"
             android:exported="false" />
@@ -112,7 +135,8 @@
             android:theme="@style/Theme.Material3.Dark.NoActionBar" />
         <activity
             android:name=".activity.SignupActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/FullScreen" />
         <activity
             android:name=".activity.MainActivity"
             android:exported="true" />

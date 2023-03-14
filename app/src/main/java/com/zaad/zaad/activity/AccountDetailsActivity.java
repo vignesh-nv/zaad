@@ -24,14 +24,12 @@ public class AccountDetailsActivity extends AppCompatActivity {
 
     private User user;
 
-    private String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_details);
 
-        phoneNumber = getIntent().getStringExtra("PHONE_NUMBER");
         user = (User) getIntent().getSerializableExtra("USER");
 
         signupBtn = findViewById(R.id.signupBtn);
@@ -56,6 +54,7 @@ public class AccountDetailsActivity extends AppCompatActivity {
 
         backBtn.setOnClickListener(view -> {
             Intent intent = new Intent(AccountDetailsActivity.this, PersonalDetailsActivity.class);
+            intent.putExtra("USER", user);
             startActivity(intent);
         });
 
@@ -78,6 +77,7 @@ public class AccountDetailsActivity extends AppCompatActivity {
         accountDetails.setAccountHolderName(accountHolderName);
         accountDetails.setIfsc(ifscCode);
         accountDetails.setBankName(bankName);
+        accountDetails.setUpi(upiNumber);
         user.setAccountDetails(accountDetails);
     }
 }

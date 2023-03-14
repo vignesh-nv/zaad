@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,10 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
 
     private User user = new User();
 
+    private Integer availableCoupons;
+
+    AvailableCouponsAdapter availableCouponsAdapter;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -55,12 +60,21 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
 
         mViewModel = new ViewModelProvider(getActivity()).get(RewardsViewModel.class);
 
+        setupAvailableCouponsRecyclerView();
+
+        availableCouponsAdapter = new AvailableCouponsAdapter(user, getActivity(), this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+
+        availableCouponsRecyclerView.setLayoutManager(layoutManager);
+        availableCouponsRecyclerView.setAdapter(availableCouponsAdapter);
+
         mViewModel.getUser().observe(getActivity(), data -> {
-            user = data;
+            user.setAvailableCoupons(data.getAvailableCoupons());
+            Log.i("RewardsFragment", user.toString());
+            availableCouponsAdapter.notifyDataSetChanged();
         });
 
         loadData();
-        setupAvailableCouponsRecyclerView();
         return view;
     }
 
@@ -80,12 +94,6 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
     }
 
     private void setupAvailableCouponsRecyclerView() {
-        AvailableCouponsAdapter availableCouponsAdapter = new AvailableCouponsAdapter(4, getActivity(), this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-
-        availableCouponsRecyclerView.setLayoutManager(layoutManager);
-        availableCouponsRecyclerView.setHasFixedSize(true);
-        availableCouponsRecyclerView.setAdapter(availableCouponsAdapter);
 
     }
 
