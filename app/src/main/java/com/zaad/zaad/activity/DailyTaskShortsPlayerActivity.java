@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.zaad.zaad.R;
@@ -34,9 +35,7 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
     ViewPager2 viewPager;
     private Set<String> completedTaskIds = new HashSet<>();
     DailyTaskShortsVideoAdapter shortsAdapter;
-
     DailyTaskVideo video;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +46,7 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
         dailyTaskViewModel = new ViewModelProvider(this).get(DailyTaskViewModel.class);
         dailyTaskShorts.add(video);
         viewPager = findViewById(R.id.view_pager);
-        shortsAdapter = new DailyTaskShortsVideoAdapter(dailyTaskShorts, this);
-        viewPager.setAdapter(shortsAdapter);
+
         getUncompletedTaskVideos();
     }
 
@@ -70,16 +68,20 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
                 }
             }
             dailyTaskShorts.addAll(completedTasks);
-            shortsAdapter.notifyDataSetChanged();
+//            shortsAdapter.notifyDataSetChanged();
+            shortsAdapter = new DailyTaskShortsVideoAdapter(dailyTaskShorts, this);
+            viewPager.setAdapter(shortsAdapter);
+            Log.i("DailyTask", String.valueOf(dailyTaskShorts.size()));
         });
     }
 
     @Override
     public void onCompleted(DailyTaskVideo video) {
         if (!completedTaskIds.contains(video.getTaskId())) {
+            Log.i("DailyTaskShorts Called", video.getTaskId());
             dailyTaskViewModel.insertCompletedTask(video);
 
-            Toast.makeText(this, "Completed Task" + video.getTaskId(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Completed Task", Toast.LENGTH_SHORT).show();
             incrementViewsCount();
         }
     }

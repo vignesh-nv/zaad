@@ -48,4 +48,10 @@
         tools:layout="My Level"
         android:label="@string/title_my_level"/>
 
+    <activity
+        android:id="@+id/report_activity"
+        android:name="com.zaad.zaad.activity.ReportActivity"
+        tools:layout="@layout/activity_report"
+        android:label="@string/title_report"/>
+
 </navigation>

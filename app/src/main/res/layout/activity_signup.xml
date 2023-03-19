@@ -1,71 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SignupActivity"
-    android:orientation="vertical"
+    android:background="@color/black"
     android:gravity="center_horizontal"
-    android:background="@color/black">
+    android:orientation="vertical"
+    tools:context=".activity.SignupActivity">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="350dp"
-        android:src="@drawable/app_logo"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Signup"
-        android:textSize="26sp"
-        android:fontFamily="@font/montserrat"
-        android:textColor="@color/white"/>
-
-    <com.google.android.material.textfield.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        app:placeholderText="john@email.com">
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/user_email_edit_text"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:src="@drawable/app_logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:text="Signup"
+            android:textColor="@color/white"
+            android:textSize="26sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="Email"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="30dp"
+            app:placeholderText="john@email.com">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        app:passwordToggleEnabled="true"
-        app:placeholderText="john@123">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_email_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/user_password_edit_text"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:hint="Password"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="30dp"
+            app:passwordToggleEnabled="true"
+            app:placeholderText="john@123">
 
-    <Button
-        android:id="@+id/signupBtn"
-        style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="@color/white"
-        android:text="Signup"
-        android:textColor="@android:color/holo_red_dark"
-        android:textSize="18sp"
-        android:layout_marginBottom="30dp"/>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_password_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Create Password"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Note: Verification mail will be sent to your email"
-        android:textColor="@color/light_white"/>
-</LinearLayout>
+        <Button
+            android:id="@+id/signupBtn"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="30dp"
+            android:backgroundTint="@color/white"
+            android:text="Signup"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Note: Verification mail will be sent to your email"
+            android:textColor="@color/light_white" />
+    </LinearLayout>
+</ScrollView>

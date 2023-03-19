@@ -1,11 +1,14 @@
 package com.zaad.zaad.ui.home;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,12 +19,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.zaad.zaad.R;
 import com.zaad.zaad.VideoType;
 import com.zaad.zaad.adapter.HomeAdBannerVideosAdapter;
 import com.zaad.zaad.adapter.HomeAdapter;
 import com.zaad.zaad.databinding.FragmentHomeBinding;
+import com.zaad.zaad.listeners.AdCompleteListener;
 import com.zaad.zaad.model.AdBanner;
 import com.zaad.zaad.model.HomeItem;
 import com.zaad.zaad.model.Video;
@@ -34,13 +39,18 @@ import org.checkerframework.checker.units.qual.A;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment  implements AdCompleteListener {
 
     private FragmentHomeBinding binding;
-    private RecyclerView recyclerView, adRecyclerView;
+    private RecyclerView recyclerView;
     private String RV_SCROLL_POSITION = "RV_SCROLL_POSITION";
     LinearLayoutManager layoutManager;
     Parcelable listState;
+
+    private List<AdBanner> videoAdBanners = new ArrayList<>();
+    HomeAdBannerVideosAdapter adBannerVideosAdapter;
+    LinearLayoutManager adLayoutManager;
+    ViewPager2 adViewPager;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -50,25 +60,28 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         recyclerView = binding.recyclerView;
-        adRecyclerView = binding.adSliderRecyclerview;
+//        adRecyclerView = binding.adSliderRecyclerview;
 
         layoutManager = new LinearLayoutManager(getContext());
-        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        adLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        HomeAdBannerVideosAdapter adBannerVideosAdapter = new HomeAdBannerVideosAdapter(generateAdBanners(), getContext());
-        adRecyclerView.setAdapter(adBannerVideosAdapter);
-        adRecyclerView.setHasFixedSize(true);
-        adRecyclerView.setLayoutManager(horizontalLayoutManager);
+        adBannerVideosAdapter = new HomeAdBannerVideosAdapter(videoAdBanners, getContext(), this);
+        adViewPager = binding.adSliderVp;
+        adViewPager.setAdapter(adBannerVideosAdapter);
+//        adRecyclerView.setAdapter(adBannerVideosAdapter);
+//        adRecyclerView.setHasFixedSize(true);
+//        adRecyclerView.setLayoutManager(adLayoutManager);
+
 
         final int radius = getResources().getDimensionPixelSize(R.dimen.radius);
         final int dotsHeight = getResources().getDimensionPixelSize(R.dimen.dots_height);
         final int color = ContextCompat.getColor(getContext(), R.color.white);
 //        adRecyclerView.addItemDecoration(new DotsIndicatorDecoration(radius, radius * 4, dotsHeight, color, color));
-        adRecyclerView.addItemDecoration(new CirclePagerIndicatorDecorator());
+//        adRecyclerView.addItemDecoration(new CirclePagerIndicatorDecorator());
 //        adRecyclerView.addItemDecoration(new LinePagerIndicationDecoration());
 
-        SnapHelper snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(adRecyclerView);
+//        SnapHelper snapHelper = new LinearSnapHelper();
+//        snapHelper.attachToRecyclerView(adRecyclerView);
 
         HomeAdapter parentItemAdapter = new HomeAdapter(generateList(), getContext());
 
@@ -80,13 +93,17 @@ public class HomeFragment extends Fragment {
             Log.i("", "onCreateView: " + categoryList);
         });
 
+        homeViewModel.getVideoAdBanner().observe(getActivity(), data -> {
+            videoAdBanners.clear();
+            videoAdBanners.addAll(data);
+            adBannerVideosAdapter.notifyDataSetChanged();
+        });
         return root;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(RV_SCROLL_POSITION, layoutManager.onSaveInstanceState());
     }
 
     @Override
@@ -247,5 +264,18 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onComplete(int position) {
+        int newPosition = (position + 1) % adBannerVideosAdapter.getItemCount();
+        Log.i("HomeFragment", "Position" + newPosition);
+//        adLayoutManager.smoothScrollToPosition(adRecyclerView, null, newPosition);
+        adViewPager.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                adViewPager.setCurrentItem(newPosition, true);
+            }
+        }, 200);
     }
 }

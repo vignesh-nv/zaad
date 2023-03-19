@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
@@ -59,7 +61,6 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnS
 
         initYouTubePlayerView();
 
-
         youtubeSuggestionVideosAdapter = new YoutubeSuggestionVideosAdapter(suggestionVideos, this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
@@ -95,6 +96,7 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnS
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        Toast.makeText(this, "Configuration change", Toast.LENGTH_SHORT).show();
 
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -102,6 +104,8 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnS
         }
         else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
             youTubePlayerView.exitFullScreen();
+            youtubeSuggestionVideosAdapter.notifyDataSetChanged();
+            Log.i("YoutubeVideoPlayer", String.valueOf(suggestionVideos.size()));
         }
     }
 
@@ -110,6 +114,7 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnS
             suggestionVideos.clear();
             suggestionVideos.addAll(data);
             youtubeSuggestionVideosAdapter.notifyDataSetChanged();
+            Log.i("YoutubeVideoPlayer", "Loading videos");
         });
     }
 
@@ -119,5 +124,11 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnS
         intent.putExtra("VIDEO_ID", video.getVideoUrl());
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("YoutubeVideoPlayer", "OnResumeCalled");
     }
 }

@@ -2,7 +2,6 @@ package com.zaad.zaad.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,7 +49,6 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         int type = viewHolder.getItemViewType();
 
-        Log.i("HomeAdapter", "onBindViewHolder" + type);
         if (type == 0 || type == 1 || type == 2) {
             VideoViewHolder videoViewHolder = (VideoViewHolder) viewHolder;
             HomeItem parentItem = itemList.get(position);
@@ -63,7 +60,6 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (type == 0) {
                 childItemAdapter = new HomeItemAdapter(parentItem.getVideos(), context, VideoType.YOUTUBE_VIDEO.name());
             } else if (type == 1) {
-                Log.i("HomeAdapter", String.valueOf(type));
                 videoViewHolder.moreBtn.setVisibility(View.INVISIBLE);
                 childItemAdapter = new HomeItemAdapter(parentItem.getVideos(), context, VideoType.YOUTUBE_SHORTS.name());
             } else {
@@ -136,11 +132,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         HomeItem parentItem = itemList.get(position);
-//        if (parentItem.getCategory().equals("Video")) {
-//            return 0;
-//        } else if (parentItem.getCategory().equals("Shorts")) {
-//            return 1;
-//        }
+
         String category = parentItem.getCategory();
         if (category.equals(VideoType.YOUTUBE_VIDEO.name())) {
             return 0;

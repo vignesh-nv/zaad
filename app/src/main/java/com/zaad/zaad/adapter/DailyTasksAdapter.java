@@ -64,8 +64,13 @@ public class DailyTasksAdapter extends RecyclerView.Adapter<DailyTasksAdapter.Da
                 .build();
         imageLoader.enqueue(request);
 
+        if (video.getCouponId()!=null && !video.getCouponId().equals("")) {
+            viewHolder.specialCouponTxt.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.specialCouponTxt.setVisibility(View.INVISIBLE);
+        }
+
         if (completedTasks.contains(video.getTaskId())) {
-            Log.i("DailyTaskAdapter", "ID: " + video.getTaskId());
             viewHolder.completedTxt.setVisibility(View.VISIBLE);
         } else {
             viewHolder.completedTxt.setVisibility(View.GONE);
@@ -85,11 +90,12 @@ public class DailyTasksAdapter extends RecyclerView.Adapter<DailyTasksAdapter.Da
     class DailyTasksViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
-        private TextView completedTxt;
+        private TextView completedTxt, specialCouponTxt;
         DailyTasksViewHolder(final View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.daily_task_image);
             completedTxt = itemView.findViewById(R.id.completed_txt);
+            specialCouponTxt = itemView.findViewById(R.id.special_coupon_txt);
         }
     }
 }

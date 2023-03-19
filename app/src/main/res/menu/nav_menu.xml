@@ -19,4 +19,11 @@
         android:icon="@drawable/ic_my_level"
         android:checked="true"
         android:title="@string/title_my_level" />
+
+    <item
+        android:id="@+id/report_activity"
+        android:icon="@drawable/ic_report"
+        android:checked="true"
+        android:title="@string/title_report" />
+
 </menu>

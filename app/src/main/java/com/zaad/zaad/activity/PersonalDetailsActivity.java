@@ -8,9 +8,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,15 +26,19 @@ import com.zaad.zaad.R;
 import com.zaad.zaad.model.User;
 import com.zaad.zaad.viewmodel.LoginRegisterViewModel;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class PersonalDetailsActivity extends AppCompatActivity {
 
     TextView phoneNumberTxt, addressTxt, pincodeTxt, nameTxt, dateTxt;
     Button signupBtn;
-    private String phoneNumber, gender;
+    private String phoneNumber, gender, district, language;
 
     private Date dob;
     RadioGroup genderRG;
@@ -63,6 +71,8 @@ public class PersonalDetailsActivity extends AppCompatActivity {
             }
         });
 
+        setupDistrictSpinner();
+        setupLanguageDropDown();
         displayUserData();
         genderRG.setOnCheckedChangeListener((radioGroup, i) -> {
             if (i == R.id.male_rb) {
@@ -87,13 +97,53 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void setupDistrictSpinner() {
+        List<String> optionsList = new ArrayList<>();
+        optionsList.add("Chennai");
+        optionsList.add("Villupuram");
+        optionsList.add("Pondy");
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(
+                        this,
+                        R.layout.dropdown_menu_district_item,
+                        optionsList);
+
+        AutoCompleteTextView editTextFilledExposedDropdown =
+                findViewById(R.id.filled_exposed_dropdown);
+        editTextFilledExposedDropdown.setAdapter(adapter);
+        editTextFilledExposedDropdown.setOnItemClickListener((adapterView, view, i, l) -> {
+            String selectedOption = adapterView.getItemAtPosition(i).toString();
+            district = selectedOption;
+        });
+    }
+
+    private void setupLanguageDropDown() {
+        List<String> optionsList = new ArrayList<>();
+        optionsList.add("Tamil");
+        optionsList.add("Telugu");
+        optionsList.add("Malayalam");
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(
+                        this,
+                        R.layout.dropdown_menu_district_item,
+                        optionsList);
+
+        AutoCompleteTextView editTextFilledExposedDropdown =
+                findViewById(R.id.language_dropdown);
+        editTextFilledExposedDropdown.setAdapter(adapter);
+        editTextFilledExposedDropdown.setOnItemClickListener((adapterView, view, i, l) -> {
+            String selectedOption = adapterView.getItemAtPosition(i).toString();
+            language = selectedOption;
+        });
+
+    }
+
     private void displayUserData() {
         if (user!= null) {
             nameTxt.setText(user.getName());
             addressTxt.setText(user.getAddress());
             pincodeTxt.setText(user.getPincode());
             phoneNumberTxt.setText(user.getPhoneNumber());
-            Toast.makeText(this, "Gender" + user.getGender(), Toast.LENGTH_SHORT).show();
             if (user.getGender()!= null && user.getGender().equals("Male")) {
                 maleRB.setChecked(true);
             } else if (user.getGender() != null && user.getGender().equals("Female")) {
@@ -117,6 +167,8 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         user.setName(name);
         user.setGender(gender);
         user.setDob(dob);
+        user.setDistrict(district);
+        user.setLanguage(language);
         user.setEmail(firebaseUser.getEmail());
         return user;
     }
@@ -151,6 +203,16 @@ public class PersonalDetailsActivity extends AppCompatActivity {
 
         if (isEmpty(pincodeTxt.getText().toString())) {
             pincodeTxt.setError("Pincode is empty");
+            return false;
+        }
+
+        if (isEmpty(district)) {
+            Toast.makeText(this, "Select district", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (isEmpty(language)) {
+            Toast.makeText(this, "Select Language", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

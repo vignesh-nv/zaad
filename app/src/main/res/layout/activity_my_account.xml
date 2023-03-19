@@ -21,18 +21,17 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/avatar"
-                app:shapeAppearance="@style/Circular"
-                app:shapeAppearanceOverlay="@style/Circular" />
+<!--            <com.google.android.material.imageview.ShapeableImageView-->
+<!--                android:layout_width="130dp"-->
+<!--                android:layout_height="130dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/avatar"-->
+<!--                app:shapeAppearance="@style/Circular"-->
+<!--                app:shapeAppearanceOverlay="@style/Circular" />-->
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="30dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -192,17 +191,17 @@
                     android:id="@+id/bankNameTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_bold"
+                    android:fontFamily="@font/montserrat_medium"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="24sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/accountHolderNameTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/montserrat_bold"
+                    android:fontFamily="@font/montserrat_medium"
                     android:text=""
                     android:textColor="@color/white"
                     android:textSize="16sp" />
@@ -212,7 +211,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/montserrat_bold"
+                    android:fontFamily="@font/montserrat_medium"
                     android:text=""
                     android:textColor="@color/white"
                     android:textSize="16sp" />
@@ -249,10 +248,10 @@
                     android:id="@+id/upiTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_bold"
+                    android:fontFamily="@font/montserrat_medium"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="24sp" />
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
@@ -288,6 +287,16 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:fontFamily="@font/montserrat_medium"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/pincodeTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/montserrat"
                     android:text=""
                     android:textColor="@color/white"
                     android:textSize="18sp" />

@@ -75,7 +75,7 @@
         android:textColor="@color/twitter_blue"
         android:background="@color/white"
         android:backgroundTint="@color/white"
-        android:text="Withdraw"/>
+        android:text="Withdraw request"/>
 
     <TextView
         android:layout_width="wrap_content"

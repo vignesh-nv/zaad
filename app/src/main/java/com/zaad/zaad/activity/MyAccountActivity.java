@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -24,7 +22,7 @@ public class MyAccountActivity extends AppCompatActivity {
 
     private User user;
     TextView userNameTxt, phoneNumberTxt, bankNameTxt, customerNameTxt, accountNumberTxt;
-    TextView ifscCodeTxt, upiTxt, addressTxt, joinedDateTxt, expiryDateTxt;
+    TextView ifscCodeTxt, upiTxt, addressTxt, joinedDateTxt, expiryDateTxt, pincodeTxt;
     ImageButton editProfileBtn;
     Button logoutBtn;
 
@@ -44,13 +42,13 @@ public class MyAccountActivity extends AppCompatActivity {
         logoutBtn = findViewById(R.id.logoutBtn);
         joinedDateTxt = findViewById(R.id.joinedDateTxt);
         expiryDateTxt = findViewById(R.id.expiryDateTxt);
+        pincodeTxt = findViewById(R.id.pincodeTxt);
 
         MyAccountViewModel accountViewModel =
                 new ViewModelProvider(this).get(MyAccountViewModel.class);
         accountViewModel.getUser().observe(this, data -> {
             user = data;
             updateUI();
-            Log.i("MyAccountActivity", "userData: " + user);
         });
 
         editProfileBtn.setOnClickListener(view -> {
@@ -75,6 +73,7 @@ public class MyAccountActivity extends AppCompatActivity {
             upiTxt.setText(user.getAccountDetails().getUpi());
         }
         addressTxt.setText(user.getAddress());
+        pincodeTxt.setText(user.getPincode());
         phoneNumberTxt.setText(user.getPhoneNumber());
         joinedDateTxt.setText(parseDate(user.getJoinedDate()));
         expiryDateTxt.setText(parseDate(user.getExpiryDate()));

@@ -82,7 +82,7 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
     }
 
     private void checkIfNotUsedMoreThanAllowed() {
-        firestore.collection("referrals").whereEqualTo("referredByCode", referralCode)
+        firestore.collection("user").whereEqualTo("referredByCode", referralCode)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.getDocuments().size() >= 2) {
@@ -164,6 +164,7 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
     }
 
     private void saveUserDetails() {
+        long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
         user.setReferralCode(myReferralCode);
         user.setReferredByCode(referralCode);
         user.setJoinedDate(new Date());
@@ -171,6 +172,7 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
         user.setLevel("A");
         Date expiryDate = new Date();
         expiryDate.setYear(expiryDate.getYear() + 1);
+        expiryDate = new Date(expiryDate.getTime() - MILLIS_IN_A_DAY);
         user.setExpiryDate(expiryDate);
         loginRegisterViewModel.saveUser(user);
     }

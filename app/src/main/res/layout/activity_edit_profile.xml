@@ -118,7 +118,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Account Holder Namer"
+            android:hint="Account Holder Name"
             android:textColorHint="@color/light_white"
             app:hintTextColor="@color/light_white">
 

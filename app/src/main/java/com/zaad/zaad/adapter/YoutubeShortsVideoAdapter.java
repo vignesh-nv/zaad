@@ -28,7 +28,6 @@ public class YoutubeShortsVideoAdapter extends RecyclerView.Adapter<YoutubeShort
 
     public YoutubeShortsVideoAdapter(final List<Video> videoList) {
         this.videoList = videoList;
-
     }
 
     @NonNull

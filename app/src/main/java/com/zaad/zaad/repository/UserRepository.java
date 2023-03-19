@@ -81,26 +81,21 @@ public class UserRepository {
     public MutableLiveData<List<Withdrawal>> getWithdrawalList() {
         String userId = getUserId();
 
-        mFirestore.collection("user").document(userId)
-                .collection("transactions").orderBy("requestedDate", Query.Direction.DESCENDING).addSnapshotListener((value, error) -> {
+        mFirestore.collection("withdrawal").whereEqualTo("userId", userId)
+                .addSnapshotListener((value, error) -> {
                     List<Withdrawal> withdrawalList = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : value) {
-                        if (doc != null) {
-                            withdrawalList.add(doc.toObject(Withdrawal.class));
-                            Log.i("FirestoreRepository", "Data -> " + doc.getData());
-                        }
+                    for (QueryDocumentSnapshot queryDocumentSnapshot: value) {
+                        withdrawalList.add(queryDocumentSnapshot.toObject(Withdrawal.class));
                     }
                     withdrawalMutableLiveData.postValue(withdrawalList);
                 });
-
         return withdrawalMutableLiveData;
     }
 
     public void makeWithdrawTransaction(final Withdrawal withdrawal) {
         String userId = getUserId();
-
-        mFirestore.collection("user").document(userId)
-                .collection("transactions").add(withdrawal);
+        withdrawal.setUserId(userId);
+        mFirestore.collection("withdrawal").add(withdrawal);
     }
 
 

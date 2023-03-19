@@ -16,16 +16,10 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/appTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="Khanzo"
-            android:textColor="@color/white"
-            android:textSize="50sp" />
+       <ImageView
+           android:layout_width="300dp"
+           android:layout_height="wrap_content"
+           android:src="@drawable/logo_toolbar"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,7 +32,6 @@
             android:id="@+id/pageTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/appTitle"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat"

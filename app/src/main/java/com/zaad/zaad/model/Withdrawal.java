@@ -11,6 +11,8 @@ public class Withdrawal {
 
     private String status;
 
+    private String userId;
+
     public Withdrawal() {
     }
 
@@ -44,5 +46,13 @@ public class Withdrawal {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

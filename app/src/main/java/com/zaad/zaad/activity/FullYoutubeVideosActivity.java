@@ -54,7 +54,9 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
 
         category = getIntent().getStringExtra("category");
         Log.i("FullVideosActivity", "Category " + category);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar()!=null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
 //        categoryRecyclerview = findViewById(R.id.youtube_video_category_recyclerview);
         recyclerView = findViewById(R.id.full_youtube_videos_recyclerview);

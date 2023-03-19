@@ -1,5 +1,7 @@
 package com.zaad.zaad.model;
 
+import androidx.annotation.NonNull;
+
 public class Video {
     private String title;
     private String imageUrl;
@@ -36,5 +38,15 @@ public class Video {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "Video{" +
+                "title='" + title + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
+                ", category='" + category + '\'' +
+                '}';
     }
 }

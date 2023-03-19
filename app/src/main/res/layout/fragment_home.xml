@@ -14,12 +14,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ad_slider_recyclerview"
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/ad_slider_recyclerview"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="220dp"-->
+<!--            tools:listitem="@layout/home_ad_banner" />-->
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/ad_slider_vp"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_margin="10dp"
-            tools:listitem="@layout/home_ad_banner" />
+            android:layout_height="230dp"
+            android:orientation="horizontal"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

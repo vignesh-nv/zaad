@@ -14,7 +14,8 @@
         <ImageView
             android:id="@+id/short_imageview"
             android:layout_width="160dp"
-            android:layout_height="190dp"
+            android:layout_height="200dp"
             android:scaleType="fitXY" />
     </RelativeLayout>
+
 </com.google.android.material.card.MaterialCardView>

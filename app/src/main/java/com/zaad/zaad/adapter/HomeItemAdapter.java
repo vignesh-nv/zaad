@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.zaad.zaad.R;
+import com.zaad.zaad.activity.AdDetailActivity;
 import com.zaad.zaad.activity.ShortsActivity;
 import com.zaad.zaad.VideoType;
 import com.zaad.zaad.activity.YoutubeShortsActivity;
@@ -146,6 +147,12 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Video childItem = videoList.get(position);
 
             ImageLoader imageLoader = Coil.imageLoader(context);
+
+            childViewHolder.imageView.setOnClickListener(view -> {
+                Intent intent = new Intent(context, AdDetailActivity.class);
+                intent.putExtra("IMAGE_URL", childItem.getImageUrl());
+                context.startActivity(intent);
+            });
 
             ImageRequest request = new ImageRequest.Builder(context)
                     .data(childItem.getImageUrl())

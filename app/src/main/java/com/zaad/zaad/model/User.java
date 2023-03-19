@@ -31,6 +31,10 @@ public class User implements Serializable {
 
     private boolean paymentCompleted;
 
+    private String district;
+
+    private String language;
+
     public User() {
     }
 
@@ -160,6 +164,22 @@ public class User implements Serializable {
 
     public void setPaymentCompleted(boolean paymentCompleted) {
         this.paymentCompleted = paymentCompleted;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     @Override

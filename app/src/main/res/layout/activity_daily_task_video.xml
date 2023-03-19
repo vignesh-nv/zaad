@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,6 +17,7 @@
         app:videoId="S0Q4gqBUs7c" />
 
     <TextView
+        android:id="@+id/next_videos_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Next Videos"
@@ -24,6 +25,7 @@
         android:textColor="@color/white"
         android:textSize="18sp"
         android:layout_marginTop="30dp"
+        android:layout_below="@id/youtube_player_view"
         android:layout_marginStart="20dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -31,5 +33,6 @@
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         tools:listitem="@layout/home_child_item"
+        android:layout_below="@id/next_videos_title"
         android:layout_height="wrap_content"/>
-</LinearLayout>
+</RelativeLayout>

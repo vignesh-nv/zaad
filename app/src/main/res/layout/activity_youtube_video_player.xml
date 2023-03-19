@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     android:orientation="vertical"
-    android:background="@color/light_black"
     tools:context=".activity.YoutubeVideoPlayerActivity">
 
     <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -17,20 +17,23 @@
         app:videoId="S0Q4gqBUs7c" />
 
     <TextView
+        android:id="@+id/sugesstion_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Suggestion Videos"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:fontFamily="@font/montserrat"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"/>
+        android:fontFamily="@font/roboto"
+        android:text="Suggestion Videos"
+        android:layout_below="@id/youtube_player_view"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/suggestion_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/youtube_suggestion_video_item"
-            android:layout_marginTop="20dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/suggestion_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/sugesstion_title"
+        tools:listitem="@layout/youtube_suggestion_video_item" />
 
-</LinearLayout>
+</RelativeLayout>

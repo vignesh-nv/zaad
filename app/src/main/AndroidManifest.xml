@@ -18,6 +18,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
+            android:name=".activity.ReportActivity"
+            android:label="@string/title_report"
+            android:parentActivityName=".activity.HomeActivity"
+            android:theme="@style/Theme.Material3.Dark"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AdDetailActivity"
+            android:exported="false"
+            android:theme="@style/FullScreen" />
+        <activity
             android:name=".activity.PasswordResetActivity"
             android:exported="false"
             android:theme="@style/Theme.Material3.Dark.NoActionBar" />
@@ -108,6 +118,7 @@
             android:theme="@style/FullScreen" />
         <activity
             android:name=".activity.YoutubeVideoPlayerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false" />
         <activity
             android:name=".activity.ShortsActivity"
@@ -144,6 +155,21 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <service
+            android:name=".service.NotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/new_app_logo" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/twitter_blue" />
     </application>
 
 </manifest>

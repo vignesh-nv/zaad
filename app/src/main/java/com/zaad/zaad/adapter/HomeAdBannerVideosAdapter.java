@@ -1,25 +1,22 @@
 package com.zaad.zaad.adapter;
 
-import static android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT;
 import static android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING;
 
 import android.content.Context;
-import android.content.Intent;
-import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zaad.zaad.R;
-import com.zaad.zaad.activity.ChildVideoPlayerActivity;
+import com.zaad.zaad.listeners.AdCompleteListener;
 import com.zaad.zaad.model.AdBanner;
-import com.zaad.zaad.model.Video;
 
 import java.util.List;
 
@@ -32,9 +29,14 @@ public class HomeAdBannerVideosAdapter extends RecyclerView.Adapter<HomeAdBanner
     private List<AdBanner> itemList;
     private Context context;
 
-    public HomeAdBannerVideosAdapter(List<AdBanner> itemList, Context context) {
+    private AdCompleteListener listener;
+
+    private int mCurrentPosition = -1;
+
+    public HomeAdBannerVideosAdapter(List<AdBanner> itemList, Context context, AdCompleteListener listener) {
         this.itemList = itemList;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -61,17 +63,25 @@ public class HomeAdBannerVideosAdapter extends RecyclerView.Adapter<HomeAdBanner
                 .target(viewHolder.imageView)
                 .build();
         imageLoader.enqueue(request);
+        viewHolder.currentAdNumber.setText(String.valueOf(position + 1));
+        viewHolder.totalAdCount.setText("/" + itemList.size());
+
+        viewHolder.title.setText(adBanner.getTitle());
 
         viewHolder.videoView.setVideoPath(adBanner.getVideoUrl());
-        viewHolder.videoView.requestFocus();
         viewHolder.videoView.start();
+
+        viewHolder.videoView.setOnCompletionListener(mediaPlayer -> {
+            listener.onComplete(position);
+        });
 
         viewHolder.videoView.setOnPreparedListener(mediaPlayer -> {
             viewHolder.videoView.seekTo(0);
-            mediaPlayer.setLooping(true);
+            mediaPlayer.setLooping(false);
             mediaPlayer.setVolume(0, 0);
             mediaPlayer.setVideoScalingMode(VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
             mediaPlayer.start();
+            viewHolder.videoView.start();
             viewHolder.imageView.setVisibility(View.GONE);
 
             float videoRatio = mediaPlayer.getVideoWidth() / (float) mediaPlayer.getVideoHeight();
@@ -82,6 +92,10 @@ public class HomeAdBannerVideosAdapter extends RecyclerView.Adapter<HomeAdBanner
             } else {
                 viewHolder.videoView.setScaleY(1f / scaleX);
             }
+
+            mediaPlayer.setOnCompletionListener(mediaPlayer1 -> {
+                listener.onComplete(position);
+            });
         });
     }
 
@@ -90,15 +104,19 @@ public class HomeAdBannerVideosAdapter extends RecyclerView.Adapter<HomeAdBanner
         return itemList.size();
     }
 
-    class VideoViewHolder extends RecyclerView.ViewHolder {
+    public class VideoViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
         private VideoView videoView;
+        private TextView totalAdCount, currentAdNumber, title;
 
         VideoViewHolder(final View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.ad_image);
             videoView = itemView.findViewById(R.id.ad_video);
+            totalAdCount = itemView.findViewById(R.id.total_ad_count);
+            currentAdNumber = itemView.findViewById(R.id.current_ad_number);
+            title = itemView.findViewById(R.id.ad_title);
         }
     }
 }

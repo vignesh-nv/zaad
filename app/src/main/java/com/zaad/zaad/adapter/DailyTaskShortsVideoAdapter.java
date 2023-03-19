@@ -1,5 +1,6 @@
 package com.zaad.zaad.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,11 +81,11 @@ public class DailyTaskShortsVideoAdapter extends RecyclerView.Adapter<DailyTaskS
                 public void onReady(@NonNull YouTubePlayer youTubePlayer) {
                     youTubePlayer.loadVideo(video.getVideoUrl(), 0);
                 }
-
                 @Override
                 public void onStateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerState state) {
                     super.onStateChange(youTubePlayer, state);
                     if (state == PlayerConstants.PlayerState.ENDED) {
+                        Log.i("DailyShortsAdapter", "Ended");
                         completedListener.onCompleted(video);
                     }
                 }

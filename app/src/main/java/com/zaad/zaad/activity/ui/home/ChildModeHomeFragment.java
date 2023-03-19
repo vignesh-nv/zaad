@@ -10,10 +10,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.zaad.zaad.R;
 import com.zaad.zaad.VideoType;
 import com.zaad.zaad.adapter.ChildVideosAdapter;
@@ -34,10 +39,16 @@ public class ChildModeHomeFragment extends Fragment {
         return new ChildModeHomeFragment();
     }
 
+    private List<HomeItem> kidsMenu = new ArrayList<>();
+
+    private FirebaseFirestore firestore;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(ChildModeHomeViewModel.class);
+
+        firestore = FirebaseFirestore.getInstance();
 
         View view = inflater.inflate(R.layout.fragment_child_mode_home, container, false);
 
@@ -45,11 +56,39 @@ public class ChildModeHomeFragment extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
-        ChildVideosAdapter childVideosAdapter = new ChildVideosAdapter(generateVideos(), getContext());
+        ChildVideosAdapter childVideosAdapter = new ChildVideosAdapter(kidsMenu, getContext());
 
         recyclerView.setAdapter(childVideosAdapter);
         recyclerView.setLayoutManager(layoutManager);
 
+        mViewModel.getKidsVideosForHome().observe(getViewLifecycleOwner(), data -> {
+            Log.i("ChildModeFragment", data.toString());
+            Log.i("ChildModeFragment", String.valueOf(data.size()));
+        });
+
+        mViewModel.getKidVideosMenu().observe(getViewLifecycleOwner(), data -> {
+//            kidsMenu.clear();
+//            kidsMenu.addAll(data);
+            for (HomeItem item : data) {
+                firestore.collection("kidsVideos").whereEqualTo("category", item.getCategory())
+                        .limit(10)
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                            List<Video> videos = new ArrayList<>();
+                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                videos.add(snapshot.toObject(Video.class));
+                            }
+                            item.setVideos(videos);
+                            kidsMenu.add(item);
+                            childVideosAdapter.notifyDataSetChanged();
+                        });
+//                mViewModel.getVideosByCategory(item.getCategory()).observe(getViewLifecycleOwner(), videos -> {
+//                    item.setVideos(videos);
+//                    Log.i(item.getCategory(), videos.toString());
+//                    kidsMenu.add(item);
+//                });
+            }
+        });
 //        mViewModel.getChildVideos().observe(getViewLifecycleOwner(), data -> {
 //            childVideosList.clear();
 //            childVideosList.addAll(data);

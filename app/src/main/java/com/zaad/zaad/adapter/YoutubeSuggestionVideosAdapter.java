@@ -51,7 +51,7 @@ public class YoutubeSuggestionVideosAdapter extends RecyclerView.Adapter<Youtube
         Video parentItem = itemList.get(position);
         ImageLoader imageLoader = Coil.imageLoader(context);
 
-        viewHolder.imageView.setOnClickListener(view -> Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show());
+//        viewHolder.imageView.setOnClickListener(view -> Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show());
 
         ImageRequest request = new ImageRequest.Builder(context)
                 .data(parentItem.getImageUrl())

@@ -13,6 +13,8 @@ public class DailyTaskVideo implements Serializable {
 
     private Date expiryDate;
 
+    private String couponId;
+
     public String getTitle() {
         return title;
     }
@@ -59,5 +61,13 @@ public class DailyTaskVideo implements Serializable {
 
     public void setTaskId(String taskId) {
         this.taskId = taskId;
+    }
+
+    public String getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(String couponId) {
+        this.couponId = couponId;
     }
 }

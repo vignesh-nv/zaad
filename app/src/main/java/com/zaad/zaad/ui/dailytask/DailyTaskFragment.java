@@ -1,6 +1,6 @@
 package com.zaad.zaad.ui.dailytask;
 
-import static com.zaad.zaad.constants.AppConstant.CHILD_MODE;
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_END_DATE_TIME;
 import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_SHORTS_COMPLETED_COUNT;
 import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
@@ -20,14 +20,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.zaad.zaad.adapter.ChildVideosAdapter;
 import com.zaad.zaad.adapter.DailyTaskShortsAdapter;
 import com.zaad.zaad.adapter.DailyTasksAdapter;
 import com.zaad.zaad.databinding.FragmentDailyTaskBinding;
 import com.zaad.zaad.model.DailyTaskVideo;
-import com.zaad.zaad.model.Video;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -67,7 +68,6 @@ public class DailyTaskFragment extends Fragment {
         shortsRecyclerView.setLayoutManager(shortsLayoutManager);
 
         dailyTaskViewModel.getCompletedTasksIds().observe(getViewLifecycleOwner(), data -> {
-            Log.i("DailyTaskFragment", data.toString());
             completedTaskIds.addAll(data);
             dailyTasksAdapter.notifyDataSetChanged();
             shortsAdapter.notifyDataSetChanged();
@@ -106,9 +106,36 @@ public class DailyTaskFragment extends Fragment {
 
     private void loadWatchedCount() {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        updateWatchedCountOnDayEnd();
         int videoWatched = sharedPreferences.getInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
         int shortsWatched = sharedPreferences.getInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
         videosWatchedCount.setText(String.valueOf(videoWatched));
         shortsWatchedCount.setText(String.valueOf(shortsWatched));
+    }
+
+    private void updateWatchedCountOnDayEnd() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        String endDate = sharedPreferences.getString(DAILY_TASK_END_DATE_TIME, "");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy h:mm:ss a");
+        Date savedDate = null;
+        try {
+            savedDate = dateFormat.parse(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Date currentDate = new Date();
+
+        if (savedDate != null && savedDate.before(currentDate)) {
+            // The saved date is before the current date
+            Log.i("", "");
+        }
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        Date date = new Date();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        String dateString = dateFormat.format(date);
+//        editor.putString("myDate", dateString);
+//        editor.apply();
     }
 }
