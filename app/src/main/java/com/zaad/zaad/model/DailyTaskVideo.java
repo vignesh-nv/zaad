@@ -13,6 +13,8 @@ public class DailyTaskVideo implements Serializable {
 
     private Date expiryDate;
 
+    private Date startDate;
+
     private String couponId;
 
     public String getTitle() {
@@ -69,5 +71,13 @@ public class DailyTaskVideo implements Serializable {
 
     public void setCouponId(String couponId) {
         this.couponId = couponId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 }

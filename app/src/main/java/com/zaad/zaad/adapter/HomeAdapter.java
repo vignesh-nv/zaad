@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.TintableCheckedTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,6 +73,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             videoViewHolder.moreBtn.setOnClickListener(view -> {
                 Intent intent = new Intent(context, FullYoutubeVideosActivity.class);
                 intent.putExtra("category", parentItem.getCategory());
+                intent.putExtra("TITLE", parentItem.getTitle());
+                intent.putExtra("SHOW_CATEGORY", parentItem.isShowVideoCategory());
+                intent.putExtra("VIDEO_CATEGORY", parentItem.getVideoCategory());
                 context.startActivity(intent);
             });
         } else if (type == 5) {
@@ -89,6 +93,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             videoViewHolder.moreBtn.setOnClickListener(view -> {
                 Intent intent = new Intent(context, FullVideosActivity.class);
                 intent.putExtra("category", parentItem.getCategory());
+                intent.putExtra("TITLE", parentItem.getTitle());
+                intent.putExtra("COLLECTION", parentItem.getCollection());
                 context.startActivity(intent);
             });
         } else if (type == 3) {

@@ -89,7 +89,6 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnS
 
         // disable web ui
         IFramePlayerOptions options = new IFramePlayerOptions.Builder().controls(0).build();
-
         youTubePlayerView.initialize(listener, options);
     }
 

@@ -1,5 +1,6 @@
 package com.zaad.zaad.activity;
 
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_END_DATE_TIME;
 import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 
@@ -16,6 +17,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
@@ -27,13 +33,17 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.DailyTaskSuggestionVideoAdapter;
 import com.zaad.zaad.listeners.DailyTaskSuggestionVideoClickListener;
+import com.zaad.zaad.model.Coupon;
 import com.zaad.zaad.model.DailyTaskVideo;
 import com.zaad.zaad.ui.dailytask.DailyTaskViewModel;
 import com.zaad.zaad.utils.DailyTaskYoutubePlayer;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTaskSuggestionVideoClickListener {
@@ -54,7 +64,7 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
     DailyTaskSuggestionVideoAdapter suggestionVideoAdapter;
 
     float currentSecond = 0;
-
+    FirebaseFirestore firestore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +75,7 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
         dailyTaskViewModel = new ViewModelProvider(this).get(DailyTaskViewModel.class);
 
         youTubePlayerView = findViewById(R.id.youtube_player_view);
+        firestore = FirebaseFirestore.getInstance();
         loadYoutubePlayer();
         getUncompletedTaskVideos();
         loadSuggestedVideos();
@@ -76,6 +87,10 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
                 Log.i("DailyTaskVideo S:", "Null Value");
             }
         });
+
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void loadYoutubePlayer() {
@@ -152,6 +167,15 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
         int videoWatched = sharedPref.getInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
         SharedPreferences.Editor editor = sharedPref.edit();
 
+        if (dailyTaskVideo.getCouponId() != null && !dailyTaskVideo.getCouponId().equals("")) {
+            Toast.makeText(this, "You won a special coupon", Toast.LENGTH_SHORT).show();
+
+            firestore.collection("coupons").document(dailyTaskVideo.getCouponId()).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        Coupon coupon = documentSnapshot.toObject(Coupon.class);
+                        dailyTaskViewModel.addCoupon(coupon);
+                    });
+        }
         if (videoWatched == 9) {
             editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
             editor.apply();
@@ -159,6 +183,10 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
             Toast.makeText(this, "You won a coupon!!!", Toast.LENGTH_SHORT).show();
         } else {
             editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, videoWatched + 1);
+            editor.apply();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String dateString = sdf.format(dailyTaskVideo.getExpiryDate());
+            editor.putString(DAILY_TASK_END_DATE_TIME, dateString);
             editor.apply();
         }
     }

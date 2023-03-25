@@ -22,30 +22,43 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zaad.zaad.R;
+import com.zaad.zaad.model.State;
 import com.zaad.zaad.model.User;
+import com.zaad.zaad.utils.AppUtils;
 import com.zaad.zaad.viewmodel.LoginRegisterViewModel;
 
 import org.checkerframework.checker.units.qual.A;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class PersonalDetailsActivity extends AppCompatActivity {
 
     TextView phoneNumberTxt, addressTxt, pincodeTxt, nameTxt, dateTxt;
     Button signupBtn;
-    private String phoneNumber, gender, district, language;
+    private String phoneNumber, gender, district, language, state;
 
     private Date dob;
     RadioGroup genderRG;
     RadioButton maleRB, femaleRB;
-
     User user;
 
+    Map<String, List<String>> stateDistrictMap = new HashMap<>();
+    List<String> stateList = new ArrayList<>();
+
+    List<String> districtList = new ArrayList<>();
+    AutoCompleteTextView stateTextView, districtTextView, languageTextView;
+    ArrayAdapter<String> districtAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +84,8 @@ public class PersonalDetailsActivity extends AppCompatActivity {
             }
         });
 
+        readStatesAndDistrictData();
+        setupStateSpinner();
         setupDistrictSpinner();
         setupLanguageDropDown();
         displayUserData();
@@ -97,41 +112,57 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void setupDistrictSpinner() {
-        List<String> optionsList = new ArrayList<>();
-        optionsList.add("Chennai");
-        optionsList.add("Villupuram");
-        optionsList.add("Pondy");
+    private void setupStateSpinner() {
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(
                         this,
                         R.layout.dropdown_menu_district_item,
-                        optionsList);
+                        stateList);
 
-        AutoCompleteTextView editTextFilledExposedDropdown =
-                findViewById(R.id.filled_exposed_dropdown);
-        editTextFilledExposedDropdown.setAdapter(adapter);
-        editTextFilledExposedDropdown.setOnItemClickListener((adapterView, view, i, l) -> {
+        stateTextView =
+                findViewById(R.id.state_drop_down);
+        stateTextView.setAdapter(adapter);
+        stateTextView.setOnItemClickListener((adapterView, view, i, l) -> {
             String selectedOption = adapterView.getItemAtPosition(i).toString();
-            district = selectedOption;
+            districtList.clear();
+            districtList.addAll(stateDistrictMap.get(selectedOption));
+            district = "";
+            state = selectedOption;
+            districtTextView.getText().clear();
+            districtTextView.setAdapter(null);
+            districtTextView.setAdapter(districtAdapter);
+            districtTextView.dismissDropDown();
+            districtTextView.clearListSelection();
+        });
+    }
+    private void setupDistrictSpinner() {
+        districtAdapter =
+                new ArrayAdapter<>(
+                        this,
+                        R.layout.dropdown_menu_district_item,
+                        districtList);
+
+        districtTextView =
+                findViewById(R.id.filled_exposed_dropdown);
+        districtTextView.setAdapter(districtAdapter);
+        districtTextView.setAdapter(null);
+        districtTextView.setOnItemClickListener((adapterView, view, i, l) -> {
+            district = adapterView.getItemAtPosition(i).toString();
         });
     }
 
     private void setupLanguageDropDown() {
-        List<String> optionsList = new ArrayList<>();
-        optionsList.add("Tamil");
-        optionsList.add("Telugu");
-        optionsList.add("Malayalam");
+        List<String> optionsList = Arrays.asList("Tamil", "Telugu", "Malayalam", "Hindi", "Kannada");
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(
                         this,
                         R.layout.dropdown_menu_district_item,
                         optionsList);
 
-        AutoCompleteTextView editTextFilledExposedDropdown =
+        languageTextView =
                 findViewById(R.id.language_dropdown);
-        editTextFilledExposedDropdown.setAdapter(adapter);
-        editTextFilledExposedDropdown.setOnItemClickListener((adapterView, view, i, l) -> {
+        languageTextView.setAdapter(adapter);
+        languageTextView.setOnItemClickListener((adapterView, view, i, l) -> {
             String selectedOption = adapterView.getItemAtPosition(i).toString();
             language = selectedOption;
         });
@@ -149,6 +180,9 @@ public class PersonalDetailsActivity extends AppCompatActivity {
             } else if (user.getGender() != null && user.getGender().equals("Female")) {
                 femaleRB.setChecked(true);
             }
+            stateTextView.setText(user.getState(), false);
+            languageTextView.setText(user.getLanguage(), false);
+            districtTextView.setText(user.getDistrict(), false);
         }
     }
 
@@ -168,6 +202,7 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         user.setGender(gender);
         user.setDob(dob);
         user.setDistrict(district);
+        user.setState(state);
         user.setLanguage(language);
         user.setEmail(firebaseUser.getEmail());
         return user;
@@ -224,6 +259,20 @@ public class PersonalDetailsActivity extends AppCompatActivity {
     }
 
 
+    private void readStatesAndDistrictData() {
+        String jsonString = AppUtils.getJsonFromAssets(this, "districts.json");
+        Gson gson = new Gson();
+        Type listStateType = new TypeToken<List<State>>() {}.getType();
+
+        Log.i("JsonString", "" + jsonString);
+        List<State> states = gson.fromJson(jsonString, listStateType);
+
+        for (State state: states) {
+            stateDistrictMap.put(state.getName(), state.getDistricts());
+            stateList.add(state.getName());
+        }
+
+    }
     private boolean isEmpty(String value) {
         return value == null || value.equals("");
     }

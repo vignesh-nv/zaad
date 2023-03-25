@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.zaad.zaad.model.AdBanner;
 import com.zaad.zaad.model.Category;
+import com.zaad.zaad.model.HomeItem;
 import com.zaad.zaad.repository.FirestoreRepository;
 
 import java.util.List;
@@ -37,5 +38,9 @@ public class HomeViewModel extends ViewModel {
 
     public MutableLiveData<List<AdBanner>> getVideoAdBanner() {
         return firestoreRepository.getVideoAdBanners();
+    }
+
+    public MutableLiveData<List<HomeItem>> getHomeMenu() {
+        return firestoreRepository.getHomeMenus();
     }
 }

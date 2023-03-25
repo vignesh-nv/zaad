@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/text_gradient" />
+            android:background="@drawable/text_gradient"/>
 
         <TextView
             android:id="@+id/ad_title"
@@ -37,9 +37,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:fontFamily="@font/montserrat"
-            android:textColor="@color/white" />
+            android:textColor="@color/light_white" />
+
+<!--        <com.google.android.exoplayer2.ui.StyledPlayerView-->
+<!--            android:id="@+id/ad_video"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            app:auto_show="true"-->
+<!--            app:use_controller="false"-->
+<!--            android:layout_height="wrap_content"/>-->
 
         <LinearLayout
             android:layout_width="wrap_content"

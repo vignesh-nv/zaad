@@ -8,6 +8,8 @@ public class Video {
     private String videoUrl;
     private String category;
 
+    private String id;
+
     public String getTitle() {
         return title;
     }
@@ -38,6 +40,14 @@ public class Video {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

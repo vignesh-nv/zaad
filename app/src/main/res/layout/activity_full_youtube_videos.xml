@@ -23,18 +23,21 @@
             app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/entertainment_chip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Entertainment" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/news_chip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="News" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/education_chip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,12 +45,14 @@
 
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/comedy_chip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Comedy" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/music_chip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

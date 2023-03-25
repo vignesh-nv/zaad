@@ -110,7 +110,7 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
             JSONObject options = new JSONObject();
             options.put("name", "zaad");
             options.put("currency", "INR");
-            options.put("amount", "115");
+            options.put("amount", "121");
             checkout.open(this, options);
         } catch (Exception e) {
             Log.e("PaymentDetail", e.toString());
@@ -170,6 +170,7 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
         user.setJoinedDate(new Date());
         user.setPaymentCompleted(true);
         user.setLevel("A");
+        user.setAmount(121);
         Date expiryDate = new Date();
         expiryDate.setYear(expiryDate.getYear() + 1);
         expiryDate = new Date(expiryDate.getTime() - MILLIS_IN_A_DAY);

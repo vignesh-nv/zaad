@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -51,6 +54,9 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         toolbar = binding.toolbar;
+
+        MobileAds.initialize(this, initializationStatus -> {
+        });
 
         FindData findData = new FindData(getApplicationContext(), (GetData) (linkList, message, isData) -> {
             if (isData) {

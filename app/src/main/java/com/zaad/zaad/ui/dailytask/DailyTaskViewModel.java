@@ -11,6 +11,7 @@ import androidx.room.Room;
 import com.zaad.zaad.database.AppDatabase;
 import com.zaad.zaad.database.DailyTask;
 import com.zaad.zaad.database.VideoDetails;
+import com.zaad.zaad.model.Coupon;
 import com.zaad.zaad.model.DailyTaskVideo;
 import com.zaad.zaad.model.Video;
 import com.zaad.zaad.repository.DatabaseRepository;
@@ -73,5 +74,9 @@ public class DailyTaskViewModel extends AndroidViewModel {
         videoDetails.videoId = videoId;
         videoDetails.watchedSeconds = seconds;
         databaseRepository.updateWatchedSeconds(videoDetails);
+    }
+
+    public void addCoupon(final Coupon coupon) {
+        userRepository.redeemCoupon(coupon);
     }
 }

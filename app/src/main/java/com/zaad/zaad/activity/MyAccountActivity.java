@@ -21,8 +21,8 @@ import java.util.Locale;
 public class MyAccountActivity extends AppCompatActivity {
 
     private User user;
-    TextView userNameTxt, phoneNumberTxt, bankNameTxt, customerNameTxt, accountNumberTxt;
-    TextView ifscCodeTxt, upiTxt, addressTxt, joinedDateTxt, expiryDateTxt, pincodeTxt;
+    TextView userNameTxt, phoneNumberTxt, bankNameTxt, customerNameTxt, accountNumberTxt, districtStateTxt;
+    TextView ifscCodeTxt, upiTxt, addressTxt, joinedDateTxt, expiryDateTxt, pincodeTxt, emailTxt;
     ImageButton editProfileBtn;
     Button logoutBtn;
 
@@ -33,6 +33,7 @@ public class MyAccountActivity extends AppCompatActivity {
 
         userNameTxt = findViewById(R.id.userNameTxt);
         phoneNumberTxt = findViewById(R.id.phoneNumberTxt);
+        emailTxt = findViewById(R.id.emailTxt);
         bankNameTxt = findViewById(R.id.bankNameTxt);
         customerNameTxt = findViewById(R.id.accountHolderNameTxt);
         accountNumberTxt = findViewById(R.id.accountNumberTxt);
@@ -43,6 +44,7 @@ public class MyAccountActivity extends AppCompatActivity {
         joinedDateTxt = findViewById(R.id.joinedDateTxt);
         expiryDateTxt = findViewById(R.id.expiryDateTxt);
         pincodeTxt = findViewById(R.id.pincodeTxt);
+        districtStateTxt = findViewById(R.id.district_state_txt);
 
         MyAccountViewModel accountViewModel =
                 new ViewModelProvider(this).get(MyAccountViewModel.class);
@@ -72,11 +74,20 @@ public class MyAccountActivity extends AppCompatActivity {
             bankNameTxt.setText(user.getAccountDetails().getBankName());
             upiTxt.setText(user.getAccountDetails().getUpi());
         }
+        emailTxt.setText(user.getEmail());
         addressTxt.setText(user.getAddress());
         pincodeTxt.setText(user.getPincode());
         phoneNumberTxt.setText(user.getPhoneNumber());
         joinedDateTxt.setText(parseDate(user.getJoinedDate()));
         expiryDateTxt.setText(parseDate(user.getExpiryDate()));
+        String districtState = "";
+        if (user.getDistrict()!=null) {
+            districtState += user.getDistrict() + " ";
+        }
+        if (user.getState() != null) {
+            districtState += user.getState();
+        }
+        districtStateTxt.setText(districtState);
     }
 
     private String parseDate(final Date date) {

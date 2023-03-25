@@ -18,11 +18,14 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
+            android:name=".activity.VideoPlayerActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ReportActivity"
+            android:exported="false"
             android:label="@string/title_report"
             android:parentActivityName=".activity.HomeActivity"
-            android:theme="@style/Theme.Material3.Dark"
-            android:exported="false" />
+            android:theme="@style/Theme.Material3.Dark" />
         <activity
             android:name=".activity.AdDetailActivity"
             android:exported="false"
@@ -70,6 +73,7 @@
         <activity
             android:name=".activity.FullYoutubeVideosActivity"
             android:exported="false"
+            android:parentActivityName=".activity.HomeActivity"
             android:label="Youtube Videos" />
         <activity
             android:name=".activity.MyLevelActivity"
@@ -170,6 +174,10 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/twitter_blue" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
     </application>
 
 </manifest>

@@ -62,7 +62,17 @@ dependencies {
 
     annotationProcessor 'androidx.room:room-compiler:2.5.0'
 
+//    implementation 'com.google.android.exoplayer:exoplayer-core:2.18.4'
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.4'
+
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.4'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.18.4'
+    implementation 'com.google.code.gson:gson:2.10.1'
+
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+
+    // For Admob ads
+    implementation 'com.google.android.gms:play-services-ads:21.5.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.5.1'

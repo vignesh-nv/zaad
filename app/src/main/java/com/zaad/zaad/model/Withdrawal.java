@@ -1,5 +1,6 @@
 package com.zaad.zaad.model;
 
+import java.util.Comparator;
 import java.util.Date;
 
 public class Withdrawal {
@@ -12,6 +13,10 @@ public class Withdrawal {
     private String status;
 
     private String userId;
+
+    private String accountNumber;
+
+    private String upiId;
 
     public Withdrawal() {
     }
@@ -54,5 +59,21 @@ public class Withdrawal {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getUpiId() {
+        return upiId;
+    }
+
+    public void setUpiId(String upiId) {
+        this.upiId = upiId;
     }
 }

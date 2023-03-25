@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -17,7 +19,9 @@ import com.zaad.zaad.viewmodel.MyAccountViewModel;
 
 import org.w3c.dom.Text;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -28,6 +32,8 @@ public class EditProfileActivity extends AppCompatActivity {
     MyAccountViewModel myAccountViewModel;
     private User user;
     private MaterialButton saveBtn;
+
+    private String language;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,24 @@ public class EditProfileActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(view -> updateUser());
     }
 
+    private void setupLanguageDropDown() {
+        List<String> optionsList = Arrays.asList("Tamil", "Telugu", "Malayalam", "Hindi", "Kannada");
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(
+                        this,
+                        R.layout.dropdown_menu_district_item,
+                        optionsList);
+
+        AutoCompleteTextView editTextFilledExposedDropdown =
+                findViewById(R.id.language_dropdown);
+        editTextFilledExposedDropdown.setAdapter(adapter);
+        editTextFilledExposedDropdown.setOnItemClickListener((adapterView, view, i, l) -> {
+            String selectedOption = adapterView.getItemAtPosition(i).toString();
+            language = selectedOption;
+        });
+        editTextFilledExposedDropdown.setText(user.getLanguage(), false);
+
+    }
     private void setupUI() {
         fullNameTxt = findViewById(R.id.full_name_edit_text);
         emailTxt = findViewById(R.id.email_edit_text);
@@ -57,6 +81,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
+        setupLanguageDropDown();
         fullNameTxt.setText(user.getName());
         emailTxt.setText(user.getEmail());
         phoneNumberTxt.setText(user.getPhoneNumber());
@@ -108,6 +133,9 @@ public class EditProfileActivity extends AppCompatActivity {
         String upi = upiTxt.getText().toString();
         if (user.getAccountDetails() == null || !ifsc.equals(user.getAccountDetails().getUpi())) {
             updates.put("accountDetails.upi", upi);
+        }
+        if (!user.getLanguage().equals(language)) {
+            updates.put("language", language);
         }
         myAccountViewModel.updateUser(updates);
         Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();

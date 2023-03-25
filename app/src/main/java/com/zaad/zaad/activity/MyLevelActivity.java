@@ -10,6 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.zaad.zaad.R;
 import com.zaad.zaad.model.User;
 import com.zaad.zaad.viewmodel.MyLevelViewModel;
@@ -27,16 +30,19 @@ public class MyLevelActivity extends AppCompatActivity {
     Button shareBtn;
 
     TextView referral1NameTxt, referral1EmailTxt, referral1JoinedDataTxt, referral1LevelTxt, myLevelTxt;
-    TextView referral2NameTxt, referral2EmailTxt, referral2JoinedDataTxt, referral2LevelTxt;
+    TextView referral2NameTxt, referral2EmailTxt, referral2JoinedDataTxt, referral2LevelTxt, active1, active2;
     View referral1Layout, referral2Layout;
 
     private List<User> myReferrals = new ArrayList<>();
+
+    FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_level);
 
+        firestore = FirebaseFirestore.getInstance();
         shareBtn = findViewById(R.id.shareBtn);
         referralCodeTxt = findViewById(R.id.referralCodeTxt);
         myLevelTxt = findViewById(R.id.my_level_text);
@@ -62,12 +68,14 @@ public class MyLevelActivity extends AppCompatActivity {
         referral1JoinedDataTxt = findViewById(R.id.joined_date);
         referral1LevelTxt = findViewById(R.id.level);
         referral1Layout = findViewById(R.id.referral1Layout);
+        active1 = findViewById(R.id.referral_1_active);
 
         referral2Layout = findViewById(R.id.referral2Layout);
         referral2LevelTxt = findViewById(R.id.level_2);
         referral2JoinedDataTxt = findViewById(R.id.joined_date_2);
         referral2EmailTxt = findViewById(R.id.email_2);
         referral2NameTxt = findViewById(R.id.referral_user_name_2);
+        active2 = findViewById(R.id.referral_2_active);
     }
 
     private void getMyReferrals() {
@@ -95,6 +103,12 @@ public class MyLevelActivity extends AppCompatActivity {
             referral1EmailTxt.setText(user1.getEmail());
             referral1JoinedDataTxt.setText(simpleDateFormat.format(user1.getJoinedDate()));
             referral1LevelTxt.setText(user1.getLevel());
+            firestore.collection("user").whereEqualTo("referredByCode", user1.getReferralCode())
+                    .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (queryDocumentSnapshots.size() == 2) {
+                            active1.setVisibility(View.VISIBLE);
+                        }
+                    });
         }
         if (myReferrals.size() == 2) {
             referral2Layout.setVisibility(View.VISIBLE);
@@ -103,6 +117,12 @@ public class MyLevelActivity extends AppCompatActivity {
             referral2EmailTxt.setText(user2.getEmail());
             referral2JoinedDataTxt.setText(simpleDateFormat.format(user2.getJoinedDate()));
             referral2LevelTxt.setText(user2.getLevel());
+            firestore.collection("user").whereEqualTo("referredByCode", user2.getReferralCode())
+                    .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (queryDocumentSnapshots.size() == 2) {
+                            active2.setVisibility(View.VISIBLE);
+                        }
+                    });
         }
     }
 }

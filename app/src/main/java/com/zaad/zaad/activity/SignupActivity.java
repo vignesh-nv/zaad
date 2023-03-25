@@ -42,6 +42,8 @@ import com.zaad.zaad.viewmodel.LoginRegisterViewModel;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -59,7 +61,10 @@ public class SignupActivity extends AppCompatActivity {
         emailEditext = findViewById(R.id.user_email_edit_text);
         editPasswordTxt = findViewById(R.id.user_password_edit_text);
         signup = findViewById(R.id.signupBtn);
-        signup.setOnClickListener(view -> checkIsNewEmail());
+        signup.setOnClickListener(view -> {
+            checkIsNewEmail();
+        });
+
         FirebaseAuth.AuthStateListener stateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -76,6 +81,10 @@ public class SignupActivity extends AppCompatActivity {
 
         String email = emailEditext.getText().toString();
         String password = editPasswordTxt.getText().toString();
+        if (!isValidPassword(password)) {
+            Toast.makeText(this, "Password doesn't meet the requirement", Toast.LENGTH_SHORT).show();
+            return;
+        }
         saveEmailToSharedPreference(email);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -192,5 +201,19 @@ public class SignupActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "onSignInResult: " + response.getError().getErrorCode());
         }
+    }
+
+    public boolean isValidPassword(String password) {
+        // Define the regular expression for a valid password
+        String regex = "^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=\\S+$).{8,}$";
+
+        // Compile the regular expression
+        Pattern pattern = Pattern.compile(regex);
+
+        // Match the password against the regular expression
+        Matcher matcher = pattern.matcher(password);
+
+        // Return true if the password matches the regular expression, otherwise false
+        return matcher.matches();
     }
 }

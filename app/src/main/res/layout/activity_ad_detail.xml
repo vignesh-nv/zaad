@@ -29,26 +29,26 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/ad_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email: bairacorp@gmail.com"
                 android:fontFamily="@font/montserrat"
                 android:textSize="18sp"
                 android:textColor="@color/white"/>
 
             <TextView
+                android:id="@+id/ad_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Address: Tindivanam"
                 android:fontFamily="@font/montserrat"
                 android:textSize="18sp"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/white"/>
 
             <TextView
+                android:id="@+id/ad_contact_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phone Number: 987654321"
                 android:fontFamily="@font/montserrat"
                 android:textSize="18sp"
                 android:layout_marginTop="10dp"

@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import com.zaad.zaad.model.User;
 import com.zaad.zaad.model.Withdrawal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -83,6 +85,9 @@ public class WalletFragment extends Fragment {
         walletViewModel.getWithdrawalList().observe(getActivity(), data -> {
             withdrawalList.clear();
             withdrawalList.addAll(data);
+            Collections.sort(withdrawalList, (o1, o2) -> {
+                return o2.getRequestedDate().compareTo(o1.getRequestedDate());
+            });
             withdrawalAdapter.notifyDataSetChanged();
         });
 
@@ -109,6 +114,8 @@ public class WalletFragment extends Fragment {
         withdrawal.setAmount(amount);
         withdrawal.setRequestedDate(new Date());
         withdrawal.setStatus("PENDING");
+        withdrawal.setUpiId(user.getAccountDetails().getUpi());
+        withdrawal.setAccountNumber(user.getAccountDetails().getAccountNumber());
         walletViewModel.makeWithdrawTransaction(withdrawal);
         walletViewModel.reduceAmountFromUserAccount(user.getAmount() - amount);
     }

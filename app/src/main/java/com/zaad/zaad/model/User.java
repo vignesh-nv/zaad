@@ -33,6 +33,8 @@ public class User implements Serializable {
 
     private String district;
 
+    private String state;
+
     private String language;
 
     public User() {
@@ -180,6 +182,14 @@ public class User implements Serializable {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     @Override

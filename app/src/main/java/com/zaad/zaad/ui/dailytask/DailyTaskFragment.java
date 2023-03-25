@@ -38,6 +38,8 @@ public class DailyTaskFragment extends Fragment {
     private FragmentDailyTaskBinding binding;
     private RecyclerView recyclerView, shortsRecyclerView;
     private List<DailyTaskVideo> dailyTasksList = new ArrayList<>();
+
+    private List<DailyTaskVideo> dailyTaskShorts = new ArrayList<>();
     private Set<String> completedTaskIds = new HashSet<>();
 
     private TextView shortsWatchedCount, videosWatchedCount;
@@ -62,7 +64,7 @@ public class DailyTaskFragment extends Fragment {
         recyclerView.setAdapter(dailyTasksAdapter);
         recyclerView.setLayoutManager(layoutManager);
 
-        DailyTaskShortsAdapter shortsAdapter = new DailyTaskShortsAdapter(dailyTasksList, completedTaskIds, getContext());
+        DailyTaskShortsAdapter shortsAdapter = new DailyTaskShortsAdapter(dailyTaskShorts, completedTaskIds, getContext());
 
         shortsRecyclerView.setAdapter(shortsAdapter);
         shortsRecyclerView.setLayoutManager(shortsLayoutManager);
@@ -84,8 +86,19 @@ public class DailyTaskFragment extends Fragment {
                 }
             }
             dailyTasksList.addAll(tasks);
-
             dailyTasksAdapter.notifyDataSetChanged();
+        });
+        dailyTaskViewModel.getDailyTaskShorts().observe(getViewLifecycleOwner(), data -> {
+            dailyTaskShorts.clear();
+            List<DailyTaskVideo> tasks = new ArrayList<>();
+            for (DailyTaskVideo video: data) {
+                if (!completedTaskIds.contains(video.getTaskId())) {
+                    dailyTaskShorts.add(video);
+                } else {
+                    tasks.add(video);
+                }
+            }
+            dailyTaskShorts.addAll(tasks);
             shortsAdapter.notifyDataSetChanged();
         });
         loadWatchedCount();
@@ -117,7 +130,10 @@ public class DailyTaskFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         String endDate = sharedPreferences.getString(DAILY_TASK_END_DATE_TIME, "");
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy h:mm:ss a");
+        if (endDate.equals("")) {
+            return;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date savedDate = null;
         try {
             savedDate = dateFormat.parse(endDate);
@@ -129,7 +145,7 @@ public class DailyTaskFragment extends Fragment {
 
         if (savedDate != null && savedDate.before(currentDate)) {
             // The saved date is before the current date
-            Log.i("", "");
+            Log.i("DailyTaskFragment", "Day is before");
         }
 //        SharedPreferences.Editor editor = sharedPreferences.edit();
 //        Date date = new Date();

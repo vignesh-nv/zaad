@@ -15,4 +15,5 @@
     <color name="recycler_view_background">#212121</color>
     <color name="light_white">#C6D9E8</color>
     <color name="light_black">#222020</color>
+    <color name="dropdown_color">#222020</color>
 </resources>

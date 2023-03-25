@@ -32,4 +32,8 @@ public class YoutubeVideosViewModel extends AndroidViewModel {
     public MutableLiveData<List<Video>> getYoutubeVideosByCollectionAndCategory(final String collection, final String category) {
         return firestoreRepository.getYoutubeVideosByCollectionAndCategory(collection, category);
     }
+
+    public MutableLiveData<List<Video>> getAllYoutubeVideos() {
+        return firestoreRepository.getYoutubeVideos();
+    }
 }

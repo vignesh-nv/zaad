@@ -15,6 +15,7 @@ import com.zaad.zaad.R;
 import com.zaad.zaad.activity.AdDetailActivity;
 import com.zaad.zaad.activity.ShortsActivity;
 import com.zaad.zaad.VideoType;
+import com.zaad.zaad.activity.VideoPlayerActivity;
 import com.zaad.zaad.activity.YoutubeShortsActivity;
 import com.zaad.zaad.activity.YoutubeVideoPlayerActivity;
 import com.zaad.zaad.model.Video;
@@ -94,9 +95,9 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Intent intent = new Intent(context, YoutubeVideoPlayerActivity.class);
                 intent.putExtra("VIDEO_ID", childItem.getVideoUrl());
                 intent.putExtra("CATEGORY", childItem.getCategory());
+                intent.putExtra("TITLE", childItem.getTitle());
                 context.startActivity(intent);
             });
-
             ImageRequest request = new ImageRequest.Builder(context)
                     .data(childItem.getImageUrl())
                     .crossfade(true)
@@ -109,9 +110,8 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ImageLoader imageLoader = Coil.imageLoader(context);
 
             childViewHolder.imageView.setOnClickListener(view -> {
-                Intent intent = new Intent(context, YoutubeVideoPlayerActivity.class);
-                intent.putExtra("VIDEO_ID", childItem.getVideoUrl());
-                intent.putExtra("CATEGORY", childItem.getCategory());
+                Intent intent = new Intent(context, VideoPlayerActivity.class);
+                intent.putExtra("VIDEO_URL", childItem.getVideoUrl());
                 context.startActivity(intent);
             });
 
@@ -129,6 +129,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             shortsViewHolder.imageView.setOnClickListener(view -> {
                 Intent intent = new Intent(context, YoutubeShortsActivity.class);
+                intent.putExtra("VIDEO_URL", childItem.getVideoUrl());
                 context.startActivity(intent);
             });
 
@@ -151,6 +152,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             childViewHolder.imageView.setOnClickListener(view -> {
                 Intent intent = new Intent(context, AdDetailActivity.class);
                 intent.putExtra("IMAGE_URL", childItem.getImageUrl());
+                intent.putExtra("AD_ID", childItem.getId());
                 context.startActivity(intent);
             });
 

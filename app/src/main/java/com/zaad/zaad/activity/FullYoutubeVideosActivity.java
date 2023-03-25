@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -39,9 +40,18 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
     List<String> categories = new ArrayList<>();
 
     private YoutubeVideosViewModel youtubeVideosViewModel;
-    private List<Video> videos;
+
+    private List<Video> videos = new ArrayList<>();
 
     private FullVideosAdapter fullVideosAdapter;
+
+    private Chip entertainmentChip, newsChip, educationChip, comedyChip, musicChip;
+
+    private boolean showCategory;
+
+    private ChipGroup chipGroup;
+
+    private String videoCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,24 +61,40 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
         youtubeVideosViewModel = new ViewModelProvider(this).get(YoutubeVideosViewModel.class);
 
         categories = Arrays.asList("Entertainment", "News", "Education", "comedy", "Music");
+        setupChip();
 
         category = getIntent().getStringExtra("category");
-        Log.i("FullVideosActivity", "Category " + category);
-        if (getSupportActionBar()!=null) {
+        videoCategory = getIntent().getStringExtra("VIDEO_CATEGORY");
+        showCategory = getIntent().getBooleanExtra("SHOW_CATEGORY", false);
+
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            String title = getIntent().getStringExtra("TITLE");
+            if (title != null && !title.equals("")) {
+                getSupportActionBar().setTitle(title);
+            }
         }
 
 //        categoryRecyclerview = findViewById(R.id.youtube_video_category_recyclerview);
         recyclerView = findViewById(R.id.full_youtube_videos_recyclerview);
 
         setupYoutubeCategory();
-        videos = generateList();
         fullVideosAdapter = new FullVideosAdapter(videos, this);
-        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(fullVideosAdapter);
+
+        if (videoCategory != null && !videoCategory.equals("")) {
+            loadVideos(videoCategory);
+        } else {
+            loadAllVideos();
+        }
+
+        if (!showCategory) {
+            chipGroup.setVisibility(View.GONE);
+        }
     }
 
     private void loadVideos(final String category) {
@@ -78,80 +104,48 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
             fullVideosAdapter.notifyDataSetChanged();
         });
     }
+
+    private void setupChip() {
+        entertainmentChip = findViewById(R.id.entertainment_chip);
+        comedyChip = findViewById(R.id.comedy_chip);
+        musicChip = findViewById(R.id.music_chip);
+        newsChip = findViewById(R.id.news_chip);
+        educationChip = findViewById(R.id.education_chip);
+    }
+
     private void setupYoutubeCategory() {
 //        YoutubeCategoryAdapter youtubeCategoryAdapter = new YoutubeCategoryAdapter(generateCategoryList());
 //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 //
 //        categoryRecyclerview.setLayoutManager(linearLayoutManager);
 //        categoryRecyclerview.setAdapter(youtubeCategoryAdapter);
-        ChipGroup chipGroup = findViewById(R.id.youtube_category_chipgroup);
+        chipGroup = findViewById(R.id.youtube_category_chipgroup);
         chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            Toast.makeText(FullYoutubeVideosActivity.this, checkedIds.toString(), Toast.LENGTH_SHORT).show();
             if (checkedIds.size() == 0) {
                 loadAllVideos();
                 return;
             }
-            loadVideos(categories.get(checkedIds.get(0)-1));
+            int checkChipId = chipGroup.getCheckedChipId();
+            if (educationChip.getId() == checkChipId) {
+                loadVideos("Education");
+            } else if (comedyChip.getId() == checkChipId) {
+                loadVideos("Comedy");
+            } else if (newsChip.getId() == checkChipId) {
+                loadVideos("News");
+            } else if (entertainmentChip.getId() == checkChipId) {
+                loadVideos("Entertainment");
+            } else if (musicChip.getId() == checkChipId) {
+                loadVideos("Music");
+            }
         });
-
-//        Chip chip = new Chip(this);
-//        chip.setText("Entertainment");
-//        chip.setId(ViewCompat.generateViewId());
-//
-//        Chip chip1 = new Chip(this);
-//        chip1.setText("Comedy");
-//        chip1.setId(ViewCompat.generateViewId());
-//
-//        Chip chip2 = new Chip(this);
-//        chip2.setText("News");
-//        chip2.setId(ViewCompat.generateViewId());
-//
-//        Chip chip3 = new Chip(this);
-//        chip3.setText("Education");
-//        chip3.setId(ViewCompat.generateViewId());
-//
-//        Chip chip4 = new Chip(this);
-//        chip4.setText("Sports");
-//        chip4.setId(ViewCompat.generateViewId());
-//
-//        chipGroup.addView(chip);
-//        chipGroup.addView(chip1);
-//        chipGroup.addView(chip2);
-//        chipGroup.addView(chip3);
-//        chipGroup.addView(chip4);
     }
 
     private void loadAllVideos() {
-        videos.clear();
-        videos.addAll(generateList());
-        fullVideosAdapter.notifyDataSetChanged();
-    }
-
-    private List<Video> generateList() {
-
-        Video video = new Video();
-        video.setTitle("Video");
-        video.setImageUrl("https://i.ytimg.com/vi/Q38f4frs8yc/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3puC9Pn8mtlYQp9gClJ83Z1Fq7Q");
-        video.setVideoUrl("Q38f4frs8yc");
-
-        Video video1 = new Video();
-        video1.setTitle("Video");
-        video1.setImageUrl("https://i.ytimg.com/vi/5BQQM4uvRkw/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAn1LHxREk816KdBcSjVbxpkITWbA");
-        video1.setVideoUrl("5BQQM4uvRkw");
-
-        Video video2 = new Video();
-        video2.setTitle("Video");
-        video2.setImageUrl("https://i.ytimg.com/vi/SFdGyt0V00M/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCbSJZ7wGrNOhf5Kwu06lH-lO8Fgg");
-        video2.setVideoUrl("");
-
-        List<Video> videoList = new ArrayList<>();
-        videoList.add(video);
-        videoList.add(video1);
-        videoList.add(video2);
-        videoList.add(video2);
-        videoList.add(video2);
-
-        return videoList;
+        youtubeVideosViewModel.getAllYoutubeVideos().observe(this, data -> {
+            videos.clear();
+            videos.addAll(data);
+            fullVideosAdapter.notifyDataSetChanged();
+        });
     }
 
     private List<YoutubeCategory> generateCategoryList() {
