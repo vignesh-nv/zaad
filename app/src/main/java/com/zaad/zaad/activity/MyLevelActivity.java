@@ -3,6 +3,7 @@ package com.zaad.zaad.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -58,7 +59,24 @@ public class MyLevelActivity extends AppCompatActivity {
         });
 
         shareBtn.setOnClickListener(view -> {
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
 
+            // type of the content to be shared
+            sharingIntent.setType("text/plain");
+
+            // Body of the content
+            String shareBody = "Hi, install Khanzoplay app to win rewards on watching videos, click this link to install the app." + "https://play.google.com/store/apps/details?id=com.zaad.zaad" + "\n"
+                    + "Use My Referral code: " + user.getReferralCode();
+
+            // subject of the content. you can share anything
+            String shareSubject = "Your Subject Here";
+
+            // passing body of the content
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+
+            // passing subject of the content
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+            startActivity(Intent.createChooser(sharingIntent, "Share using"));
         });
     }
 

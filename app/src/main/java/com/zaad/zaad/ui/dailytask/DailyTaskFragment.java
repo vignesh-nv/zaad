@@ -146,12 +146,10 @@ public class DailyTaskFragment extends Fragment {
         if (savedDate != null && savedDate.before(currentDate)) {
             // The saved date is before the current date
             Log.i("DailyTaskFragment", "Day is before");
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
+            editor.putInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
+            editor.apply();
         }
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        Date date = new Date();
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        String dateString = dateFormat.format(date);
-//        editor.putString("myDate", dateString);
-//        editor.apply();
     }
 }

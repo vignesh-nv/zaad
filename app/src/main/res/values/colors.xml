@@ -16,4 +16,5 @@
     <color name="light_white">#C6D9E8</color>
     <color name="light_black">#222020</color>
     <color name="dropdown_color">#222020</color>
+    <color name="mal_color_icon_light_theme">#616161</color>
 </resources>

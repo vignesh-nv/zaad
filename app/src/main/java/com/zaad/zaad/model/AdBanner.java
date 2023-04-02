@@ -2,6 +2,7 @@ package com.zaad.zaad.model;
 
 public class AdBanner {
     private String imageUrl;
+
     private String videoUrl;
 
     private String title;

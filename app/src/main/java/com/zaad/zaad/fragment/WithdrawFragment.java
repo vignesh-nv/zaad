@@ -68,7 +68,6 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                     totalAmountTxt.setText("");
                     return;
                 }
-                Toast.makeText(getContext(), "Running", Toast.LENGTH_SHORT).show();
                 withdrawalAmountTxt.setText(String.valueOf(charSequence));
                 int serviceCharge = (2 * amount / 100);
                 serviceChargeTxt.setText(String.valueOf(serviceCharge));
@@ -93,8 +92,7 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                 Toast.makeText(getContext(), "Amount is lesser than 500", Toast.LENGTH_SHORT).show();
                 return;
             }
-            int serviceCharge = (2 * amount / 100);
-            walletViewModel.setWithdrawAmount(amount - serviceCharge);
+            walletViewModel.setWithdrawAmount(amount);
             dismiss();
         });
     }

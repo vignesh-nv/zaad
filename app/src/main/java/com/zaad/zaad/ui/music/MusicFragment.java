@@ -71,6 +71,7 @@ public class MusicFragment extends Fragment {
                             for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
                                 videos.add(snapshot.toObject(Video.class));
                             }
+                            Log.i("Category", item.getCategory() + " Size: " + videos.size());
                             item.setVideos(videos);
                             musicMenu.add(item);
                             childVideosAdapter.notifyDataSetChanged();

@@ -148,27 +148,51 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
             running = true;
             final int[] count = {0};
             List<HomeItem> tempHomeItems = new ArrayList<>();
+
             for (HomeItem item : data) {
                 Log.i("HomeFragment Item", item.getTitle());
-                firestore.collection(item.getCollection())
-                        .limit(10)
-                        .get()
-                        .addOnSuccessListener(queryDocumentSnapshots -> {
-                            List<Video> videos = new ArrayList<>();
-                            for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
-                                videos.add(snapshot.toObject(Video.class));
-                            }
-                            count[0]++;
-                            item.setVideos(videos);
-                            tempHomeItems.add(item);
-                            if (count[0] == data.size()) {
-                                running = false;
-                                Collections.sort(tempHomeItems);
-                                items.addAll(tempHomeItems);
-                                Log.i("HomeFragment menu", String.valueOf(items.size()));
-                                homeAdapter.notifyDataSetChanged();
-                            }
-                        });
+                if (item.getVideoCategory()!=null && !item.getVideoCategory().equals(""))
+                    firestore.collection(item.getCollection())
+                            .whereEqualTo("category", item.getVideoCategory())
+                            .limit(10)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                List<Video> videos = new ArrayList<>();
+                                for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
+                                    videos.add(snapshot.toObject(Video.class));
+                                }
+                                count[0]++;
+                                item.setVideos(videos);
+                                tempHomeItems.add(item);
+                                if (count[0] == data.size()) {
+                                    running = false;
+                                    Collections.sort(tempHomeItems);
+                                    items.addAll(tempHomeItems);
+                                    Log.i("HomeFragment menu", String.valueOf(items.size()));
+                                    homeAdapter.notifyDataSetChanged();
+                                }
+                            });
+                else {
+                    firestore.collection(item.getCollection())
+                            .limit(10)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                List<Video> videos = new ArrayList<>();
+                                for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
+                                    videos.add(snapshot.toObject(Video.class));
+                                }
+                                count[0]++;
+                                item.setVideos(videos);
+                                tempHomeItems.add(item);
+                                if (count[0] == data.size()) {
+                                    running = false;
+                                    Collections.sort(tempHomeItems);
+                                    items.addAll(tempHomeItems);
+                                    Log.i("HomeFragment menu", String.valueOf(items.size()));
+                                    homeAdapter.notifyDataSetChanged();
+                                }
+                            });
+                }
             }
         });
     }

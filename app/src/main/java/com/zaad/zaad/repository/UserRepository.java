@@ -27,6 +27,7 @@ import com.zaad.zaad.model.Video;
 import com.zaad.zaad.model.Withdrawal;
 
 import java.sql.Ref;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +96,10 @@ public class UserRepository {
     public void makeWithdrawTransaction(final Withdrawal withdrawal) {
         String userId = getUserId();
         withdrawal.setUserId(userId);
-        mFirestore.collection("withdrawal").add(withdrawal);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String id = String.valueOf(timestamp.getTime());
+        withdrawal.setWithdrawalId(id);
+        mFirestore.collection("withdrawal").document(id).set(withdrawal);
     }
 
 

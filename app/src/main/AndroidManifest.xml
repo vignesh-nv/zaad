@@ -18,6 +18,23 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
+            android:name=".activity.EarningActivity"
+            android:theme="@style/FullScreen"
+            android:exported="false" />
+        <activity
+            android:name=".activity.CouponDetailsActivity"
+            android:exported="false"
+            android:theme="@style/FullScreen" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.MaterialAboutActivity.Light.DarkActionBar.CustomCardView" />
+        <activity
+            android:name=".activity.LanguageActivity"
+            android:exported="false"
+            android:label="Preferred Language"
+            android:parentActivityName=".activity.HomeActivity" />
+        <activity
             android:name=".activity.VideoPlayerActivity"
             android:exported="false" />
         <activity
@@ -73,8 +90,8 @@
         <activity
             android:name=".activity.FullYoutubeVideosActivity"
             android:exported="false"
-            android:parentActivityName=".activity.HomeActivity"
-            android:label="Youtube Videos" />
+            android:label="Youtube Videos"
+            android:parentActivityName=".activity.HomeActivity" />
         <activity
             android:name=".activity.MyLevelActivity"
             android:exported="false"
@@ -85,6 +102,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.DailyTaskVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:theme="@style/Theme.Zaad.NoActionBar" />
         <activity
@@ -123,7 +141,8 @@
         <activity
             android:name=".activity.YoutubeVideoPlayerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Zaad.NoActionBar" />
         <activity
             android:name=".activity.ShortsActivity"
             android:exported="true"
@@ -174,10 +193,9 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/twitter_blue" />
-
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-3940256099942544~3347511713" />
     </application>
 
 </manifest>

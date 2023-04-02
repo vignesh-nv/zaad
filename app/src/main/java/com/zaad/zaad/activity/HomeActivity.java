@@ -1,6 +1,7 @@
 package com.zaad.zaad.activity;
 
 import static com.zaad.zaad.constants.AppConstant.CHILD_MODE;
+import static com.zaad.zaad.constants.AppConstant.SHOW_REWARDS_BADGE;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 
 import android.content.Context;
@@ -15,9 +16,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -55,18 +54,18 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         toolbar = binding.toolbar;
 
-        MobileAds.initialize(this, initializationStatus -> {
-        });
+//        MobileAds.initialize(this, initializationStatus -> {
+//        });
 
-        FindData findData = new FindData(getApplicationContext(), (GetData) (linkList, message, isData) -> {
-            if (isData) {
-                if (linkList.size() != 0) {
-                    Log.i("Download Urls", linkList.toString());
-                }
-            } else {
-            }
-        });
-        findData.data("https://www.instagram.com/reel/CoAiTpdtmvJ/");
+//        FindData findData = new FindData(getApplicationContext(), (GetData) (linkList, message, isData) -> {
+//            if (isData) {
+//                if (linkList.size() != 0) {
+//                    Log.i("Download Urls", linkList.toString());
+//                }
+//            } else {
+//            }
+//        });
+//        findData.data("https://www.instagram.com/reel/CoAiTpdtmvJ/");
         bottomNavigationView = findViewById(R.id.bottomNavView);
 
         setSupportActionBar(toolbar);
@@ -88,6 +87,14 @@ public class HomeActivity extends AppCompatActivity {
 //            FirebaseAuth.getInstance().signOut();
 //            Intent intent = new Intent()
 //        });
+
+        SharedPreferences sharedPref = getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        boolean showBadge = sharedPref.getBoolean(SHOW_REWARDS_BADGE, false);
+
+        if (showBadge) {
+            BadgeDrawable rewardsBadge = bottomNavigationView.getOrCreateBadge(R.id.navigation_rewards);
+            rewardsBadge.setVisible(true);
+        }
 
         SwitchMaterial materialSwitch = (SwitchMaterial) binding.navView.getMenu().findItem(R.id.kid_mode_switch).getActionView();
         materialSwitch.setOnCheckedChangeListener((compoundButton, b) -> {

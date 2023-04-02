@@ -2,6 +2,7 @@ package com.zaad.zaad.activity;
 
 import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_END_DATE_TIME;
 import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
+import static com.zaad.zaad.constants.AppConstant.SHOW_REWARDS_BADGE;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 
 import androidx.annotation.NonNull;
@@ -13,14 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
@@ -88,9 +88,9 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
             }
         });
 
-        AdView mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+//        AdView mAdView = findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
     }
 
     private void loadYoutubePlayer() {
@@ -100,6 +100,19 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
                 DailyTaskYoutubePlayer defaultPlayerUiController = new DailyTaskYoutubePlayer(youTubePlayerView, youTubePlayer);
+                defaultPlayerUiController.setFullScreenButtonClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        switch (getResources().getConfiguration().orientation) {
+                            case Configuration.ORIENTATION_LANDSCAPE:
+                                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                                break;
+                            case Configuration.ORIENTATION_PORTRAIT:
+                                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                                break;
+                        }
+                    }
+                });
                 youTubePlayerView.setCustomPlayerUi(defaultPlayerUiController.getRootView());
                 YouTubePlayerUtils.loadOrCueVideo(
                         youTubePlayer,
@@ -169,7 +182,8 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
 
         if (dailyTaskVideo.getCouponId() != null && !dailyTaskVideo.getCouponId().equals("")) {
             Toast.makeText(this, "You won a special coupon", Toast.LENGTH_SHORT).show();
-
+            editor.putBoolean(SHOW_REWARDS_BADGE, true);
+            editor.apply();
             firestore.collection("coupons").document(dailyTaskVideo.getCouponId()).get()
                     .addOnSuccessListener(documentSnapshot -> {
                         Coupon coupon = documentSnapshot.toObject(Coupon.class);
@@ -178,12 +192,15 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
         }
         if (videoWatched == 9) {
             editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
+            editor.putBoolean(SHOW_REWARDS_BADGE, true);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String dateString = sdf.format(dailyTaskVideo.getExpiryDate());
+            editor.putString(DAILY_TASK_END_DATE_TIME, dateString);
             editor.apply();
             incrementAvailableCoupons();
             Toast.makeText(this, "You won a coupon!!!", Toast.LENGTH_SHORT).show();
         } else {
             editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, videoWatched + 1);
-            editor.apply();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String dateString = sdf.format(dailyTaskVideo.getExpiryDate());
             editor.putString(DAILY_TASK_END_DATE_TIME, dateString);
@@ -202,6 +219,18 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
         intent.putExtra("TASK", video);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            youTubePlayerView.enterFullScreen();
+        }
+        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            youTubePlayerView.exitFullScreen();
+        }
     }
 
     @Override

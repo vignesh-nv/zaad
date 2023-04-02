@@ -59,6 +59,7 @@ public class PersonalDetailsActivity extends AppCompatActivity {
     List<String> districtList = new ArrayList<>();
     AutoCompleteTextView stateTextView, districtTextView, languageTextView;
     ArrayAdapter<String> districtAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,17 +125,18 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         stateTextView.setAdapter(adapter);
         stateTextView.setOnItemClickListener((adapterView, view, i, l) -> {
             String selectedOption = adapterView.getItemAtPosition(i).toString();
+            if (districtTextView.getAdapter() == null) {
+                districtTextView.setAdapter(districtAdapter);
+            }
             districtList.clear();
             districtList.addAll(stateDistrictMap.get(selectedOption));
+            districtAdapter.notifyDataSetChanged();
             district = "";
             state = selectedOption;
-            districtTextView.getText().clear();
-            districtTextView.setAdapter(null);
-            districtTextView.setAdapter(districtAdapter);
-            districtTextView.dismissDropDown();
-            districtTextView.clearListSelection();
+            districtTextView.setText("", false);
         });
     }
+
     private void setupDistrictSpinner() {
         districtAdapter =
                 new ArrayAdapter<>(
@@ -152,7 +154,7 @@ public class PersonalDetailsActivity extends AppCompatActivity {
     }
 
     private void setupLanguageDropDown() {
-        List<String> optionsList = Arrays.asList("Tamil", "Telugu", "Malayalam", "Hindi", "Kannada");
+        List<String> optionsList = Arrays.asList("English", "Tamil", "Telugu", "Malayalam", "Hindi", "Kannada");
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(
                         this,
@@ -166,16 +168,15 @@ public class PersonalDetailsActivity extends AppCompatActivity {
             String selectedOption = adapterView.getItemAtPosition(i).toString();
             language = selectedOption;
         });
-
     }
 
     private void displayUserData() {
-        if (user!= null) {
+        if (user != null) {
             nameTxt.setText(user.getName());
             addressTxt.setText(user.getAddress());
             pincodeTxt.setText(user.getPincode());
             phoneNumberTxt.setText(user.getPhoneNumber());
-            if (user.getGender()!= null && user.getGender().equals("Male")) {
+            if (user.getGender() != null && user.getGender().equals("Male")) {
                 maleRB.setChecked(true);
             } else if (user.getGender() != null && user.getGender().equals("Female")) {
                 femaleRB.setChecked(true);
@@ -262,17 +263,18 @@ public class PersonalDetailsActivity extends AppCompatActivity {
     private void readStatesAndDistrictData() {
         String jsonString = AppUtils.getJsonFromAssets(this, "districts.json");
         Gson gson = new Gson();
-        Type listStateType = new TypeToken<List<State>>() {}.getType();
+        Type listStateType = new TypeToken<List<State>>() {
+        }.getType();
 
         Log.i("JsonString", "" + jsonString);
         List<State> states = gson.fromJson(jsonString, listStateType);
 
-        for (State state: states) {
+        for (State state : states) {
             stateDistrictMap.put(state.getName(), state.getDistricts());
             stateList.add(state.getName());
         }
-
     }
+
     private boolean isEmpty(String value) {
         return value == null || value.equals("");
     }

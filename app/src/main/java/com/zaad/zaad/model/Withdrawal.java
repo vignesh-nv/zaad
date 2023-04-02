@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.Date;
 
 public class Withdrawal {
+
+    private String withdrawalId;
     private int amount;
 
     private Date requestedDate;
@@ -75,5 +77,13 @@ public class Withdrawal {
 
     public void setUpiId(String upiId) {
         this.upiId = upiId;
+    }
+
+    public String getWithdrawalId() {
+        return withdrawalId;
+    }
+
+    public void setWithdrawalId(String withdrawalId) {
+        this.withdrawalId = withdrawalId;
     }
 }

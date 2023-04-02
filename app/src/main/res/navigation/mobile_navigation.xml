@@ -49,9 +49,27 @@
         android:label="@string/title_my_level"/>
 
     <activity
+        android:id="@+id/my_earning_activity"
+        android:name="com.zaad.zaad.activity.EarningActivity"
+        tools:layout="@layout/activity_earning"
+        android:label="@string/title_earning"/>
+
+    <activity
+        android:id="@+id/language_activity"
+        android:name="com.zaad.zaad.activity.LanguageActivity"
+        tools:layout="@layout/activity_language"
+        android:label="@string/title_language"/>
+
+    <activity
         android:id="@+id/report_activity"
         android:name="com.zaad.zaad.activity.ReportActivity"
         tools:layout="@layout/activity_report"
         android:label="@string/title_report"/>
+
+    <activity
+        android:id="@+id/about_activity"
+        android:name="com.zaad.zaad.activity.AboutActivity"
+        tools:layout="@layout/activity_about"
+        android:label="@string/title_about"/>
 
 </navigation>

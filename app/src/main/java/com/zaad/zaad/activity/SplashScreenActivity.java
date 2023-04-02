@@ -61,7 +61,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshot -> {
                     User user = documentSnapshot.toObject(User.class);
                     if (user != null && user.isPaymentCompleted()) {
-                        Intent intent = new Intent(SplashScreenActivity.this, PersonalDetailsActivity.class);
+                        Intent intent = new Intent(SplashScreenActivity.this, HomeActivity.class);
                         startActivity(intent);
                         finish();
                     } else {

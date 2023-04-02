@@ -21,9 +21,27 @@
         android:title="@string/title_my_level" />
 
     <item
+        android:id="@+id/my_earning_activity"
+        android:icon="@drawable/ic_earning"
+        android:checked="true"
+        android:title="@string/title_earning" />
+
+    <item
+        android:id="@+id/language_activity"
+        android:icon="@drawable/ic_language"
+        android:checked="true"
+        android:title="@string/title_language" />
+
+    <item
         android:id="@+id/report_activity"
         android:icon="@drawable/ic_report"
         android:checked="true"
         android:title="@string/title_report" />
+
+    <item
+        android:id="@+id/about_activity"
+        android:icon="@drawable/ic_menu_send"
+        android:checked="true"
+        android:title="@string/title_about" />
 
 </menu>

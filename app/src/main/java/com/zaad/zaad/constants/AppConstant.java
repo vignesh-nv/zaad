@@ -5,6 +5,7 @@ public class AppConstant {
     public static String CHILD_MODE = "CHILD_MODE";
 
     public static String DAILY_TASK_VIDEO_COMPLETED_COUNT = "DAILY_TASK_VIDEO_COMPLETED_COUNT";
+    public static String SHOW_REWARDS_BADGE = "SHOW_REWARDS_BADGE";
 
     public static String DAILY_TASK_SHORTS_COMPLETED_COUNT = "DAILY_TASK_SHORTS_COMPLETED_COUNT";
 

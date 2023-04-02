@@ -1,9 +1,15 @@
 package com.zaad.zaad.ui.rewards;
 
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
+import static com.zaad.zaad.constants.AppConstant.SHOW_REWARDS_BADGE;
+import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.zaad.zaad.R;
 import com.zaad.zaad.activity.CouponsActivity;
@@ -51,12 +58,17 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
 
     AvailableCouponsAdapter availableCouponsAdapter;
 
+    TextView noAvailableCouponsTxt, noRedeemedCouponsTxt;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_rewards, container, false);
         availableCouponsRecyclerView = view.findViewById(R.id.available_coupons_recyclerView);
         redeemedCouponsRecyclerView = view.findViewById(R.id.redeemed_coupons_recyclerView);
+
+        noAvailableCouponsTxt = view.findViewById(R.id.no_coupons_available_text);
+        noRedeemedCouponsTxt = view.findViewById(R.id.no_redeemed_coupons_txt);
 
         mViewModel = new ViewModelProvider(getActivity()).get(RewardsViewModel.class);
 
@@ -71,10 +83,23 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
         mViewModel.getUser().observe(getActivity(), data -> {
             user.setAvailableCoupons(data.getAvailableCoupons());
             Log.i("RewardsFragment", user.toString());
+            if (data.getAvailableCoupons() == 0) {
+                noAvailableCouponsTxt.setVisibility(View.VISIBLE);
+                availableCouponsRecyclerView.setVisibility(View.GONE);
+            } else {
+                noAvailableCouponsTxt.setVisibility(View.GONE);
+                availableCouponsRecyclerView.setVisibility(View.VISIBLE);
+            }
             availableCouponsAdapter.notifyDataSetChanged();
         });
 
         loadData();
+
+        SharedPreferences sharedPref = getContext().getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(SHOW_REWARDS_BADGE, false);
+        editor.apply();
+
         return view;
     }
 
@@ -89,6 +114,13 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
         mViewModel.getMyCoupons().observe(getActivity(), data -> {
             couponList.clear();
             couponList.addAll(data);
+            if (data.size() == 0) {
+                noRedeemedCouponsTxt.setVisibility(View.VISIBLE);
+                redeemedCouponsRecyclerView.setVisibility(View.GONE);
+            } else {
+                noRedeemedCouponsTxt.setVisibility(View.GONE);
+                redeemedCouponsRecyclerView.setVisibility(View.VISIBLE);
+            }
             redeemedCouponsAdapter.notifyDataSetChanged();
         });
     }

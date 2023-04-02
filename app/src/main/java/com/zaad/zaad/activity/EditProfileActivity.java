@@ -13,12 +13,18 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zaad.zaad.R;
+import com.zaad.zaad.model.State;
 import com.zaad.zaad.model.User;
+import com.zaad.zaad.utils.AppUtils;
 import com.zaad.zaad.viewmodel.MyAccountViewModel;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +39,15 @@ public class EditProfileActivity extends AppCompatActivity {
     private User user;
     private MaterialButton saveBtn;
 
+    AutoCompleteTextView stateTextView, districtTextView;
     private String language;
+    ArrayAdapter<String> districtAdapter;
+    Map<String, List<String>> stateDistrictMap = new HashMap<>();
+    List<String> stateList = new ArrayList<>();
+
+    List<String> districtList = new ArrayList<>();
+
+    String state, district;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +60,7 @@ public class EditProfileActivity extends AppCompatActivity {
             updateUI();
         });
 
+        readStatesAndDistrictData();
         saveBtn.setOnClickListener(view -> updateUser());
     }
 
@@ -65,8 +80,51 @@ public class EditProfileActivity extends AppCompatActivity {
             language = selectedOption;
         });
         editTextFilledExposedDropdown.setText(user.getLanguage(), false);
-
     }
+
+    private void setupStateDropDown() {
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(
+                        this,
+                        R.layout.dropdown_menu_district_item,
+                        stateList);
+
+        stateTextView =
+                findViewById(R.id.state_drop_down);
+        stateTextView.setAdapter(adapter);
+        stateTextView.setOnItemClickListener((adapterView, view, i, l) -> {
+            String selectedOption = adapterView.getItemAtPosition(i).toString();
+            if (districtTextView.getAdapter() == null) {
+                districtTextView.setAdapter(districtAdapter);
+            }
+            districtList.clear();
+            districtList.addAll(stateDistrictMap.get(selectedOption));
+            districtAdapter.notifyDataSetChanged();
+            district = "";
+            state = selectedOption;
+            districtTextView.setText("", false);
+        });
+        stateTextView.setText(user.getState(), false);
+    }
+
+    private void setupDistrictDropDown() {
+        Log.i("StateDistrict", stateDistrictMap.toString());
+        districtList.addAll(stateDistrictMap.get(user.getState()));
+        districtAdapter =
+                new ArrayAdapter<>(
+                        this,
+                        R.layout.dropdown_menu_district_item,
+                        districtList);
+
+        districtTextView =
+                findViewById(R.id.district_drop_down);
+        districtTextView.setAdapter(districtAdapter);
+        districtTextView.setOnItemClickListener((adapterView, view, i, l) -> {
+            district = adapterView.getItemAtPosition(i).toString();
+        });
+        districtTextView.setText(user.getDistrict(), false);
+    }
+
     private void setupUI() {
         fullNameTxt = findViewById(R.id.full_name_edit_text);
         emailTxt = findViewById(R.id.email_edit_text);
@@ -82,8 +140,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void updateUI() {
         setupLanguageDropDown();
+        setupStateDropDown();
+        setupDistrictDropDown();
         fullNameTxt.setText(user.getName());
-        emailTxt.setText(user.getEmail());
         phoneNumberTxt.setText(user.getPhoneNumber());
         addressTxt.setText(user.getAddress());
         if (user.getAccountDetails() != null) {
@@ -97,14 +156,17 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void updateUser() {
         Map<String, Object> updates = new HashMap<>();
+        if (state != null && !user.getState().equals(state)) {
+            if (district == null || district.equals("")) {
+                Toast.makeText(this, "Select District", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
         String name = fullNameTxt.getText().toString();
         if (!name.equals(user.getName())) {
             updates.put("name", name);
         }
-        String email = emailTxt.getText().toString();
-        if (!email.equals(user.getEmail())) {
-            updates.put("email", email);
-        }
+
         String phoneNumber = phoneNumberTxt.getText().toString();
         if (!phoneNumber.equals(user.getPhoneNumber())) {
             updates.put("phoneNumber", phoneNumber);
@@ -114,12 +176,12 @@ public class EditProfileActivity extends AppCompatActivity {
             updates.put("address", address);
         }
         String accountHolderName = accountHolderNameTxt.getText().toString();
-        if (user.getAccountDetails()== null || !accountHolderName.equals(user.getAccountDetails().getAccountHolderName())) {
+        if (user.getAccountDetails() == null || !accountHolderName.equals(user.getAccountDetails().getAccountHolderName())) {
             updates.put("accountDetails.accountHolderName", accountHolderName);
         }
 
         String accountNumber = accountNumberTxt.getText().toString();
-        if (user.getAccountDetails()== null || !accountNumber.equals(user.getAccountDetails().getAccountNumber())) {
+        if (user.getAccountDetails() == null || !accountNumber.equals(user.getAccountDetails().getAccountNumber())) {
             updates.put("accountDetails.accountNumber", accountNumber);
         }
         String bankName = bankNameTxt.getText().toString();
@@ -134,11 +196,34 @@ public class EditProfileActivity extends AppCompatActivity {
         if (user.getAccountDetails() == null || !ifsc.equals(user.getAccountDetails().getUpi())) {
             updates.put("accountDetails.upi", upi);
         }
-        if (!user.getLanguage().equals(language)) {
-            updates.put("language", language);
+        if (language != null) {
+            if (user.getLanguage() == null || !user.getLanguage().equals(language))
+                updates.put("language", language);
+        }
+        if (state != null) {
+            if (!state.equals(user.getState())) {
+                updates.put("state", state);
+            }
+        }
+        if (district != null) {
+            if (!district.equals(user.getDistrict())) {
+                updates.put("district", district);
+            }
         }
         myAccountViewModel.updateUser(updates);
         Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    private void readStatesAndDistrictData() {
+        String jsonString = AppUtils.getJsonFromAssets(this, "districts.json");
+        Gson gson = new Gson();
+        Type listStateType = new TypeToken<List<State>>() {}.getType();
+        List<State> states = gson.fromJson(jsonString, listStateType);
+
+        for (State state : states) {
+            stateDistrictMap.put(state.getName(), state.getDistricts());
+            stateList.add(state.getName());
+        }
     }
 }

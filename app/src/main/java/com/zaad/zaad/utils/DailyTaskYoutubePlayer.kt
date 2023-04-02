@@ -93,7 +93,9 @@ class DailyTaskYoutubePlayer(private val youTubePlayerView: YouTubePlayerView, p
     }
 
     init {
-        onFullScreenButtonListener = View.OnClickListener { youTubePlayerView.toggleFullScreen() }
+        onFullScreenButtonListener = View.OnClickListener {
+            youTubePlayerView.toggleFullScreen()
+        }
 
         initClickListeners()
     }
@@ -109,7 +111,9 @@ class DailyTaskYoutubePlayer(private val youTubePlayerView: YouTubePlayerView, p
         youtubePlayerSeekBar.seekBar.isEnabled = false;
         panel.setOnClickListener { fadeControlsContainer.toggleVisibility() }
         playPauseButton.setOnClickListener { onPlayButtonPressed() }
-        fullScreenButton.setOnClickListener { onFullScreenButtonListener.onClick(fullScreenButton) }
+        fullScreenButton.setOnClickListener {
+            onFullScreenButtonListener.onClick(fullScreenButton)
+        }
     }
 
     override fun showVideoTitle(show: Boolean): PlayerUiController {

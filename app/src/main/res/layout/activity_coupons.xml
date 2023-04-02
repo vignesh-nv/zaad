@@ -22,30 +22,35 @@
             app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/fashionChip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fashion" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/electronicsChip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Electronics" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/foodChip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Food" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/ecommerceChip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ecommerce" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/furnitureChip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

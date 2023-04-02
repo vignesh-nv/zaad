@@ -11,6 +11,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
@@ -25,6 +26,7 @@ import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.YoutubeSuggestionVideosAdapter;
 import com.zaad.zaad.listeners.OnSuggestionVideoClick;
 import com.zaad.zaad.model.Video;
+import com.zaad.zaad.utils.YoutubePlayerController;
 import com.zaad.zaad.viewmodel.YoutubeVideosViewModel;
 
 import java.util.ArrayList;
@@ -76,7 +78,20 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnS
         YouTubePlayerListener listener = new AbstractYouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-                DefaultPlayerUiController defaultPlayerUiController = new DefaultPlayerUiController(youTubePlayerView, youTubePlayer);
+                YoutubePlayerController defaultPlayerUiController = new YoutubePlayerController(youTubePlayerView, youTubePlayer);
+                defaultPlayerUiController.setFullScreenButtonClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        switch (getResources().getConfiguration().orientation) {
+                            case Configuration.ORIENTATION_LANDSCAPE:
+                                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                                break;
+                            case Configuration.ORIENTATION_PORTRAIT:
+                                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                                break;
+                        }
+                    }
+                });
                 youTubePlayerView.setCustomPlayerUi(defaultPlayerUiController.getRootView());
                 YouTubePlayerUtils.loadOrCueVideo(
                         youTubePlayer,
@@ -95,8 +110,6 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnS
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Toast.makeText(this, "Configuration change", Toast.LENGTH_SHORT).show();
-
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             youTubePlayerView.enterFullScreen();
@@ -109,7 +122,7 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnS
     }
 
     private void setupSuggestionVideos() {
-        youtubeVideosViewModel.getYoutubeVideosByCategory("comedy").observe(this, data -> {
+        youtubeVideosViewModel.getYoutubeVideosByCategory(category).observe(this, data -> {
             suggestionVideos.clear();
             suggestionVideos.addAll(data);
             youtubeSuggestionVideosAdapter.notifyDataSetChanged();
@@ -121,6 +134,7 @@ public class YoutubeVideoPlayerActivity extends AppCompatActivity implements OnS
     public void onClick(Video video) {
         Intent intent = new Intent(this, YoutubeVideoPlayerActivity.class);
         intent.putExtra("VIDEO_ID", video.getVideoUrl());
+        intent.putExtra("CATEGORY", category);
         startActivity(intent);
         finish();
     }

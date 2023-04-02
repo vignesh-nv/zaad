@@ -2,6 +2,7 @@ package com.zaad.zaad.activity;
 
 import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_SHORTS_COMPLETED_COUNT;
 import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
+import static com.zaad.zaad.constants.AppConstant.SHOW_REWARDS_BADGE;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -93,7 +94,10 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
 
         if (videoWatched == 24) {
             editor.putInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
+            editor.putBoolean(SHOW_REWARDS_BADGE, true);
             editor.apply();
+            dailyTaskViewModel.incrementAvailableCoupons();
+            Toast.makeText(this, "You won a coupon!!!", Toast.LENGTH_SHORT).show();
         } else {
             editor.putInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, videoWatched + 1);
             editor.apply();

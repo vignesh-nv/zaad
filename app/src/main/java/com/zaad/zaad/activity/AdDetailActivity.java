@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.zaad.zaad.R;
 import com.zaad.zaad.model.AdBanner;
@@ -54,6 +55,9 @@ public class AdDetailActivity extends AppCompatActivity {
                     updateUI(adBanner);
             }
         });
+        firestore.collection("adBanner")
+                .document(id)
+                .update("views", FieldValue.increment(1));
     }
 
     private void updateUI(AdBanner adBanner) {
