@@ -2,7 +2,7 @@ package com.zaad.zaad.model;
 
 import java.util.List;
 
-public class HomeItem implements Comparable{
+public class HomeItem implements Comparable {
     private String title;
     private List<Video> videos;
     private String category;
@@ -11,6 +11,10 @@ public class HomeItem implements Comparable{
     private int order;
     private boolean showVideoCategory;
     private String videoCategory;
+
+    private List<String> categoryFilter;
+
+    boolean languageFilter;
 
     public HomeItem() {
     }
@@ -69,6 +73,22 @@ public class HomeItem implements Comparable{
 
     public void setVideoCategory(String videoCategory) {
         this.videoCategory = videoCategory;
+    }
+
+    public boolean isLanguageFilter() {
+        return languageFilter;
+    }
+
+    public void setLanguageFilter(boolean languageFilter) {
+        this.languageFilter = languageFilter;
+    }
+
+    public List<String> getCategoryFilter() {
+        return categoryFilter;
+    }
+
+    public void setCategoryFilter(List<String> categoryFilter) {
+        this.categoryFilter = categoryFilter;
     }
 
     @Override

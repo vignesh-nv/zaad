@@ -133,6 +133,19 @@
 
 
             <ImageView
+                android:id="@+id/youtube_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ayp_ic_youtube_24dp"
+                android:padding="8dp"
+
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ayp_background_item_selected"
+
+                android:contentDescription="@string/ayp_open_video_in_youtube" />
+
+            <ImageView
                 android:id="@+id/fullscreen_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -171,18 +184,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ayp_ic_play_36dp"
-
             android:visibility="gone"
-
             android:padding="8dp"
             android:layout_margin="32dp"
-
             android:clickable="true"
             android:focusable="true"
             android:background="@drawable/ayp_background_item_selected"
-
             android:contentDescription="@string/ayp_custom_action_right"
-
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/play_pause_button" />
 

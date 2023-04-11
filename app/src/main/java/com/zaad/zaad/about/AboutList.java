@@ -94,7 +94,7 @@ public class AboutList extends MaterialAboutActivity {
                         .sizeDp(18),
                 "Email",
                 true,
-                "service@biaracorp.in",
+                "services@baiaracorp.in",
                 "Contact us for project inquiry"));
 
         developedByCardBuilder.addItem(ConvenienceBuilder.createWebsiteActionItem(c,
@@ -137,7 +137,7 @@ public class AboutList extends MaterialAboutActivity {
                         .sizeDp(18),
                 "Send an email",
                 true,
-                "khanzoenterprises@gmail.com",
+                "contact@khanzoplay.com",
                 "Question concerning Khanzoplay App"));
 
 

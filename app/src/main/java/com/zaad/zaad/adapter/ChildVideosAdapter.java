@@ -69,7 +69,8 @@ public class ChildVideosAdapter extends RecyclerView.Adapter<ChildVideosAdapter.
         viewHolder.moreBtn.setOnClickListener(view -> {
             Intent intent = new Intent(context, YoutubeFullVideosActivity.class);
             intent.putExtra("CATEGORY", item.getCategory());
-            intent.putExtra("COLLECTION", "music");
+            intent.putExtra("COLLECTION", item.getCollection());
+            intent.putExtra("TITLE", item.getTitle());
             context.startActivity(intent);
         });
     }

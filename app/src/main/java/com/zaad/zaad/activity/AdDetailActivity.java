@@ -47,7 +47,7 @@ public class AdDetailActivity extends AppCompatActivity {
         imageLoader.enqueue(request);
 
         firestore = FirebaseFirestore.getInstance();
-        firestore.collection("adBanner").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        firestore.collection("imageBanner").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 AdBanner adBanner = documentSnapshot.toObject(AdBanner.class);
@@ -55,7 +55,7 @@ public class AdDetailActivity extends AppCompatActivity {
                     updateUI(adBanner);
             }
         });
-        firestore.collection("adBanner")
+        firestore.collection("imageBanner")
                 .document(id)
                 .update("views", FieldValue.increment(1));
     }
@@ -63,7 +63,7 @@ public class AdDetailActivity extends AppCompatActivity {
     private void updateUI(AdBanner adBanner) {
         String address = "Address: " + adBanner.getAddress();
         String email = "Email: " + adBanner.getEmail();
-        String contactNumber = "Contact Number: " + adBanner.getContactNumber();
+        String contactNumber = "Contact Number: " + adBanner.getPhoneNumber();
         adAddressTxt.setText(address);
         adEmailTxt.setText(email);
         adContactNumberTxt.setText(contactNumber);

@@ -125,7 +125,6 @@ public class CouponsActivity extends AppCompatActivity implements CouponOnClickL
     }
 
     private void loadCoupons(final String couponsCategory) {
-        Toast.makeText(this, couponsCategory, Toast.LENGTH_SHORT).show();
         couponsViewModel.getOnlineCouponsByCategory(couponsCategory).observe(this, data -> {
             couponList.clear();
             couponList.addAll(data);

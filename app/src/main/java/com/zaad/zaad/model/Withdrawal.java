@@ -20,6 +20,12 @@ public class Withdrawal {
 
     private String upiId;
 
+    private String accountHolderName;
+
+    private String ifscCode;
+
+    private String bankName;
+
     public Withdrawal() {
     }
 
@@ -85,5 +91,29 @@ public class Withdrawal {
 
     public void setWithdrawalId(String withdrawalId) {
         this.withdrawalId = withdrawalId;
+    }
+
+    public String getAccountHolderName() {
+        return accountHolderName;
+    }
+
+    public void setAccountHolderName(String accountHolderName) {
+        this.accountHolderName = accountHolderName;
+    }
+
+    public String getIfscCode() {
+        return ifscCode;
+    }
+
+    public void setIfscCode(String ifscCode) {
+        this.ifscCode = ifscCode;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

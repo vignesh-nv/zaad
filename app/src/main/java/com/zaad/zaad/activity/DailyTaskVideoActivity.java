@@ -21,6 +21,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
@@ -35,6 +39,7 @@ import com.zaad.zaad.adapter.DailyTaskSuggestionVideoAdapter;
 import com.zaad.zaad.listeners.DailyTaskSuggestionVideoClickListener;
 import com.zaad.zaad.model.Coupon;
 import com.zaad.zaad.model.DailyTaskVideo;
+import com.zaad.zaad.model.User;
 import com.zaad.zaad.ui.dailytask.DailyTaskViewModel;
 import com.zaad.zaad.utils.DailyTaskYoutubePlayer;
 
@@ -65,6 +70,11 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
 
     float currentSecond = 0;
     FirebaseFirestore firestore;
+
+    FirebaseUser firebaseUser;
+
+    User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,12 +85,20 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
         dailyTaskViewModel = new ViewModelProvider(this).get(DailyTaskViewModel.class);
 
         youTubePlayerView = findViewById(R.id.youtube_player_view);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
         loadYoutubePlayer();
-        getUncompletedTaskVideos();
         loadSuggestedVideos();
+
+
+        firestore.collection("user").document(firebaseUser.getEmail())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    user = documentSnapshot.toObject(User.class);
+                    getUncompletedTaskVideos();
+                });
         dailyTaskViewModel.getWatchedSeconds(dailyTaskVideo.getTaskId()).observe(this, data -> {
-            if (data != null){
+            if (data != null) {
                 currentSecond = data;
                 Log.i("DailyTaskVideo S:", String.valueOf(currentSecond));
             } else {
@@ -146,6 +164,7 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
 
         youTubePlayerView.initialize(listener, options);
     }
+
     private void loadSuggestedVideos() {
         recyclerView = findViewById(R.id.daily_task_suggestion_task_recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,
@@ -161,7 +180,7 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
             completedTaskIds.addAll(data);
         });
 
-        dailyTaskViewModel.getDailyTaskVideos().observe(this, data -> {
+        dailyTaskViewModel.getDailyTaskVideos(user.getLanguage()).observe(this, data -> {
             uncompletedTasks.clear();
             uncompletedTasks.addAll(data);
 
@@ -227,8 +246,7 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             youTubePlayerView.enterFullScreen();
-        }
-        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             youTubePlayerView.exitFullScreen();
         }
     }

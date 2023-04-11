@@ -92,6 +92,8 @@ public class SignupActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     sendVerificationEmail();
+                } else {
+                    Toast.makeText(SignupActivity.this, "Error Occured", Toast.LENGTH_SHORT).show();
                 }
             }
         });

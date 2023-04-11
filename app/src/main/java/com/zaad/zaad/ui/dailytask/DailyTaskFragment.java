@@ -20,10 +20,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.zaad.zaad.adapter.DailyTaskShortsAdapter;
 import com.zaad.zaad.adapter.DailyTasksAdapter;
 import com.zaad.zaad.databinding.FragmentDailyTaskBinding;
 import com.zaad.zaad.model.DailyTaskVideo;
+import com.zaad.zaad.model.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,13 +50,29 @@ public class DailyTaskFragment extends Fragment {
 
     private TextView shortsWatchedCount, videosWatchedCount;
 
+    private FirebaseUser firebaseUser;
+
+    private User user;
+
+    private DailyTaskViewModel dailyTaskViewModel;
+
+    private DailyTasksAdapter dailyTasksAdapter;
+
+    private DailyTaskShortsAdapter shortsAdapter;
+
+    private FirebaseFirestore firestore;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DailyTaskViewModel dailyTaskViewModel =
+        dailyTaskViewModel =
                 new ViewModelProvider(this).get(DailyTaskViewModel.class);
 
         binding = FragmentDailyTaskBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        firestore = FirebaseFirestore.getInstance();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         recyclerView = binding.dailyTaskVideosRecyclerview;
         shortsRecyclerView = binding.dailyTaskShortsRecyclerview;
         shortsWatchedCount = binding.shortsWatchedCount;
@@ -59,26 +81,38 @@ public class DailyTaskFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager shortsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        DailyTasksAdapter dailyTasksAdapter = new DailyTasksAdapter(dailyTasksList, completedTaskIds,  getContext());
+        dailyTasksAdapter = new DailyTasksAdapter(dailyTasksList, completedTaskIds, getContext());
 
         recyclerView.setAdapter(dailyTasksAdapter);
         recyclerView.setLayoutManager(layoutManager);
 
-        DailyTaskShortsAdapter shortsAdapter = new DailyTaskShortsAdapter(dailyTaskShorts, completedTaskIds, getContext());
+        shortsAdapter = new DailyTaskShortsAdapter(dailyTaskShorts, completedTaskIds, getContext());
 
         shortsRecyclerView.setAdapter(shortsAdapter);
         shortsRecyclerView.setLayoutManager(shortsLayoutManager);
 
+        firestore.collection("user").document(firebaseUser.getEmail())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    user = documentSnapshot.toObject(User.class);
+                    loadDailyTask();
+                });
+
+        loadWatchedCount();
+        return root;
+    }
+
+    private void loadDailyTask() {
         dailyTaskViewModel.getCompletedTasksIds().observe(getViewLifecycleOwner(), data -> {
             completedTaskIds.addAll(data);
             dailyTasksAdapter.notifyDataSetChanged();
             shortsAdapter.notifyDataSetChanged();
         });
 
-        dailyTaskViewModel.getDailyTaskVideos().observe(getViewLifecycleOwner(), data -> {
+        dailyTaskViewModel.getDailyTaskVideos(user.getLanguage()).observe(getViewLifecycleOwner(), data -> {
             dailyTasksList.clear();
             List<DailyTaskVideo> tasks = new ArrayList<>();
-            for (DailyTaskVideo video: data) {
+            for (DailyTaskVideo video : data) {
                 if (!completedTaskIds.contains(video.getTaskId())) {
                     dailyTasksList.add(video);
                 } else {
@@ -88,10 +122,10 @@ public class DailyTaskFragment extends Fragment {
             dailyTasksList.addAll(tasks);
             dailyTasksAdapter.notifyDataSetChanged();
         });
-        dailyTaskViewModel.getDailyTaskShorts().observe(getViewLifecycleOwner(), data -> {
+        dailyTaskViewModel.getDailyTaskShorts(user.getLanguage()).observe(getViewLifecycleOwner(), data -> {
             dailyTaskShorts.clear();
             List<DailyTaskVideo> tasks = new ArrayList<>();
-            for (DailyTaskVideo video: data) {
+            for (DailyTaskVideo video : data) {
                 if (!completedTaskIds.contains(video.getTaskId())) {
                     dailyTaskShorts.add(video);
                 } else {
@@ -101,8 +135,6 @@ public class DailyTaskFragment extends Fragment {
             dailyTaskShorts.addAll(tasks);
             shortsAdapter.notifyDataSetChanged();
         });
-        loadWatchedCount();
-        return root;
     }
 
     @Override

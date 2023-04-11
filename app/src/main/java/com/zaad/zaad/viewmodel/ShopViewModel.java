@@ -21,6 +21,17 @@ public class ShopViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<List<Shop>> getShopList(String availability) {
-        return firestoreRepository.getShopList(availability);
+        if (availability.equals("OFFLINE")) {
+            return firestoreRepository.getOfflineShops();
+        }
+        return firestoreRepository.getOnlineShops();
+    }
+
+    public MutableLiveData<List<Shop>> getOfflineShopByDistrict(List<String> districts) {
+        return firestoreRepository.getOfflineShopByDistricts(districts);
+    }
+
+    public MutableLiveData<List<Shop>> getOnlineShopByCategory(final String category) {
+        return firestoreRepository.getOnlineShopListByCategory(category);
     }
 }

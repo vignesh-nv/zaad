@@ -42,6 +42,14 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser() {
         String email = emailTxt.getText().toString();
         String password = passwordTxt.getText().toString();
+        if (email.equals("")) {
+            Toast.makeText(this, "Enter email address", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (password.equals("")) {
+            Toast.makeText(this, "Enter password", Toast.LENGTH_SHORT).show();
+            return;
+        }
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {

@@ -39,6 +39,7 @@ class YoutubePlayerController(private val youTubePlayerView: YouTubePlayerView, 
 
     private val progressBar: ProgressBar = rootView.findViewById(R.id.progress)
     private val menuButton: ImageView = rootView.findViewById(R.id.menu_button)
+    private val youTubeButton: ImageView = rootView.findViewById(R.id.youtube_button)
     private val playPauseButton: ImageView = rootView.findViewById(R.id.play_pause_button)
     private val fullScreenButton: ImageView = rootView.findViewById(R.id.fullscreen_button)
 
@@ -89,7 +90,14 @@ class YoutubePlayerController(private val youTubePlayerView: YouTubePlayerView, 
         }
 
         override fun onVideoId(youTubePlayer: YouTubePlayer, videoId: String) {
-
+            youTubeButton.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videoId + "#t=" + youtubePlayerSeekBar.seekBar.progress))
+                try {
+                    youTubeButton.context.startActivity(intent)
+                } catch (e: Exception) {
+                    Log.e(javaClass.simpleName, e.message ?: "Can't open url to YouTube")
+                }
+            }
         }
     }
 
@@ -116,9 +124,9 @@ class YoutubePlayerController(private val youTubePlayerView: YouTubePlayerView, 
         videoTitle.visibility = if (show) View.VISIBLE else View.GONE
         return this
     }
-
     override fun showYouTubeButton(show: Boolean): PlayerUiController {
-        TODO("Not yet implemented")
+        youTubeButton.visibility = if (show) View.VISIBLE else View.GONE
+        return this
     }
 
     override fun setVideoTitle(videoTitle: String): PlayerUiController {

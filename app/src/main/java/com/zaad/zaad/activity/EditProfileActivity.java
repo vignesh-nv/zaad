@@ -65,7 +65,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void setupLanguageDropDown() {
-        List<String> optionsList = Arrays.asList("Tamil", "Telugu", "Malayalam", "Hindi", "Kannada");
+        List<String> optionsList = Arrays.asList("Tamil", "Telugu", "Malayalam", "Hindi", "Kannada", "English");
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(
                         this,

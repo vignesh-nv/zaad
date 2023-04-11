@@ -263,8 +263,7 @@ public class PersonalDetailsActivity extends AppCompatActivity {
     private void readStatesAndDistrictData() {
         String jsonString = AppUtils.getJsonFromAssets(this, "districts.json");
         Gson gson = new Gson();
-        Type listStateType = new TypeToken<List<State>>() {
-        }.getType();
+        Type listStateType = new TypeToken<List<State>>() {}.getType();
 
         Log.i("JsonString", "" + jsonString);
         List<State> states = gson.fromJson(jsonString, listStateType);

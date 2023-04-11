@@ -15,11 +15,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.DailyTaskShortsVideoAdapter;
 import com.zaad.zaad.adapter.YoutubeShortsVideoAdapter;
 import com.zaad.zaad.listeners.ShortsPlayCompletedListener;
 import com.zaad.zaad.model.DailyTaskVideo;
+import com.zaad.zaad.model.User;
 import com.zaad.zaad.model.Video;
 import com.zaad.zaad.ui.dailytask.DailyTaskViewModel;
 import com.zaad.zaad.viewmodel.YoutubeVideosViewModel;
@@ -38,17 +44,28 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
     DailyTaskShortsVideoAdapter shortsAdapter;
     DailyTaskVideo video;
 
+    FirebaseUser firebaseUser;
+    User user;
+    FirebaseFirestore firestore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_task_shorts_player);
         video = (DailyTaskVideo) getIntent().getSerializableExtra("TASK");
 
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firestore = FirebaseFirestore.getInstance();
+        firestore.collection("user").document(firebaseUser.getEmail())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    user = documentSnapshot.toObject(User.class);
+                    getUncompletedTaskVideos();
+                });
         dailyTaskViewModel = new ViewModelProvider(this).get(DailyTaskViewModel.class);
         dailyTaskShorts.add(video);
         viewPager = findViewById(R.id.view_pager);
 
-        getUncompletedTaskVideos();
     }
 
     private void getUncompletedTaskVideos() {
@@ -57,11 +74,14 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
             completedTaskIds.addAll(data);
         });
 
-        dailyTaskViewModel.getDailyTaskShorts().observe(this, data -> {
+        dailyTaskViewModel.getDailyTaskShorts(user.getLanguage()).observe(this, data -> {
             dailyTaskShorts.clear();
             dailyTaskShorts.add(video);
             List<DailyTaskVideo> completedTasks = new ArrayList<>();
             for (DailyTaskVideo taskVideo: data) {
+                if (taskVideo.getTaskId().equals(video.getTaskId())) {
+                    continue;
+                }
                 if (!completedTaskIds.contains(taskVideo.getTaskId())) {
                     dailyTaskShorts.add(taskVideo);
                 } else {

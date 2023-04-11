@@ -29,7 +29,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        subscribeToTopic();
         new Handler().postDelayed(this::checkChildMode, 1000);
     }
 
@@ -37,9 +36,14 @@ public class SplashScreenActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         boolean childMode = sharedPref.getBoolean(CHILD_MODE, false);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (firebaseUser != null && firebaseUser.getEmail() != null) {
+            subscribeToTopic();
+        }
         if (childMode) {
             Intent intent = new Intent(SplashScreenActivity.this, ChildModeActivity.class);
             startActivity(intent);
+            finish();
         } else if (firebaseUser != null) {
             checkEmailAndPaymentStatus();
         } else {
@@ -81,11 +85,15 @@ public class SplashScreenActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(SUBSCRIBED_TO_TOPIC, true);
         editor.apply();
-        FirebaseMessaging.getInstance().subscribeToTopic("withdrawal")
+        String userId = firebaseUser.getEmail().substring(0, firebaseUser.getEmail().indexOf("@"));
+        FirebaseMessaging.getInstance().subscribeToTopic(userId)
                 .addOnCompleteListener(task -> {
                     String msg = "Subscribed";
                     if (!task.isSuccessful()) {
                         msg = "Subscribe failed";
+                        Toast.makeText(this, userId + "Failed", Toast.LENGTH_SHORT).show();
+                        Log.e("SplashScreen", task.getException().toString());
+                        Log.e("SplashScreen", task.getResult().toString());
                     }
                     Log.d("SplashScreenActivity", msg);
                 });

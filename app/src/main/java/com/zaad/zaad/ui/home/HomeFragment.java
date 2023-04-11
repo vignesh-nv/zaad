@@ -21,8 +21,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.zaad.zaad.R;
@@ -33,6 +39,7 @@ import com.zaad.zaad.databinding.FragmentHomeBinding;
 import com.zaad.zaad.listeners.AdCompleteListener;
 import com.zaad.zaad.model.AdBanner;
 import com.zaad.zaad.model.HomeItem;
+import com.zaad.zaad.model.User;
 import com.zaad.zaad.model.Video;
 import com.zaad.zaad.utils.CirclePagerIndicatorDecorator;
 import com.zaad.zaad.utils.DotsIndicatorDecoration;
@@ -42,6 +49,7 @@ import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements AdCompleteListener {
@@ -63,6 +71,10 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
     private List<HomeItem> items = new ArrayList<>();
 
     HomeAdapter homeAdapter;
+    FirebaseUser firebaseUser;
+
+    User user;
+
     boolean running = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -72,7 +84,11 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
 
         firestore = FirebaseFirestore.getInstance();
 
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        getUserDetails();
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+
         View root = binding.getRoot();
         recyclerView = binding.recyclerView;
 //        adRecyclerView = binding.adSliderRecyclerview;
@@ -104,7 +120,7 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
         recyclerView.setLayoutManager(layoutManager);
 //        homeViewModel.getCategories();
 
-        getHomeMenu();
+
         homeViewModel.getLiveCategoryData().observe(getActivity(), categoryList -> {
             Log.i("", "onCreateView: " + categoryList);
         });
@@ -112,6 +128,9 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
         homeViewModel.getVideoAdBanner().observe(getActivity(), data -> {
             videoAdBanners.clear();
             videoAdBanners.addAll(data);
+            if (data.size() == 0) {
+                adViewPager.setVisibility(View.GONE);
+            }
             adBannerVideosAdapter.notifyDataSetChanged();
         });
         return root;
@@ -151,47 +170,119 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
 
             for (HomeItem item : data) {
                 Log.i("HomeFragment Item", item.getTitle());
-                if (item.getVideoCategory()!=null && !item.getVideoCategory().equals(""))
+                if (item.getVideoCategory() != null && !item.getVideoCategory().equals(""))
                     firestore.collection(item.getCollection())
                             .whereEqualTo("category", item.getVideoCategory())
+                            .whereEqualTo("language", user.getLanguage())
                             .limit(10)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 List<Video> videos = new ArrayList<>();
-                                for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
+                                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
                                     videos.add(snapshot.toObject(Video.class));
                                 }
+                                Collections.sort(videos);
                                 count[0]++;
-                                item.setVideos(videos);
-                                tempHomeItems.add(item);
+                                if (videos.size() != 0) {
+                                    item.setVideos(videos);
+                                    tempHomeItems.add(item);
+                                }
                                 if (count[0] == data.size()) {
                                     running = false;
                                     Collections.sort(tempHomeItems);
                                     items.addAll(tempHomeItems);
-                                    Log.i("HomeFragment menu", String.valueOf(items.size()));
                                     homeAdapter.notifyDataSetChanged();
                                 }
                             });
                 else {
-                    firestore.collection(item.getCollection())
-                            .limit(10)
-                            .get()
-                            .addOnSuccessListener(queryDocumentSnapshots -> {
-                                List<Video> videos = new ArrayList<>();
-                                for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
-                                    videos.add(snapshot.toObject(Video.class));
-                                }
-                                count[0]++;
-                                item.setVideos(videos);
-                                tempHomeItems.add(item);
-                                if (count[0] == data.size()) {
-                                    running = false;
-                                    Collections.sort(tempHomeItems);
-                                    items.addAll(tempHomeItems);
-                                    Log.i("HomeFragment menu", String.valueOf(items.size()));
-                                    homeAdapter.notifyDataSetChanged();
-                                }
-                            });
+                    if (item.isLanguageFilter()) {
+                        List<String> categoryFilter = item.getCategoryFilter();
+                        if (categoryFilter == null) {
+                            firestore.collection(item.getCollection())
+                                    .whereEqualTo("language", user.getLanguage())
+                                    .limit(10)
+                                    .get()
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.i("HomeFragment", e.toString());
+                                        }
+                                    })
+                                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                                        List<Video> videos = new ArrayList<>();
+                                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                            videos.add(snapshot.toObject(Video.class));
+                                        }
+                                        Collections.sort(videos);
+
+                                        count[0]++;
+                                        if (videos.size() != 0) {
+                                            item.setVideos(videos);
+                                            tempHomeItems.add(item);
+                                        }
+                                        if (count[0] == data.size()) {
+                                            running = false;
+                                            Collections.sort(tempHomeItems);
+                                            items.addAll(tempHomeItems);
+                                            homeAdapter.notifyDataSetChanged();
+                                        }
+                                    });
+                        } else {
+                            firestore.collection(item.getCollection())
+                                    .whereEqualTo("language", user.getLanguage())
+                                    .whereNotIn("category", categoryFilter)
+                                    .limit(10)
+                                    .get()
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.i("HomeFragment", e.toString());
+                                        }
+                                    })
+                                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                                        List<Video> videos = new ArrayList<>();
+                                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                            videos.add(snapshot.toObject(Video.class));
+                                        }
+                                        Collections.sort(videos);
+
+                                        count[0]++;
+                                        if (videos.size() != 0) {
+                                            item.setVideos(videos);
+                                            tempHomeItems.add(item);
+                                        }
+                                        if (count[0] == data.size()) {
+                                            running = false;
+                                            Collections.sort(tempHomeItems);
+                                            items.addAll(tempHomeItems);
+                                            homeAdapter.notifyDataSetChanged();
+                                        }
+                                    });
+                        }
+                    } else {
+                        firestore.collection(item.getCollection())
+                                .limit(10)
+                                .get()
+                                .addOnSuccessListener(queryDocumentSnapshots -> {
+                                    List<Video> videos = new ArrayList<>();
+                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                        videos.add(snapshot.toObject(Video.class));
+                                    }
+                                    Collections.sort(videos);
+
+                                    count[0]++;
+                                    if (videos.size() != 0) {
+                                        item.setVideos(videos);
+                                        tempHomeItems.add(item);
+                                    }
+                                    if (count[0] == data.size()) {
+                                        running = false;
+                                        Collections.sort(tempHomeItems);
+                                        items.addAll(tempHomeItems);
+                                        homeAdapter.notifyDataSetChanged();
+                                    }
+                                });
+                    }
                 }
             }
         });
@@ -213,5 +304,14 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
                 adViewPager.setCurrentItem(newPosition, true);
             }
         }, 200);
+    }
+
+    private void getUserDetails() {
+        firestore.collection("user").document(firebaseUser.getEmail())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    user = documentSnapshot.toObject(User.class);
+                    getHomeMenu();
+                });
     }
 }

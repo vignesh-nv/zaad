@@ -24,6 +24,9 @@ public class YoutubeShortsActivity extends AppCompatActivity {
     String videoUrl;
     FirebaseFirestore firestore;
     List<Video> shorts = new ArrayList<>();
+    ViewPager2 viewPager2;
+
+    YoutubeShortsVideoAdapter videoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +35,12 @@ public class YoutubeShortsActivity extends AppCompatActivity {
 
         firestore = FirebaseFirestore.getInstance();
         videoUrl = getIntent().getStringExtra("VIDEO_URL");
-        final ViewPager2 viewPager2 = findViewById(R.id.view_pager);
+        viewPager2 = findViewById(R.id.view_pager);
         Video video = new Video();
         video.setVideoUrl(videoUrl);
-        viewPager2.setAdapter(new YoutubeShortsVideoAdapter(shorts));
+        shorts.add(video);
+        videoAdapter = new YoutubeShortsVideoAdapter(shorts);
+        viewPager2.setAdapter(videoAdapter);
         generateVideos();
     }
 
@@ -44,9 +49,14 @@ public class YoutubeShortsActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Video> shortsList = new ArrayList<>();
                     for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                        Video video = snapshot.toObject(Video.class);
+                        if (video.getVideoUrl().equals(videoUrl)) {
+                            continue;
+                        }
                         shortsList.add(snapshot.toObject(Video.class));
                     }
                     shorts.addAll(shortsList);
+                    videoAdapter.notifyDataSetChanged();
                 });
     }
 }

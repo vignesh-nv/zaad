@@ -7,7 +7,6 @@ public class Shop {
     private String name;
     private String address;
     private String phoneNumber;
-
     private Date openingTime;
 
     private Date closingTime;
@@ -15,6 +14,10 @@ public class Shop {
     private String buyLink;
 
     private String availability;
+
+    private String imageUrl;
+
+    private String websiteName;
 
     public Shop() {
     }
@@ -74,5 +77,21 @@ public class Shop {
 
     public void setAvailability(String availability) {
         this.availability = availability;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getWebsiteName() {
+        return websiteName;
+    }
+
+    public void setWebsiteName(String websiteName) {
+        this.websiteName = websiteName;
     }
 }

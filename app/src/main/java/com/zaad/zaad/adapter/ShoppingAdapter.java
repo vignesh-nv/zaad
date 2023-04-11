@@ -2,7 +2,6 @@ package com.zaad.zaad.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zaad.zaad.R;
 import com.zaad.zaad.model.Shop;
-import com.zaad.zaad.model.Video;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import coil.Coil;
+import coil.ImageLoader;
+import coil.request.ImageRequest;
 
 public class ShoppingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
@@ -52,11 +54,22 @@ public class ShoppingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 (ShoppingAdapter.OnlineShoppingViewHolder) viewHolder;
         onlineShoppingViewHolder.shopNameTxt.setText(shop.getName());
 
+        ImageLoader imageLoader = Coil.imageLoader(context);
+        ImageRequest request = new ImageRequest.Builder(context)
+                .data(shop.getImageUrl())
+                .crossfade(true)
+                .target(onlineShoppingViewHolder.shopImage)
+                .build();
+        imageLoader.enqueue(request);
+
         if (shop.getAvailability().equals("OFFLINE")) {
             onlineShoppingViewHolder.buyLink.setVisibility(View.GONE);
             onlineShoppingViewHolder.onlineAddressTxt.setVisibility(View.GONE);
             onlineShoppingViewHolder.onlineAddressTxt.setText(shop.getAddress());
+            onlineShoppingViewHolder.shopContactTxt.setText(shop.getPhoneNumber());
+            onlineShoppingViewHolder.shopAddressTxt.setText(shop.getAddress());
             onlineShoppingViewHolder.buyLinkLayout.setVisibility(View.GONE);
+
 
             Date openingTime = shop.getOpeningTime();
             Date closingTime = shop.getClosingTime();
@@ -75,7 +88,10 @@ public class ShoppingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             onlineShoppingViewHolder.contactLayout.setVisibility(View.GONE);
             onlineShoppingViewHolder.addressLayout.setVisibility(View.GONE);
             onlineShoppingViewHolder.timingLayout.setVisibility(View.GONE);
+            onlineShoppingViewHolder.onlineAddressTxt.setVisibility(View.VISIBLE);
 
+            onlineShoppingViewHolder.buyLink.setText(shop.getBuyLink());
+            onlineShoppingViewHolder.onlineAddressTxt.setText(shop.getWebsiteName());
             onlineShoppingViewHolder.shopAddressTxt.setText(shop.getAddress());
             onlineShoppingViewHolder.shopContactTxt.setText(shop.getPhoneNumber());
         }
@@ -88,7 +104,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     class OnlineShoppingViewHolder extends RecyclerView.ViewHolder {
         ImageView shopImage;
-        TextView shopNameTxt, shopContactTxt, buyLink, onlineAddressTxt, shopAddressTxt, shopStatus;
+        TextView shopNameTxt, shopContactTxt, buyLink, onlineAddressTxt, shopAddressTxt, shopStatus, websiteName;
 
         View buyLinkLayout, addressLayout, contactLayout, timingLayout;
 
@@ -109,4 +125,3 @@ public class ShoppingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 }
-

@@ -113,8 +113,7 @@
                     android:id="@+id/shop_contact_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="6381511648"/>
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 

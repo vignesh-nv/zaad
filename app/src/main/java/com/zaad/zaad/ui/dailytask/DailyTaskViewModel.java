@@ -39,8 +39,8 @@ public class DailyTaskViewModel extends AndroidViewModel {
         userRepository = new UserRepository();
     }
 
-    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskVideos() {
-        return firestoreRepository.getDailyTasks();
+    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskVideos(final String language) {
+        return firestoreRepository.getDailyTasks(language);
     }
 
     public LiveData<List<DailyTask>> getCompletedTasks() {
@@ -51,8 +51,8 @@ public class DailyTaskViewModel extends AndroidViewModel {
         return databaseRepository.getAllCompletedTaskIds();
     }
 
-    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskShorts() {
-        return firestoreRepository.getDailyTaskShorts();
+    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskShorts(final String language) {
+        return firestoreRepository.getDailyTaskShorts(language);
     }
 
     public void insertCompletedTask(DailyTaskVideo video) {

@@ -27,6 +27,7 @@ import com.zaad.zaad.model.Video;
 import com.zaad.zaad.viewmodel.ChildModeHomeViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ChildModeHomeFragment extends Fragment {
@@ -70,7 +71,7 @@ public class ChildModeHomeFragment extends Fragment {
 //            kidsMenu.clear();
 //            kidsMenu.addAll(data);
             for (HomeItem item : data) {
-                firestore.collection("kidsVideos").whereEqualTo("category", item.getCategory())
+                firestore.collection("childVideos").whereEqualTo("category", item.getCategory())
                         .limit(10)
                         .get()
                         .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -78,8 +79,11 @@ public class ChildModeHomeFragment extends Fragment {
                             for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
                                 videos.add(snapshot.toObject(Video.class));
                             }
-                            item.setVideos(videos);
-                            kidsMenu.add(item);
+                            if (videos.size()!=0) {
+                                Collections.sort(videos);
+                                item.setVideos(videos);
+                                kidsMenu.add(item);
+                            }
                             childVideosAdapter.notifyDataSetChanged();
                         });
 //                mViewModel.getVideosByCategory(item.getCategory()).observe(getViewLifecycleOwner(), videos -> {

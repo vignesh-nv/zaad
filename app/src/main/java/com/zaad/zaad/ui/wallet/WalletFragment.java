@@ -116,6 +116,9 @@ public class WalletFragment extends Fragment {
         withdrawal.setStatus("PENDING");
         withdrawal.setUpiId(user.getAccountDetails().getUpi());
         withdrawal.setAccountNumber(user.getAccountDetails().getAccountNumber());
+        withdrawal.setBankName(user.getAccountDetails().getBankName());
+        withdrawal.setIfscCode(user.getAccountDetails().getIfsc());
+        withdrawal.setAccountHolderName(user.getAccountDetails().getAccountHolderName());
         walletViewModel.makeWithdrawTransaction(withdrawal);
         walletViewModel.reduceAmountFromUserAccount(user.getAmount() - amount);
     }

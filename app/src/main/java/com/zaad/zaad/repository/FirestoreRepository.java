@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -39,7 +40,9 @@ public class FirestoreRepository {
 
     MutableLiveData<List<Coupon>> couponsListMutableLiveData = new MutableLiveData<>();
     MutableLiveData<List<Coupon>> onlineCouponsByCategoryListMutableLiveData = new MutableLiveData<>();
-    MutableLiveData<List<Shop>> shopListMutableLiveData = new MutableLiveData<>();
+    MutableLiveData<List<Shop>> shopListByCategoryMutableLiveData = new MutableLiveData<>();
+    MutableLiveData<List<Shop>> onlineShopListMutableLiveData = new MutableLiveData<>();
+    MutableLiveData<List<Shop>> offlineShopListMutableLiveData = new MutableLiveData<>();
 
     MutableLiveData<List<Video>> youtubeVideosMutableLiveData = new MutableLiveData<>();
 
@@ -97,9 +100,52 @@ public class FirestoreRepository {
         return videoListMutableLiveData;
     }
 
-    public MutableLiveData<List<Shop>> getShopList(final String availability) {
+    public MutableLiveData<List<Shop>> getOnlineShops() {
+        mFirestore.collection("onlineShop")
+                .addSnapshotListener((value, error) -> {
+                    List<Shop> videoList = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc != null) {
+                            videoList.add(doc.toObject(Shop.class));
+                        }
+                    }
+                    onlineShopListMutableLiveData.postValue(videoList);
+                });
+        return onlineShopListMutableLiveData;
+    }
 
-        mFirestore.collection("shops").whereEqualTo("availability", availability)
+    public MutableLiveData<List<Shop>> getOfflineShops() {
+        mFirestore.collection("offlineShop")
+                .addSnapshotListener((value, error) -> {
+                    List<Shop> videoList = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc != null) {
+                            videoList.add(doc.toObject(Shop.class));
+                        }
+                    }
+                    offlineShopListMutableLiveData.postValue(videoList);
+                });
+        return offlineShopListMutableLiveData;
+    }
+
+    public MutableLiveData<List<Shop>> getOfflineShopByDistricts(List<String> districts) {
+        mFirestore.collection("offlineShop")
+                .whereIn("district", districts)
+                .addSnapshotListener((value, error) -> {
+                    List<Shop> videoList = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc != null) {
+                            videoList.add(doc.toObject(Shop.class));
+                        }
+                    }
+                    offlineShopListMutableLiveData.postValue(videoList);
+                });
+        return offlineShopListMutableLiveData;
+    }
+
+    public MutableLiveData<List<Shop>> getOnlineShopListByCategory(final String category) {
+
+        mFirestore.collection("onlineShop").whereEqualTo("category", category)
                 .addSnapshotListener((value, error) -> {
                     List<Shop> videoList = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : value) {
@@ -108,9 +154,9 @@ public class FirestoreRepository {
                             Log.i("FirestoreRepository", "Data -> " + doc.getData());
                         }
                     }
-                    shopListMutableLiveData.postValue(videoList);
+                    shopListByCategoryMutableLiveData.postValue(videoList);
                 });
-        return shopListMutableLiveData;
+        return shopListByCategoryMutableLiveData;
     }
 
     public MutableLiveData<List<Video>> getChildVideos() {
@@ -127,21 +173,29 @@ public class FirestoreRepository {
         return childVideosListMutableLiveData;
     }
 
-    public MutableLiveData<List<DailyTaskVideo>> getDailyTasks() {
-        mFirestore.collection("dailyTasks").whereGreaterThan("expiryDate", new Date()).addSnapshotListener((value, error) -> {
-            Date currentDate = new Date();
-            List<DailyTaskVideo> dailyTaskVideos = new ArrayList<>();
-            for (QueryDocumentSnapshot doc : value) {
-                if (doc != null) {
-                    DailyTaskVideo dailyTaskVideo = doc.toObject(DailyTaskVideo.class);
-                    Date videoDate = dailyTaskVideo.getStartDate();
-                    if (videoDate != null && currentDate.after(videoDate) && dailyTaskVideo.getCategory().equals("Video")) {
-                        dailyTaskVideos.add(doc.toObject(DailyTaskVideo.class));
+    public MutableLiveData<List<DailyTaskVideo>> getDailyTasks(final String language) {
+        mFirestore.collection("dailyTasks")
+                .whereEqualTo("category", "Video")
+                .whereEqualTo("language", language)
+                .whereGreaterThan("expiryDate", new Date())
+                .addSnapshotListener((value, error) -> {
+                    Date currentDate = new Date();
+                    List<DailyTaskVideo> dailyTaskVideos = new ArrayList<>();
+
+                    if (value == null) {
+                        return;
                     }
-                }
-            }
-            dailyTaskVideosListMutableLiveData.postValue(dailyTaskVideos);
-        });
+                    for (DocumentSnapshot doc : value.getDocuments()) {
+                        if (doc != null) {
+                            DailyTaskVideo dailyTaskVideo = doc.toObject(DailyTaskVideo.class);
+                            Date videoDate = dailyTaskVideo.getStartDate();
+                            if (videoDate != null && currentDate.after(videoDate) && dailyTaskVideo.getCategory().equals("Video")) {
+                                dailyTaskVideos.add(doc.toObject(DailyTaskVideo.class));
+                            }
+                        }
+                    }
+                    dailyTaskVideosListMutableLiveData.postValue(dailyTaskVideos);
+                });
         return dailyTaskVideosListMutableLiveData;
     }
 
@@ -197,8 +251,8 @@ public class FirestoreRepository {
         return youtubeAllVideosMutableLiveData;
     }
 
-    public MutableLiveData<List<Video>> getYoutubeVideosByCollectionAndCategory(final String collections, final String category) {
-        mFirestore.collection(collections).whereEqualTo("category", category).get().addOnSuccessListener(queryDocumentSnapshots -> {
+    public MutableLiveData<List<Video>> getYoutubeVideosByCollectionAndCategory(final String collection, final String category) {
+        mFirestore.collection(collection).whereEqualTo("category", category).get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<Video> videos = new ArrayList<>();
             for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                 if (queryDocumentSnapshot != null) {
@@ -210,16 +264,19 @@ public class FirestoreRepository {
         return youtubeVideosByCollectionMutableLiveData;
     }
 
-    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskShorts() {
-        mFirestore.collection("dailyTasks").whereEqualTo("category", "Shorts").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            List<DailyTaskVideo> videos = new ArrayList<>();
-            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                if (queryDocumentSnapshot != null) {
-                    videos.add(queryDocumentSnapshot.toObject(DailyTaskVideo.class));
-                }
-            }
-            dailyTaskShortsMutableLiveData.postValue(videos);
-        });
+    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskShorts(final String language) {
+        mFirestore.collection("dailyTasks")
+                .whereEqualTo("category", "Shorts")
+                .whereEqualTo("language", language)
+                .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<DailyTaskVideo> videos = new ArrayList<>();
+                    for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                        if (queryDocumentSnapshot != null) {
+                            videos.add(queryDocumentSnapshot.toObject(DailyTaskVideo.class));
+                        }
+                    }
+                    dailyTaskShortsMutableLiveData.postValue(videos);
+                });
         return dailyTaskShortsMutableLiveData;
     }
 
@@ -278,7 +335,7 @@ public class FirestoreRepository {
     }
 
     public MutableLiveData<List<HomeItem>> getMusicVideosMenu() {
-        mFirestore.collection("musicVideosMenu").get().addOnSuccessListener(queryDocumentSnapshots -> {
+        mFirestore.collection("musicVideoMenu").get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<HomeItem> items = new ArrayList<>();
             for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
                 items.add(snapshot.toObject(HomeItem.class));
@@ -293,7 +350,7 @@ public class FirestoreRepository {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<HomeItem> items = new ArrayList<>();
-                for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
                     items.add(snapshot.toObject(HomeItem.class));
                 }
                 homeMenuMutableLiveData.postValue(items);

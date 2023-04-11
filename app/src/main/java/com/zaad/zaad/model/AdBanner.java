@@ -11,7 +11,7 @@ public class AdBanner {
 
     private String address;
 
-    private String contactNumber;
+    private String phoneNumber;
 
 
     public String getImageUrl() {
@@ -54,11 +54,11 @@ public class AdBanner {
         this.address = address;
     }
 
-    public String getContactNumber() {
-        return contactNumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

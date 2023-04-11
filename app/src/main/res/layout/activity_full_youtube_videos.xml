@@ -52,11 +52,25 @@
                 android:text="Comedy" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/music_chip"
+                android:id="@+id/trailers_chip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Music" />
+                android:text="Trailers" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/movies_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movies" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/cinema_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cinema" />
 
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>

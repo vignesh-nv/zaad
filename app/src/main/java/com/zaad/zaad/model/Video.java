@@ -2,13 +2,19 @@ package com.zaad.zaad.model;
 
 import androidx.annotation.NonNull;
 
-public class Video {
+import java.util.Date;
+
+public class Video implements Comparable {
     private String title;
     private String imageUrl;
     private String videoUrl;
     private String category;
 
     private String id;
+
+    private Date uploadDate;
+
+    private String language;
 
     public String getTitle() {
         return title;
@@ -50,6 +56,22 @@ public class Video {
         this.id = id;
     }
 
+    public Date getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
     @Override
     public String toString() {
         return "Video{" +
@@ -59,4 +81,11 @@ public class Video {
                 ", category='" + category + '\'' +
                 '}';
     }
+
+    @Override
+    public int compareTo(Object o) {
+        Date uploadDate = ((Video)o).getUploadDate();
+        return uploadDate.compareTo(this.uploadDate);
+    }
+
 }

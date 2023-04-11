@@ -24,7 +24,6 @@ import java.util.List;
 import coil.Coil;
 import coil.ImageLoader;
 import coil.disk.DiskCache;
-import coil.disk.RealDiskCache;
 import coil.memory.MemoryCache;
 import coil.request.ImageRequest;
 
@@ -57,9 +56,6 @@ public class RedeemedCouponsAdapter extends RecyclerView.Adapter<RedeemedCoupons
                 .memoryCache(new MemoryCache.Builder(context).maxSizePercent(0.25).build())
                 .diskCache(new DiskCache.Builder().directory(context.getCacheDir()).maxSizePercent(0.25).build())
                 .build();
-
-        viewHolder.imageView.setOnClickListener(view -> Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show());
-
         ImageRequest request = new ImageRequest.Builder(context)
                 .data(coupon.getImageUrl())
                 .crossfade(true)

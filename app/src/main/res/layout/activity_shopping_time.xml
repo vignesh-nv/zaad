@@ -1,12 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="@color/black"
     android:background="@color/black"
+    android:orientation="vertical"
     tools:context=".activity.ShoppingTimeActivity">
+
+
+    <HorizontalScrollView
+        android:id="@+id/chips_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/online_shop_chipgroup"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/grocery_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Grocery" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/mobile_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mobiles" />
+
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/fashion_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fashion" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/electronics_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Electronics" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/home_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/personal_care_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Personal Care" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/appliances_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Appliances" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/sports_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sports" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/toys_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Toys &amp; Baby" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/furniture_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Furniture" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/flights_hotels_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Flights &amp; Hotels Chip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/nutrition_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nutrition &amp; more" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/bikes_cars_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bikes &amp; Cars" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/medicines_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Medicines" />
+
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/filter_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_filter"/>
+
+        <TextView
+            android:id="@+id/filter_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter"
+            android:layout_gravity="end"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat"
+            android:layout_marginEnd="10dp" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/shopping_time_recycler_view"
@@ -14,4 +157,4 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         tools:listitem="@layout/shop_item"/>
-</RelativeLayout>
+</LinearLayout>

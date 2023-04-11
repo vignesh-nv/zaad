@@ -103,14 +103,14 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
 
     private void startPayment() {
         Checkout checkout = new Checkout();
-        checkout.setImage(R.mipmap.ic_launcher);
+        checkout.setImage(R.drawable.new_app_logo);
 
-        checkout.setKeyID("rzp_live_0FD1FY1bVAtKpp");
+        checkout.setKeyID("rzp_test_qhd4HWdr10XmWx");
         try {
             JSONObject options = new JSONObject();
-            options.put("name", "zaad");
+            options.put("name", "Khanzoplay");
             options.put("currency", "INR");
-            options.put("amount", "121");
+            options.put("amount", 12100);
             checkout.open(this, options);
         } catch (Exception e) {
             Log.e("PaymentDetail", e.toString());
@@ -129,10 +129,6 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
     @Override
     public void onPaymentError(int i, String s) {
         Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
-        saveUserDetails();
-        updatePaymentCompleted();
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
     }
 
     public void createAndSaveReferralCode() {

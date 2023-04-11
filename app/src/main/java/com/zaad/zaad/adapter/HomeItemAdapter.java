@@ -140,7 +140,15 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .build();
             imageLoader.enqueue(request);
         } else if (category.equals("OFFLINE_STORE") || category.equals("ONLINE_STORE")) {
+            Video childItem = videoList.get(position);
+            ImageLoader imageLoader = Coil.imageLoader(context);
             StoreViewHolder storeViewHolder = (StoreViewHolder) viewHolder;
+            ImageRequest request = new ImageRequest.Builder(context)
+                    .data(childItem.getImageUrl())
+                    .crossfade(true)
+                    .target(storeViewHolder.imageView)
+                    .build();
+            imageLoader.enqueue(request);
 
         } else if (category.equals(VideoType.IMAGE_AD.name())) {
 

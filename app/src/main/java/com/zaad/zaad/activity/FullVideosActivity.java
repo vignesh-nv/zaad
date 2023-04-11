@@ -55,7 +55,6 @@ public class FullVideosActivity extends AppCompatActivity {
         loadVideos();
     }
 
-
     private void loadVideos() {
         firestore.collection(collection).get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<Video> videos = new ArrayList<>();

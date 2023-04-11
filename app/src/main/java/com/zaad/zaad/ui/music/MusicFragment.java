@@ -23,6 +23,7 @@ import com.zaad.zaad.model.Video;
 import com.zaad.zaad.viewmodel.ChildModeHomeViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MusicFragment extends Fragment {
@@ -72,8 +73,11 @@ public class MusicFragment extends Fragment {
                                 videos.add(snapshot.toObject(Video.class));
                             }
                             Log.i("Category", item.getCategory() + " Size: " + videos.size());
-                            item.setVideos(videos);
-                            musicMenu.add(item);
+                            if (videos.size()!=0) {
+                                Collections.sort(videos);
+                                item.setVideos(videos);
+                                musicMenu.add(item);
+                            }
                             childVideosAdapter.notifyDataSetChanged();
                         });
 //                mViewModel.getVideosByCategory(item.getCategory()).observe(getViewLifecycleOwner(), videos -> {

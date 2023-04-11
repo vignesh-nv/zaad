@@ -31,6 +31,10 @@ public class YoutubeFullVideosActivity extends AppCompatActivity {
         collection = getIntent().getStringExtra("COLLECTION");
         category = getIntent().getStringExtra("CATEGORY");
 
+        String title = getIntent().getStringExtra("TITLE");
+        if (title != null && !"".equals(title)) {
+            getSupportActionBar().setTitle(title);
+        }
         videosViewModel = new ViewModelProvider(this).get(YoutubeVideosViewModel.class);
 
         recyclerView = findViewById(R.id.youtube_full_videos_recyclerview);

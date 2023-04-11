@@ -30,6 +30,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.CheckedInputStream;
 
 public class FullYoutubeVideosActivity extends AppCompatActivity {
 
@@ -45,7 +46,7 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
 
     private FullVideosAdapter fullVideosAdapter;
 
-    private Chip entertainmentChip, newsChip, educationChip, comedyChip, musicChip;
+    private Chip entertainmentChip, newsChip, educationChip, comedyChip, trailersChip, moviesChip, cinemaChip;
 
     private boolean showCategory;
 
@@ -60,7 +61,7 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
 
         youtubeVideosViewModel = new ViewModelProvider(this).get(YoutubeVideosViewModel.class);
 
-        categories = Arrays.asList("Entertainment", "News", "Education", "comedy", "Music");
+        categories = Arrays.asList("Entertainment", "News", "Education", "comedy", "Trailers", "Movies", "Cinema");
         setupChip();
 
         category = getIntent().getStringExtra("category");
@@ -108,7 +109,9 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
     private void setupChip() {
         entertainmentChip = findViewById(R.id.entertainment_chip);
         comedyChip = findViewById(R.id.comedy_chip);
-        musicChip = findViewById(R.id.music_chip);
+        trailersChip = findViewById(R.id.trailers_chip);
+        cinemaChip = findViewById(R.id.cinema_chip);
+        moviesChip = findViewById(R.id.movies_chip);
         newsChip = findViewById(R.id.news_chip);
         educationChip = findViewById(R.id.education_chip);
     }
@@ -134,8 +137,12 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
                 loadVideos("News");
             } else if (entertainmentChip.getId() == checkChipId) {
                 loadVideos("Entertainment");
-            } else if (musicChip.getId() == checkChipId) {
-                loadVideos("Music");
+            } else if (trailersChip.getId() == checkChipId) {
+                loadVideos("Trailers");
+            } else if (moviesChip.getId() == checkChipId) {
+                loadVideos("Movies");
+            } else if (cinemaChip.getId() == checkChipId) {
+                loadVideos("Cinema");
             }
         });
     }
@@ -146,39 +153,5 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
             videos.addAll(data);
             fullVideosAdapter.notifyDataSetChanged();
         });
-    }
-
-    private List<YoutubeCategory> generateCategoryList() {
-        List<YoutubeCategory> categories = new ArrayList<>();
-        YoutubeCategory category1 = new YoutubeCategory();
-        category1.setTitle("Entertainment");
-
-        YoutubeCategory category2 = new YoutubeCategory();
-        category2.setTitle("Education");
-
-        YoutubeCategory category3 = new YoutubeCategory();
-        category3.setTitle("Comedy");
-
-        YoutubeCategory category4 = new YoutubeCategory();
-        category4.setTitle("News");
-
-        YoutubeCategory category5 = new YoutubeCategory();
-        category5.setTitle("Trailers");
-
-        YoutubeCategory category6 = new YoutubeCategory();
-        category6.setTitle("Movies");
-
-        YoutubeCategory category7 = new YoutubeCategory();
-        category7.setTitle("Cinema");
-
-        categories.add(category1);
-        categories.add(category2);
-        categories.add(category3);
-        categories.add(category4);
-        categories.add(category5);
-        categories.add(category6);
-        categories.add(category7);
-
-        return categories;
     }
 }
