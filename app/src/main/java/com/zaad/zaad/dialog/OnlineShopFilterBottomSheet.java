@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.OnlineShopFilterAdapter;
@@ -28,6 +31,19 @@ public class OnlineShopFilterBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.offlin_shop_filter, container, false);
 
+        final BottomSheetBehavior<View> behavior = BottomSheetBehavior.from((View) view.getParent());
+        behavior.setHideable(false);
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
         ListView listView = view.findViewById(R.id.list_view);
         Button applyButton = view.findViewById(R.id.apply_button);
 

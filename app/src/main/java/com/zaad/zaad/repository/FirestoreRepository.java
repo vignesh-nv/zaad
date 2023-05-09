@@ -181,7 +181,6 @@ public class FirestoreRepository {
                 .addSnapshotListener((value, error) -> {
                     Date currentDate = new Date();
                     List<DailyTaskVideo> dailyTaskVideos = new ArrayList<>();
-
                     if (value == null) {
                         return;
                     }
@@ -268,14 +267,23 @@ public class FirestoreRepository {
         mFirestore.collection("dailyTasks")
                 .whereEqualTo("category", "Shorts")
                 .whereEqualTo("language", language)
-                .get().addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<DailyTaskVideo> videos = new ArrayList<>();
-                    for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                        if (queryDocumentSnapshot != null) {
-                            videos.add(queryDocumentSnapshot.toObject(DailyTaskVideo.class));
+                .whereGreaterThan("expiryDate", new Date())
+                .addSnapshotListener((value, error) -> {
+                    Date currentDate = new Date();
+                    List<DailyTaskVideo> dailyTaskVideos = new ArrayList<>();
+                    if (value == null) {
+                        return;
+                    }
+                    for (DocumentSnapshot doc : value.getDocuments()) {
+                        if (doc != null) {
+                            DailyTaskVideo dailyTaskVideo = doc.toObject(DailyTaskVideo.class);
+                            Date videoDate = dailyTaskVideo.getStartDate();
+                            if (videoDate != null && currentDate.after(videoDate)) {
+                                dailyTaskVideos.add(doc.toObject(DailyTaskVideo.class));
+                            }
                         }
                     }
-                    dailyTaskShortsMutableLiveData.postValue(videos);
+                    dailyTaskShortsMutableLiveData.postValue(dailyTaskVideos);
                 });
         return dailyTaskShortsMutableLiveData;
     }

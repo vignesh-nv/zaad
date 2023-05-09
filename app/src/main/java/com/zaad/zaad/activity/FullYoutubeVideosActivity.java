@@ -1,6 +1,7 @@
 package com.zaad.zaad.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,12 +15,23 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.FullVideosAdapter;
 import com.zaad.zaad.adapter.YoutubeCategoryAdapter;
 import com.zaad.zaad.model.Category;
+import com.zaad.zaad.model.HomeItem;
+import com.zaad.zaad.model.User;
 import com.zaad.zaad.model.Video;
 import com.zaad.zaad.model.YoutubeCategory;
 import com.zaad.zaad.viewmodel.YoutubeVideosViewModel;
@@ -54,6 +66,12 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
 
     private String videoCategory;
 
+    private FirebaseUser firebaseUser;
+
+    private FirebaseFirestore firestore;
+
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +81,9 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
 
         categories = Arrays.asList("Entertainment", "News", "Education", "comedy", "Trailers", "Movies", "Cinema");
         setupChip();
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firestore = FirebaseFirestore.getInstance();
 
         category = getIntent().getStringExtra("category");
         videoCategory = getIntent().getStringExtra("VIDEO_CATEGORY");
@@ -87,23 +108,43 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(fullVideosAdapter);
 
-        if (videoCategory != null && !videoCategory.equals("")) {
-            loadVideos(videoCategory);
-        } else {
-            loadAllVideos();
-        }
+        loadUser();
 
         if (!showCategory) {
             chipGroup.setVisibility(View.GONE);
         }
     }
 
+    private void loadUser() {
+        firestore.collection("user").document(firebaseUser.getEmail())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    user = documentSnapshot.toObject(User.class);
+                    if (videoCategory != null && !videoCategory.equals("")) {
+                        loadVideos(videoCategory);
+                    } else {
+                        loadAllVideos();
+                    }
+                });
+    }
+
     private void loadVideos(final String category) {
-        youtubeVideosViewModel.getYoutubeVideosByCategory(category).observe(this, data -> {
-            videos.clear();
-            videos.addAll(data);
-            fullVideosAdapter.notifyDataSetChanged();
-        });
+        firestore.collection("youtube")
+                .whereEqualTo("language", user.getLanguage())
+                .whereEqualTo("category", category)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<Video> videoList = new ArrayList<>();
+                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                            videoList.add(snapshot.toObject(Video.class));
+                        }
+                        videos.clear();
+                        videos.addAll(videoList);
+                        fullVideosAdapter.notifyDataSetChanged();
+                    }
+                });
     }
 
     private void setupChip() {
@@ -148,10 +189,17 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
     }
 
     private void loadAllVideos() {
-        youtubeVideosViewModel.getAllYoutubeVideos().observe(this, data -> {
-            videos.clear();
-            videos.addAll(data);
-            fullVideosAdapter.notifyDataSetChanged();
-        });
+        firestore.collection("youtube")
+                .whereEqualTo("language", user.getLanguage())
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Video> videoList = new ArrayList<>();
+                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                        videoList.add(snapshot.toObject(Video.class));
+                    }
+                    videos.clear();
+                    videos.addAll(videoList);
+                    fullVideosAdapter.notifyDataSetChanged();
+                });
     }
 }

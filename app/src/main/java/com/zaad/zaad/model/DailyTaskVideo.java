@@ -17,6 +17,9 @@ public class DailyTaskVideo implements Serializable {
 
     private String couponId;
 
+    private String fullVideoUrl;
+
+    private String channelUrl;
     public String getTitle() {
         return title;
     }
@@ -79,5 +82,21 @@ public class DailyTaskVideo implements Serializable {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    public String getFullVideoUrl() {
+        return fullVideoUrl;
+    }
+
+    public void setFullVideoUrl(String fullVideoUrl) {
+        this.fullVideoUrl = fullVideoUrl;
+    }
+
+    public String getChannelUrl() {
+        return channelUrl;
+    }
+
+    public void setChannelUrl(String channelUrl) {
+        this.channelUrl = channelUrl;
     }
 }

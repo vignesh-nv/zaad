@@ -231,7 +231,6 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
                             firestore.collection(item.getCollection())
                                     .whereEqualTo("language", user.getLanguage())
                                     .whereNotIn("category", categoryFilter)
-                                    .limit(10)
                                     .get()
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -248,7 +247,7 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
 
                                         count[0]++;
                                         if (videos.size() != 0) {
-                                            item.setVideos(videos);
+                                            item.setVideos(videos.subList(0, Math.min(10, videos.size())));
                                             tempHomeItems.add(item);
                                         }
                                         if (count[0] == data.size()) {

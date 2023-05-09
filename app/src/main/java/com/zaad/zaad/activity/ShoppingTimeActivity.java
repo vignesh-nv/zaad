@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.HorizontalScrollView;
@@ -29,6 +30,7 @@ import com.zaad.zaad.model.User;
 import com.zaad.zaad.utils.AppUtils;
 import com.zaad.zaad.viewmodel.ShopViewModel;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +56,8 @@ public class ShoppingTimeActivity extends AppCompatActivity implements OnDistric
 
     ChipGroup onlineShopChipGroup;
 
+    List<String> selectedDistricts;
+
     Chip groceryChip, mobilesChip, fashionChip, electronicsChip, homeChip, personalCareChip, appliancesChip;
     Chip toysBabyChip, furnitureChip, flightsChip, nutritionChip, bikesCarChip, medicinesChip, sportsChip;
 
@@ -67,24 +71,26 @@ public class ShoppingTimeActivity extends AppCompatActivity implements OnDistric
 
         firestore.collection("user").document(firebaseUser.getEmail())
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        user = documentSnapshot.toObject(User.class);
-                        readStatesAndDistrictData();
-                    }
+                .addOnSuccessListener(documentSnapshot -> {
+                    user = documentSnapshot.toObject(User.class);
+                    readStatesAndDistrictData();
                 });
         category = getIntent().getStringExtra("SHOP_TYPE");
+
+        selectedDistricts = (List<String>) getIntent().getSerializableExtra("FILTER_DISTRICTS");
 
         filterText = findViewById(R.id.filter_text);
         filterLayout = findViewById(R.id.filter_layout);
         chipsLayout = findViewById(R.id.chips_layout);
 
         filterText.setOnClickListener(view -> {
-            OnlineShopFilterBottomSheet bottomSheet = new OnlineShopFilterBottomSheet(districts,
-                    ShoppingTimeActivity.this);
-            bottomSheet.show(getSupportFragmentManager(), "MyBottomSheetDialog");
-
+//            OnlineShopFilterBottomSheet bottomSheet = new OnlineShopFilterBottomSheet(districts,
+//                    ShoppingTimeActivity.this);
+//            bottomSheet.show(getSupportFragmentManager(), "MyBottomSheetDialog");
+            Intent intent = new Intent(this, ShoppingFilterActivity.class);
+            intent.putExtra("USER", user);
+            intent.putExtra("FILTER_DISTRICTS", (Serializable) selectedDistricts);
+            startActivity(intent);
         });
         if (category.equals("OFFLINE_STORE")) {
             shopType = "OFFLINE";
@@ -115,6 +121,9 @@ public class ShoppingTimeActivity extends AppCompatActivity implements OnDistric
         recyclerView.setAdapter(shoppingAdapter);
         setupUI();
         setupOnlineShopFiltering();
+        if (selectedDistricts!=null && selectedDistricts.size()!=0) {
+            loadShopsByDistricts();
+        }
     }
 
     private void setupUI() {
@@ -177,6 +186,14 @@ public class ShoppingTimeActivity extends AppCompatActivity implements OnDistric
 
     @Override
     public void onNamesSelected(List<String> selectedDistricts) {
+        shopViewModel.getOfflineShopByDistrict(selectedDistricts).observe(this, data -> {
+            shopList.clear();
+            shopList.addAll(data);
+            shoppingAdapter.notifyDataSetChanged();
+        });
+    }
+
+    public void loadShopsByDistricts() {
         shopViewModel.getOfflineShopByDistrict(selectedDistricts).observe(this, data -> {
             shopList.clear();
             shopList.addAll(data);

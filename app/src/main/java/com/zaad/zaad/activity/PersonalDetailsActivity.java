@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
@@ -60,6 +61,8 @@ public class PersonalDetailsActivity extends AppCompatActivity {
     AutoCompleteTextView stateTextView, districtTextView, languageTextView;
     ArrayAdapter<String> districtAdapter;
 
+    TextInputLayout languageDropdownLayout, stateDropdownLayout, districtDropdownLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +78,9 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         genderRG = findViewById(R.id.gender_rg);
         maleRB = findViewById(R.id.male_rb);
         femaleRB = findViewById(R.id.female_rb);
+        languageDropdownLayout = findViewById(R.id.language_dropdown_layout);
+        stateDropdownLayout = findViewById(R.id.state_drop_down_layout);
+        districtDropdownLayout = findViewById(R.id.district_drop_down_layout);
 
         signupBtn.setOnClickListener(view -> {
             if (checkEmptyFields()) {
@@ -124,6 +130,7 @@ public class PersonalDetailsActivity extends AppCompatActivity {
                 findViewById(R.id.state_drop_down);
         stateTextView.setAdapter(adapter);
         stateTextView.setOnItemClickListener((adapterView, view, i, l) -> {
+            stateDropdownLayout.setHintEnabled(false);
             String selectedOption = adapterView.getItemAtPosition(i).toString();
             if (districtTextView.getAdapter() == null) {
                 districtTextView.setAdapter(districtAdapter);
@@ -149,6 +156,7 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         districtTextView.setAdapter(districtAdapter);
         districtTextView.setAdapter(null);
         districtTextView.setOnItemClickListener((adapterView, view, i, l) -> {
+            districtDropdownLayout.setHintEnabled(false);
             district = adapterView.getItemAtPosition(i).toString();
         });
     }
@@ -167,6 +175,7 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         languageTextView.setOnItemClickListener((adapterView, view, i, l) -> {
             String selectedOption = adapterView.getItemAtPosition(i).toString();
             language = selectedOption;
+            languageDropdownLayout.setHintEnabled(false);
         });
     }
 

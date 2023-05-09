@@ -16,9 +16,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -75,6 +77,8 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
 
     User user;
 
+    Button fullVideoBtn, subscribeBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,11 +89,24 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
         dailyTaskViewModel = new ViewModelProvider(this).get(DailyTaskViewModel.class);
 
         youTubePlayerView = findViewById(R.id.youtube_player_view);
+        fullVideoBtn = findViewById(R.id.full_video_btn);
+        subscribeBtn = findViewById(R.id.subscibe_btn);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
         loadYoutubePlayer();
         loadSuggestedVideos();
 
+        subscribeBtn.setOnClickListener(v -> {
+            Uri uri = Uri.parse(dailyTaskVideo.getChannelUrl());
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+
+        fullVideoBtn.setOnClickListener(v -> {
+            Uri uri = Uri.parse(dailyTaskVideo.getFullVideoUrl());
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
 
         firestore.collection("user").document(firebaseUser.getEmail())
                 .get()

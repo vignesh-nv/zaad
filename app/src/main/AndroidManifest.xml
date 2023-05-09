@@ -18,9 +18,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
+            android:name=".activity.ShoppingFilterActivity"
+            android:exported="false"
+            android:parentActivityName=".activity.ShoppingTimeActivity"/>
+        <activity
             android:name=".activity.EarningActivity"
-            android:theme="@style/FullScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/FullScreen" />
         <activity
             android:name=".activity.CouponDetailsActivity"
             android:exported="false"
@@ -196,6 +200,9 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713" />
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
     </application>
 
 </manifest>

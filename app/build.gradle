@@ -11,8 +11,8 @@ android {
         applicationId "com.zaad.zaad"
         minSdk 21
         targetSdk 33
-        versionCode 8
-        versionName "1.7"
+        versionCode 9
+        versionName "1.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -83,6 +83,10 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.5.1"
     implementation 'com.mikepenz:community-material-typeface:3.5.95.1@aar'
 
+    // Stripe
+    implementation 'com.stripe:stripe-android:20.24.0'
+    implementation 'com.github.kittinunf.fuel:fuel:2.3.1'
+   implementation 'com.github.kittinunf.fuel:fuel-json:2.3.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'

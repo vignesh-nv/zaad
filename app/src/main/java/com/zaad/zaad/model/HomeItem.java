@@ -1,8 +1,9 @@
 package com.zaad.zaad.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class HomeItem implements Comparable {
+public class HomeItem implements Comparable, Serializable {
     private String title;
     private List<Video> videos;
     private String category;

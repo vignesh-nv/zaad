@@ -1,7 +1,6 @@
 package com.zaad.zaad.about;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
@@ -80,12 +79,22 @@ public class AboutList extends MaterialAboutActivity {
 //        authorCardBuilder.titleColor(ContextCompat.getColor(c, R.color.colorAccent));
 
         developedByCardBuilder.addItem(new MaterialAboutActionItem.Builder()
-                .text("Bairacorp Pvt Ltd")
+                .text("BAIRACORP")
+                .subText("Muvendhan Information and Technologies Pvt Ltd")
                 .icon(new IconicsDrawable(c)
                         .icon(CommunityMaterial.Icon.cmd_globe_model)
                         .color(c.getResources().getColor(R.color.white))
                         .sizeDp(18))
                 .build());
+
+//        developedByCardBuilder.addItem(new MaterialAboutTitleItem.Builder()
+//                .text("Bairacorp Pvt Ltd")
+//                .desc("©2023 Khanzo Enterprises")
+//                .icon(new IconicsDrawable(c)
+//                        .icon(CommunityMaterial.Icon.cmd_globe_model)
+//                        .color(c.getResources().getColor(R.color.white))
+//                        .sizeDp(18))
+//                .build());
 
         developedByCardBuilder.addItem(ConvenienceBuilder.createEmailItem(c,
                 new IconicsDrawable(c)
@@ -94,7 +103,7 @@ public class AboutList extends MaterialAboutActivity {
                         .sizeDp(18),
                 "Email",
                 true,
-                "services@baiaracorp.in",
+                "services@bairacorp.in",
                 "Contact us for project inquiry"));
 
         developedByCardBuilder.addItem(ConvenienceBuilder.createWebsiteActionItem(c,

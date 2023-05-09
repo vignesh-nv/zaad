@@ -1,5 +1,6 @@
 package com.zaad.zaad.activity;
 
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_END_DATE_TIME;
 import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_SHORTS_COMPLETED_COUNT;
 import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
 import static com.zaad.zaad.constants.AppConstant.SHOW_REWARDS_BADGE;
@@ -30,9 +31,11 @@ import com.zaad.zaad.model.Video;
 import com.zaad.zaad.ui.dailytask.DailyTaskViewModel;
 import com.zaad.zaad.viewmodel.YoutubeVideosViewModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements ShortsPlayCompletedListener {
@@ -101,7 +104,6 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
         if (!completedTaskIds.contains(video.getTaskId())) {
             Log.i("DailyTaskShorts Called", video.getTaskId());
             dailyTaskViewModel.insertCompletedTask(video);
-
             Toast.makeText(this, "Completed Task", Toast.LENGTH_SHORT).show();
             incrementViewsCount();
         }
@@ -115,11 +117,18 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
         if (videoWatched == 24) {
             editor.putInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
             editor.putBoolean(SHOW_REWARDS_BADGE, true);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String dateString = sdf.format(video.getExpiryDate());
+            editor.putString(DAILY_TASK_END_DATE_TIME, dateString);
             editor.apply();
+
             dailyTaskViewModel.incrementAvailableCoupons();
             Toast.makeText(this, "You won a coupon!!!", Toast.LENGTH_SHORT).show();
         } else {
             editor.putInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, videoWatched + 1);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String dateString = sdf.format(video.getExpiryDate());
+            editor.putString(DAILY_TASK_END_DATE_TIME, dateString);
             editor.apply();
         }
     }
