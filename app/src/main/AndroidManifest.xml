@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.zaad.zaad">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/new_app_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/new_app_logo"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Zaad"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="33">
+        <activity
+            android:name=".activity.ShoppingFilterActivity"
+            android:exported="false"
+            android:parentActivityName=".activity.ShoppingTimeActivity"/>
+        <activity
+            android:name=".activity.EarningActivity"
+            android:exported="false"
+            android:theme="@style/FullScreen" />
+        <activity
+            android:name=".activity.CouponDetailsActivity"
+            android:exported="false"
+            android:theme="@style/FullScreen" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.MaterialAboutActivity.Light.DarkActionBar.CustomCardView" />
+        <activity
+            android:name=".activity.LanguageActivity"
+            android:exported="false"
+            android:label="Preferred Language"
+            android:parentActivityName=".activity.HomeActivity" />
+        <activity
+            android:name=".activity.VideoPlayerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ReportActivity"
+            android:exported="false"
+            android:label="@string/title_report"
+            android:parentActivityName=".activity.HomeActivity"
+            android:theme="@style/Theme.Material3.Dark" />
+        <activity
+            android:name=".activity.AdDetailActivity"
+            android:exported="false"
+            android:theme="@style/FullScreen" />
+        <activity
+            android:name=".activity.PasswordResetActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+        <activity
+            android:name=".activity.EmailSignupAcitivity"
+            android:exported="true"
+            android:theme="@style/FullScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="zaad-cb167.firebaseapp.com"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SignupHomeActivity"
+            android:exported="false"
+            android:theme="@style/FullScreen" />
+        <activity
+            android:name=".activity.EditProfileActivity"
+            android:exported="false"
+            android:label="Edit Profile"
+            android:parentActivityName=".activity.MyAccountActivity" />
+        <activity
+            android:name=".activity.YoutubeFullVideosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.DailyTaskShortsPlayerActivity"
+            android:exported="false"
+            android:theme="@style/FullScreen" />
+        <activity
+            android:name=".activity.CouponsActivity"
+            android:exported="false"
+            android:label="@string/title_coupons"
+            android:parentActivityName=".activity.HomeActivity" />
+        <activity
+            android:name=".activity.FullYoutubeVideosActivity"
+            android:exported="false"
+            android:label="Youtube Videos"
+            android:parentActivityName=".activity.HomeActivity" />
+        <activity
+            android:name=".activity.MyLevelActivity"
+            android:exported="false"
+            android:label="@string/title_my_level"
+            android:parentActivityName=".activity.HomeActivity" />
+        <activity
+            android:name=".activity.ChildVideoPlayerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.DailyTaskVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.Zaad.NoActionBar" />
+        <activity
+            android:name=".activity.PersonalDetailsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+        <activity
+            android:name=".activity.SplashScreenActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Zaad.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.ChildModeActivity"
+            android:exported="true"
+            android:label="@string/title_activity_child_mode"
+            android:theme="@style/Theme.Zaad.NoActionBar" />
+        <activity
+            android:name=".activity.MyAccountActivity"
+            android:exported="true"
+            android:label="My Profile"
+            android:parentActivityName=".activity.HomeActivity" />
+        <activity
+            android:name=".activity.ShoppingTimeActivity"
+            android:exported="true"
+            android:label="Shopping Time"
+            android:parentActivityName=".activity.HomeActivity" />
+        <activity
+            android:name=".activity.YoutubeShortsActivity"
+            android:exported="false"
+            android:theme="@style/FullScreen" />
+        <activity
+            android:name=".activity.YoutubeVideoPlayerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.Zaad.NoActionBar" />
+        <activity
+            android:name=".activity.ShortsActivity"
+            android:exported="true"
+            android:theme="@style/FullScreen" />
+        <activity
+            android:name=".activity.FullVideosActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.PaymentDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+        <activity
+            android:name=".activity.HomeActivity"
+            android:exported="true"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Theme.Zaad.NoActionBar" />
+        <activity
+            android:name=".activity.AccountDetailsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+        <activity
+            android:name=".activity.SignupActivity"
+            android:exported="true"
+            android:theme="@style/FullScreen" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="true" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <service
+            android:name=".service.NotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/new_app_logo" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/twitter_blue" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+    </application>
+
+</manifest>

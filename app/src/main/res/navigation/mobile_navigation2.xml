@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation2"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.zaad.zaad.activity.ui.home.ChildModeHomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_child_mode_home" />
+
+    <activity
+        android:id="@+id/nav_my_level"
+        android:name="com.zaad.zaad.activity.MyLevelActivity"
+        android:label="My Level"
+        tools:layout="@layout/activity_my_level"/>
+
+</navigation>

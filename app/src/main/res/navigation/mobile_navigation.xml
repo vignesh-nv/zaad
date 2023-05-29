@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.zaad.zaad.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_daily_task"
+        android:name="com.zaad.zaad.ui.dailytask.DailyTaskFragment"
+        android:label="@string/title_daily_task"
+        tools:layout="@layout/fragment_daily_task" />
+
+
+    <fragment
+        android:id="@+id/navigation_wallet"
+        android:name="com.zaad.zaad.ui.wallet.WalletFragment"
+        android:label="@string/title_wallet"
+        tools:layout="@layout/fragment_wallet" />
+
+    <fragment
+        android:id="@+id/navigation_rewards"
+        android:name="com.zaad.zaad.ui.rewards.RewardsFragment"
+        android:label="@string/title_rewards"
+        tools:layout="@layout/fragment_rewards" />
+
+    <fragment
+        android:id="@+id/navigation_music"
+        android:name="com.zaad.zaad.ui.music.MusicFragment"
+        android:label="@string/title_music"
+        tools:layout="@layout/fragment_music" />
+
+    <activity
+        android:id="@+id/my_account_activity"
+        android:name="com.zaad.zaad.activity.MyAccountActivity"
+        android:label="MyAccount"
+        tools:layout="@layout/activity_my_account"/>
+
+    <activity
+        android:id="@+id/my_level_activity"
+        android:name="com.zaad.zaad.activity.MyLevelActivity"
+        tools:layout="My Level"
+        android:label="@string/title_my_level"/>
+
+    <activity
+        android:id="@+id/my_earning_activity"
+        android:name="com.zaad.zaad.activity.EarningActivity"
+        tools:layout="@layout/activity_earning"
+        android:label="@string/title_earning"/>
+
+    <activity
+        android:id="@+id/language_activity"
+        android:name="com.zaad.zaad.activity.LanguageActivity"
+        tools:layout="@layout/activity_language"
+        android:label="@string/title_language"/>
+
+    <activity
+        android:id="@+id/report_activity"
+        android:name="com.zaad.zaad.activity.ReportActivity"
+        tools:layout="@layout/activity_report"
+        android:label="@string/title_report"/>
+
+    <activity
+        android:id="@+id/about_activity"
+        android:name="com.zaad.zaad.activity.AboutActivity"
+        tools:layout="@layout/activity_about"
+        android:label="@string/title_about"/>
+
+</navigation>

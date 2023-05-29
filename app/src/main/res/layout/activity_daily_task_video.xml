@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.DailyTaskVideoActivity"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+        android:id="@+id/youtube_player_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:autoPlay="true"
+        app:enableAutomaticInitialization="false"
+        app:videoId="S0Q4gqBUs7c" />
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/youtube_player_view"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:weightSum="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/full_video_btn"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/white"
+            android:textSize="16sp"
+            android:layout_marginRight="10dp"
+            android:text="Full Video"/>
+
+        <Button
+            android:id="@+id/subscibe_btn"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="Subscribe"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/next_videos_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next Videos"
+        android:fontFamily="@font/montserrat_medium"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/button_layout"
+        android:layout_marginStart="20dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/daily_task_suggestion_task_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        tools:listitem="@layout/home_child_item"
+        android:layout_below="@id/next_videos_title"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:backgroundTint="@color/black"
+    android:orientation="vertical"
+    tools:context=".activity.FullYoutubeVideosActivity">
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/youtube_category_chipgroup"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/entertainment_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Entertainment" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/cooking_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/CustomChipChoice"
+                android:text="Cooking" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/unboxing_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unboxing" />
+
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/movie_review_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movie Review" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/gaming_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gaming" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/travel_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Travel" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/food_review_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Food review" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/cinema_talks_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cinema Talks" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/trailer_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trailer" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/motivation_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Motivation" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/news_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="News" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/live_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Live" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/business_talks_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Business Talks" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/comedy_chip"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comedy" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/full_youtube_videos_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/video_item" />
+
+</LinearLayout>
