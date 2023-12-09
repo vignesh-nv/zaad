@@ -10,6 +10,8 @@ import com.zaad.zaad.model.ReferralData;
 import com.zaad.zaad.model.User;
 import com.zaad.zaad.repository.UserRepository;
 
+import java.util.Map;
+
 public class LoginRegisterViewModel extends AndroidViewModel {
 
     private UserRepository userRepository;
@@ -30,6 +32,14 @@ public class LoginRegisterViewModel extends AndroidViewModel {
 
     public void saveReferralData(final ReferralData referralData) {
         userRepository.saveReferralData(referralData);
+    }
+
+    public void updateUser(final Map<String, Object> userMap) {
+        userRepository.updateUser(userMap);
+    }
+
+    public void updateUserWithID(final String id, final Map<String, Object> userMap) {
+        userRepository.updateUser(userMap);
     }
 }
 

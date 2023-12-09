@@ -1,14 +1,13 @@
 package com.zaad.zaad.ui.home;
 
-import android.graphics.Rect;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,40 +15,30 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.zaad.zaad.BuildConfig;
 import com.zaad.zaad.R;
-import com.zaad.zaad.VideoType;
 import com.zaad.zaad.adapter.HomeAdBannerVideosAdapter;
 import com.zaad.zaad.adapter.HomeAdapter;
 import com.zaad.zaad.databinding.FragmentHomeBinding;
 import com.zaad.zaad.listeners.AdCompleteListener;
 import com.zaad.zaad.model.AdBanner;
 import com.zaad.zaad.model.HomeItem;
+import com.zaad.zaad.model.KhanzoPlayApp;
 import com.zaad.zaad.model.User;
 import com.zaad.zaad.model.Video;
-import com.zaad.zaad.utils.CirclePagerIndicatorDecorator;
-import com.zaad.zaad.utils.DotsIndicatorDecoration;
-import com.zaad.zaad.utils.LinePagerIndicationDecoration;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements AdCompleteListener {
@@ -77,6 +66,12 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
 
     boolean running = false;
 
+    boolean appUpdateShownAlready = false;
+
+    List<AdBanner> ads;
+
+    int counter = 0;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
@@ -85,6 +80,8 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
         firestore = FirebaseFirestore.getInstance();
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        ads = new ArrayList<>();
 
         getUserDetails();
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -114,7 +111,7 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
 //        SnapHelper snapHelper = new LinearSnapHelper();
 //        snapHelper.attachToRecyclerView(adRecyclerView);
 
-        homeAdapter = new HomeAdapter(items, getContext());
+        homeAdapter = new HomeAdapter(items, ads, getContext());
 
         recyclerView.setAdapter(homeAdapter);
         recyclerView.setLayoutManager(layoutManager);
@@ -125,7 +122,12 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
             Log.i("", "onCreateView: " + categoryList);
         });
 
-        homeViewModel.getVideoAdBanner().observe(getActivity(), data -> {
+        readLatestAppVersionFromFirebase();
+        return root;
+    }
+
+    private void getAdVideoBannerData() {
+        homeViewModel.getVideoAdBanner(user).observe(getActivity(), data -> {
             videoAdBanners.clear();
             videoAdBanners.addAll(data);
             if (data.size() == 0) {
@@ -133,9 +135,7 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
             }
             adBannerVideosAdapter.notifyDataSetChanged();
         });
-        return root;
     }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -168,12 +168,19 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
             final int[] count = {0};
             List<HomeItem> tempHomeItems = new ArrayList<>();
 
+//            int counter = 0;
             for (HomeItem item : data) {
+//                counter++;
+//                if (counter % 2 == 0) {
+//                    items.add(null);
+//                }
                 Log.i("HomeFragment Item", item.getTitle());
                 if (item.getVideoCategory() != null && !item.getVideoCategory().equals(""))
                     firestore.collection(item.getCollection())
-                            .whereEqualTo("category", item.getVideoCategory())
                             .whereEqualTo("language", user.getLanguage())
+                            .whereEqualTo("state", user.getState())
+                            .whereEqualTo("category", item.getVideoCategory())
+                            .whereArrayContains("districts", user.getDistrict())
                             .limit(10)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -190,8 +197,12 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
                                 if (count[0] == data.size()) {
                                     running = false;
                                     Collections.sort(tempHomeItems);
-                                    items.addAll(tempHomeItems);
-                                    homeAdapter.notifyDataSetChanged();
+                                    notifyData(tempHomeItems);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e("Error", e.toString());
                                 }
                             });
                 else {
@@ -214,7 +225,6 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
                                             videos.add(snapshot.toObject(Video.class));
                                         }
                                         Collections.sort(videos);
-
                                         count[0]++;
                                         if (videos.size() != 0) {
                                             item.setVideos(videos);
@@ -223,8 +233,7 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
                                         if (count[0] == data.size()) {
                                             running = false;
                                             Collections.sort(tempHomeItems);
-                                            items.addAll(tempHomeItems);
-                                            homeAdapter.notifyDataSetChanged();
+                                            notifyData(tempHomeItems);
                                         }
                                     });
                         } else {
@@ -253,8 +262,7 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
                                         if (count[0] == data.size()) {
                                             running = false;
                                             Collections.sort(tempHomeItems);
-                                            items.addAll(tempHomeItems);
-                                            homeAdapter.notifyDataSetChanged();
+                                            notifyData(tempHomeItems);
                                         }
                                     });
                         }
@@ -274,11 +282,11 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
                                         item.setVideos(videos);
                                         tempHomeItems.add(item);
                                     }
+
                                     if (count[0] == data.size()) {
                                         running = false;
                                         Collections.sort(tempHomeItems);
-                                        items.addAll(tempHomeItems);
-                                        homeAdapter.notifyDataSetChanged();
+                                        notifyData(tempHomeItems);
                                     }
                                 });
                     }
@@ -286,7 +294,26 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
             }
         });
     }
+    private void notifyData(List<HomeItem> tempHomeItems) {
+        int req = tempHomeItems.size() + tempHomeItems.size() / 2;
 
+        List<HomeItem> newTempItems = new ArrayList<>(Collections.nCopies(req, new HomeItem()));
+
+        for (int i = 2; i < req; i = i + 3) {
+            newTempItems.set(i, null);
+        }
+        int counter = 0;
+        for (int i = 0; i < newTempItems.size(); i++) {
+            if (newTempItems.get(i) != null && counter < tempHomeItems.size()) {
+                newTempItems.set(i, tempHomeItems.get(counter));
+                counter++;
+            }
+        }
+
+        items.clear();
+        items.addAll(newTempItems);
+        homeAdapter.notifyDataSetChanged();
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -311,6 +338,49 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
                 .addOnSuccessListener(documentSnapshot -> {
                     user = documentSnapshot.toObject(User.class);
                     getHomeMenu();
+                    loadAds();
+                    getAdVideoBannerData();
+                });
+    }
+
+    private void readLatestAppVersionFromFirebase() {
+        firestore.collection("appVersion")
+                .document("appVersion")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    KhanzoPlayApp app = documentSnapshot.toObject(KhanzoPlayApp.class);
+                    int versionCode = BuildConfig.VERSION_CODE;
+                    if (app.getVersion() > versionCode) {
+                        if (!appUpdateShownAlready) {
+                            showAppUpdateDialog();
+                        }
+
+                    }
+                });
+    }
+    private void showAppUpdateDialog() {
+        appUpdateShownAlready = true;
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("App Update")
+                .setMessage("New version of Khanzoplay is available. Upgrade your app for more features and better user experience")
+                .setPositiveButton("Update", (dialogInterface, i) -> {
+                    Uri uri = Uri.parse("https://khanzoplay.com/");
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                })
+                .show();
+    }
+
+    private void loadAds() {
+        firestore.collection("homeAds")
+                .whereEqualTo("state", user.getState())
+                .whereArrayContains("districts", user.getDistrict())
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
+                        ads.add(snapshot.toObject(AdBanner.class));
+                    }
+                    homeAdapter.notifyDataSetChanged();
                 });
     }
 }

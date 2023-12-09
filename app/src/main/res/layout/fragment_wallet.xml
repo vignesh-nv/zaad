@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".ui.wallet.WalletFragment">
 
@@ -77,10 +77,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@color/white"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@android:color/holo_red_light"
             android:text="Withdraw request"
-            android:textColor="@color/twitter_blue" />
+            android:textColor="@color/white" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,7 +88,7 @@
             android:fontFamily="@font/montserrat"
             android:padding="20dp"
             android:text="Last Withdrawal"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView

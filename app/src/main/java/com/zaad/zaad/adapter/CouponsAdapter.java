@@ -24,13 +24,15 @@ import coil.request.ImageRequest;
 
 public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.CouponsViewHolder> {
     private List<Coupon> itemList;
+    private List<String> redeemedCoupons;
     private Context context;
 
     private CouponOnClickListener listener;
-    public CouponsAdapter(List<Coupon> itemList, Context context, CouponOnClickListener onClickListener) {
+    public CouponsAdapter(List<Coupon> itemList, List<String> myRedeemedCoupons, Context context, CouponOnClickListener onClickListener) {
         this.itemList = itemList;
         this.context = context;
         this.listener = onClickListener;
+        this.redeemedCoupons = myRedeemedCoupons;
     }
 
     @NonNull
@@ -51,11 +53,14 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.CouponsV
         Coupon coupon = itemList.get(position);
         ImageLoader imageLoader = Coil.imageLoader(context);
 
-        viewHolder.imageView.setOnClickListener(view -> Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show());
-
-        viewHolder.redeemBtn.setOnClickListener(view -> {
-            listener.onclick(coupon);
-        });
+        if (redeemedCoupons.contains(coupon.getCouponId())) {
+            viewHolder.redeemBtn.setText("Already Redeemed");
+            viewHolder.redeemBtn.setClickable(false);
+        } else {
+            viewHolder.redeemBtn.setOnClickListener(view -> {
+                listener.onclick(coupon);
+            });
+        }
         ImageRequest request = new ImageRequest.Builder(context)
                 .data(coupon.getImageUrl())
                 .crossfade(true)

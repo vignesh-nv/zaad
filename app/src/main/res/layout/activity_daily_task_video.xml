@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.DailyTaskVideoActivity"
-    android:background="@color/black"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -32,8 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:backgroundTint="@android:color/holo_orange_dark"
             android:textSize="16sp"
             android:layout_marginRight="10dp"
             android:text="Full Video"/>
@@ -43,10 +43,10 @@
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
             android:text="Subscribe"
             android:layout_marginRight="20dp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
+            android:backgroundTint="@android:color/holo_orange_dark"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:text="Next Videos"
         android:fontFamily="@font/montserrat_medium"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:layout_marginTop="30dp"
         android:layout_below="@id/button_layout"
@@ -70,4 +70,20 @@
         tools:listitem="@layout/home_child_item"
         android:layout_below="@id/next_videos_title"
         android:layout_height="wrap_content"/>
-</RelativeLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/ad_slider"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal" />
+
+    <ImageView
+        android:id="@+id/image_ad_banner"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        android:layout_gravity="bottom"
+        android:layout_height="70dp"/>
+
+</LinearLayout>

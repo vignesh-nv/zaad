@@ -17,13 +17,12 @@ import com.zaad.zaad.viewmodel.LoginRegisterViewModel;
 
 public class AccountDetailsActivity extends AppCompatActivity {
 
-    Button signupBtn, backBtn;
+    Button signupBtn, backBtn, skipBtn;
     TextInputEditText accountNumberTxt, accountHolderNameTxt, ifscCodeTxt, upiNumberTxt, bankNameTxt;
     TextView skipTxt;
     LoginRegisterViewModel loginRegisterViewModel;
 
     private User user;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +33,7 @@ public class AccountDetailsActivity extends AppCompatActivity {
 
         signupBtn = findViewById(R.id.signupBtn);
         backBtn = findViewById(R.id.backBtn);
+        skipBtn = findViewById(R.id.skipBtn);
 
 //        loginRegisterViewModel = ViewModelProviders.of(this).get(LoginRegisterViewModel.class);
         loginRegisterViewModel = new ViewModelProvider(this).get(LoginRegisterViewModel.class);
@@ -43,7 +43,7 @@ public class AccountDetailsActivity extends AppCompatActivity {
         ifscCodeTxt = findViewById(R.id.ifscCodeTxt);
         upiNumberTxt = findViewById(R.id.upiNumberTxt);
         bankNameTxt = findViewById(R.id.bankNameEditTxt);
-        skipTxt = findViewById(R.id.skipTxt);
+        skipBtn = findViewById(R.id.skipBtn);
 
         signupBtn.setOnClickListener(view -> {
             saveAccountDetails();
@@ -58,7 +58,7 @@ public class AccountDetailsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        skipTxt.setOnClickListener(view -> {
+        skipBtn.setOnClickListener(view -> {
             Intent intent = new Intent(AccountDetailsActivity.this, PaymentDetailActivity.class);
             intent.putExtra("USER", user);
             startActivity(intent);

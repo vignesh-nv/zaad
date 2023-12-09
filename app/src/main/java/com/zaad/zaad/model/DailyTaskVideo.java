@@ -2,6 +2,7 @@ package com.zaad.zaad.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class DailyTaskVideo implements Serializable {
     private String title;
@@ -20,6 +21,11 @@ public class DailyTaskVideo implements Serializable {
     private String fullVideoUrl;
 
     private String channelUrl;
+
+    private String bannerId;
+
+    private List<String> adIds;
+
     public String getTitle() {
         return title;
     }
@@ -98,5 +104,21 @@ public class DailyTaskVideo implements Serializable {
 
     public void setChannelUrl(String channelUrl) {
         this.channelUrl = channelUrl;
+    }
+
+    public String getBannerId() {
+        return bannerId;
+    }
+
+    public void setBannerId(String bannerId) {
+        this.bannerId = bannerId;
+    }
+
+    public List<String> getAdIds() {
+        return adIds;
+    }
+
+    public void setAdIds(List<String> adIds) {
+        this.adIds = adIds;
     }
 }

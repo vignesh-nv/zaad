@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/black"
+    android:background="@color/white"
     android:gravity="center_horizontal"
     tools:context=".activity.EmailSignupAcitivity">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="400dp"
-        app:srcCompat="@drawable/app_logo" />
+        app:srcCompat="@drawable/khanzo_play_1" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"

@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/black"
-    android:backgroundTint="@color/black"
+    android:background="@android:color/white"
+    android:backgroundTint="@color/white"
     android:layout_marginBottom="4dp">
 
     <LinearLayout
@@ -26,55 +26,22 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/image"
                 android:background="@color/white"
-                android:scaleType="centerCrop"
-                />
+                android:scaleType="centerCrop" />
         </androidx.cardview.widget.CardView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginStart="5dp">
 
             <TextView
                 android:id="@+id/shopNameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_medium"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:text="Sri Krishna " />
-
-            <TextView
-                android:id="@+id/onlineAddressTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_medium"
-                android:textColor="@color/white"
-                android:text="Amazon" />
-
-            <LinearLayout
-                android:id="@+id/buyLinkLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="Buy Link: "/>
-
-                <TextView
-                    android:id="@+id/buyLink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textColorLink="#03A9F4"
-                    android:autoLink="web"
-                    android:text="https://www.amazon.in/"/>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/addressLayout"
@@ -85,35 +52,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:text="Address: "/>
 
                 <TextView
                     android:id="@+id/shop_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:text="Tindivanam"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/contactLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="Contact: "/>
-
-                <TextView
-                    android:id="@+id/shop_contact_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white" />
 
             </LinearLayout>
 
@@ -126,16 +73,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:text="Timing: "/>
 
                 <TextView
                     android:id="@+id/shop_timing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:text="9 am - 9 pm"/>
-
             </LinearLayout>
 
             <TextView
@@ -144,6 +90,32 @@
                 android:layout_height="wrap_content"
                 android:text="open"
                 android:textColor="@android:color/holo_green_dark"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/contact_btn"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/holo_orange_dark"
+                    android:text="Contact"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/map_btn"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="@android:color/holo_orange_dark"
+                    android:text="Map"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

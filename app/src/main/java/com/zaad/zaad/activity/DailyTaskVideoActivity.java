@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
@@ -37,8 +40,11 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTube
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import com.zaad.zaad.R;
+import com.zaad.zaad.adapter.AdImageAdapter;
 import com.zaad.zaad.adapter.DailyTaskSuggestionVideoAdapter;
+import com.zaad.zaad.listeners.AdCompleteListener;
 import com.zaad.zaad.listeners.DailyTaskSuggestionVideoClickListener;
+import com.zaad.zaad.model.AdBanner;
 import com.zaad.zaad.model.Coupon;
 import com.zaad.zaad.model.DailyTaskVideo;
 import com.zaad.zaad.model.User;
@@ -52,9 +58,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTaskSuggestionVideoClickListener {
+import coil.Coil;
+import coil.ImageLoader;
+import coil.request.ImageRequest;
 
+public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTaskSuggestionVideoClickListener, AdCompleteListener {
+
+    Timer timer;
     YouTubePlayerView youTubePlayerView;
     private DailyTaskVideo dailyTaskVideo;
 
@@ -79,6 +92,15 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
 
     Button fullVideoBtn, subscribeBtn;
 
+    List<AdBanner> ads;
+    AdBanner imageAdBanner;
+
+    ViewPager2 adSlider;
+
+    ImageView imageAdBannerView;
+    AdImageAdapter adAdapter;
+    int currentAd = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,10 +109,13 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
         dailyTaskVideo = (DailyTaskVideo) getIntent().getSerializableExtra("TASK");
 
         dailyTaskViewModel = new ViewModelProvider(this).get(DailyTaskViewModel.class);
-
+        ads = new ArrayList<>();
         youTubePlayerView = findViewById(R.id.youtube_player_view);
         fullVideoBtn = findViewById(R.id.full_video_btn);
         subscribeBtn = findViewById(R.id.subscibe_btn);
+        imageAdBannerView = findViewById(R.id.image_ad_banner);
+        adSlider = findViewById(R.id.ad_slider);
+
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
         loadYoutubePlayer();
@@ -126,6 +151,35 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
 //        AdView mAdView = findViewById(R.id.adView);
 //        AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
+
+        if (dailyTaskVideo.getBannerId() != null && !dailyTaskVideo.getBannerId().equals("")) {
+            firestore.collection("imageBanner").document(dailyTaskVideo.getBannerId())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        imageAdBanner = documentSnapshot.toObject(AdBanner.class);
+
+                        ImageLoader imageLoader = Coil.imageLoader(DailyTaskVideoActivity.this);
+                        ImageRequest request = new ImageRequest.Builder(DailyTaskVideoActivity.this)
+                                .data(imageAdBanner.getImageUrl())
+                                .crossfade(true)
+                                .target(imageAdBannerView)
+                                .build();
+                        imageLoader.enqueue(request);
+                    });
+        }
+
+        imageAdBannerView.setOnClickListener(view -> {
+            if (imageAdBanner == null) {
+                return;
+            }
+            Uri uri = Uri.parse(imageAdBanner.getLink());
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+
+        loadAds();
+        adAdapter = new AdImageAdapter(ads, this, this);
+        adSlider.setAdapter(adAdapter);
     }
 
     private void loadYoutubePlayer() {
@@ -197,7 +251,7 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
             completedTaskIds.addAll(data);
         });
 
-        dailyTaskViewModel.getDailyTaskVideos(user.getLanguage()).observe(this, data -> {
+        dailyTaskViewModel.getDailyTaskVideos(user.getLanguage(), user).observe(this, data -> {
             uncompletedTasks.clear();
             uncompletedTasks.addAll(data);
 
@@ -227,7 +281,7 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
                     });
         }
         if (videoWatched == 9) {
-            editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
+            editor.putInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, videoWatched + 1);
             editor.putBoolean(SHOW_REWARDS_BADGE, true);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String dateString = sdf.format(dailyTaskVideo.getExpiryDate());
@@ -272,6 +326,8 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
     protected void onPause() {
         super.onPause();
         Log.i("DailyTaskVideo", "ActivityPaused");
+        if (timer != null)
+            timer.cancel();
         dailyTaskViewModel.updateWatchedSeconds(dailyTaskVideo.getTaskId(), currentSecond);
     }
 
@@ -279,5 +335,48 @@ public class DailyTaskVideoActivity extends AppCompatActivity implements DailyTa
     protected void onResume() {
         super.onResume();
         Log.i("DailyTaskVideo", "ActivityResumed");
+    }
+
+    private void loadAds() {
+        if (dailyTaskVideo.getAdIds() == null || dailyTaskVideo.getAdIds().size() == 0) {
+            return;
+        }
+        firestore.collection("imageBanner").whereIn("id", dailyTaskVideo.getAdIds())
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                        ads.add(snapshot.toObject(AdBanner.class));
+                    }
+                    slideAdImages();
+                    adAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e ->
+                        Log.d("YoutubeVideoPlayerActi", "onFailure: " + e.toString())
+                );
+    }
+
+
+    private void slideAdImages() {
+        timer = new Timer(); // At this line a new Thread will be created
+        timer.scheduleAtFixedRate(new RemindTask(), 0, 5 * 1000); //
+    }
+
+    @Override
+    public void onComplete(int position) {
+
+    }
+
+    class RemindTask extends TimerTask {
+
+        @Override
+        public void run() {
+            runOnUiThread(() -> {
+
+                if (currentAd > ads.size()) {
+                    currentAd = 0;
+                }
+                adSlider.setCurrentItem(currentAd++);
+            });
+        }
     }
 }

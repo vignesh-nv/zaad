@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:backgroundTint="@color/black"
+    android:background="@color/white"
+    android:backgroundTint="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".activity.SignupHomeActivity">
@@ -19,7 +19,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/app_logo" />
+            android:layout_marginTop="150dp"
+            android:src="@drawable/khanzo_play_1" />
 
         <Button
             android:id="@+id/signupBtn"
@@ -28,10 +29,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@android:color/holo_red_light"
             android:gravity="center_horizontal"
             android:text="Signup"
-            android:textColor="@color/twitter_blue"
+            android:layout_marginTop="100dp"
+            android:textColor="@color/white"
             android:textSize="20sp" />
 
         <TextView
@@ -41,7 +43,7 @@
             android:layout_marginTop="10dp"
             android:fontFamily="@font/montserrat"
             android:text="Already have an account? Login"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:layout_marginBottom="20dp"/>
     </LinearLayout>
 </ScrollView>

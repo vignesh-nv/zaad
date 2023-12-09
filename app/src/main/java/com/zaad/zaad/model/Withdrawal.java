@@ -26,6 +26,8 @@ public class Withdrawal {
 
     private String bankName;
 
+    private int serviceCharge;
+
     public Withdrawal() {
     }
 
@@ -115,5 +117,13 @@ public class Withdrawal {
 
     public void setBankName(String bankName) {
         this.bankName = bankName;
+    }
+
+    public int getServiceCharge() {
+        return serviceCharge;
+    }
+
+    public void setServiceCharge(int serviceCharge) {
+        this.serviceCharge = serviceCharge;
     }
 }

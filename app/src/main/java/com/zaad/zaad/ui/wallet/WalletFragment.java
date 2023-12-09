@@ -1,9 +1,15 @@
 package com.zaad.zaad.ui.wallet;
 
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_SHORTS_COMPLETED_COUNT;
+import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COUNT;
+import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
+
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -99,6 +105,10 @@ public class WalletFragment extends Fragment {
                     Toast.makeText(getContext(), "Insufficient balance", Toast.LENGTH_SHORT).show();
                     return;
                 }
+//                if (!checkWithdrawEligibility()) {
+//                    Toast.makeText(getContext(), "Complete Daily Task to withdraw", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 if (user.getAccountDetails() == null || user.getAccountDetails().getAccountNumber()==null
                         || user.getAccountDetails().getBankName() == null || user.getAccountDetails().getAccountNumber().equals("")) {
                     Toast.makeText(getContext(), "Add your account details in your profile page, before you make withdrawal", Toast.LENGTH_SHORT).show();
@@ -119,7 +129,16 @@ public class WalletFragment extends Fragment {
         withdrawal.setBankName(user.getAccountDetails().getBankName());
         withdrawal.setIfscCode(user.getAccountDetails().getIfsc());
         withdrawal.setAccountHolderName(user.getAccountDetails().getAccountHolderName());
+        withdrawal.setServiceCharge((15 * amount / 100));
         walletViewModel.makeWithdrawTransaction(withdrawal);
         walletViewModel.reduceAmountFromUserAccount(user.getAmount() - amount);
+    }
+
+    private boolean checkWithdrawEligibility() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        int videoWatched = sharedPreferences.getInt(DAILY_TASK_VIDEO_COMPLETED_COUNT, 0);
+        int shortsWatched = sharedPreferences.getInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
+
+        return videoWatched >= 10 && shortsWatched >= 25;
     }
 }

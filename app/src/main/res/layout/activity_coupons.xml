@@ -6,58 +6,58 @@
     android:layout_height="match_parent"
     tools:context=".activity.CouponsActivity"
     android:orientation="vertical"
-    android:background="@color/black">
+    android:background="@color/white">
 
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+<!--    <HorizontalScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="5dp">-->
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/online_coupons_category"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:singleLine="true"
-            app:singleSelection="true">
+<!--        <com.google.android.material.chip.ChipGroup-->
+<!--            android:id="@+id/online_coupons_category"-->
+<!--            style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:singleLine="true"-->
+<!--            app:singleSelection="true">-->
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/fashionChip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fashion" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/fashionChip"-->
+<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Fashion" />-->
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/electronicsChip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Electronics" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/electronicsChip"-->
+<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Electronics" />-->
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/foodChip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Food" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/foodChip"-->
+<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Food" />-->
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/ecommerceChip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ecommerce" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/ecommerceChip"-->
+<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Ecommerce" />-->
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/furnitureChip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Furniture" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/furnitureChip"-->
+<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Furniture" />-->
 
-        </com.google.android.material.chip.ChipGroup>
-    </HorizontalScrollView>
+<!--        </com.google.android.material.chip.ChipGroup>-->
+<!--    </HorizontalScrollView>-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/coupons_recyclerView"
         android:layout_width="match_parent"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:background="@color/black"
+    android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".activity.AccountDetailsActivity">
@@ -19,12 +19,14 @@
        <ImageView
            android:layout_width="300dp"
            android:layout_height="wrap_content"
-           android:src="@drawable/logo_toolbar"/>
+           android:layout_marginTop="10dp"
+           android:src="@drawable/khanzo_play_1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
+            android:textColor="@color/light_black"
             android:text="Step 2 of 3"
             android:textSize="16sp" />
 
@@ -36,7 +38,8 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat"
             android:text="Account Details"
-            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textSize="26dp" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -47,12 +50,16 @@
             android:layout_below="@id/pageTitle"
             android:layout_marginTop="20dp"
             android:hint="Account holder name"
-            android:textColorHint="@color/white">
+            app:hintTextColor="@color/black"
+            app:boxStrokeColor="@color/black"
+            android:textColorHint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/accountHolderNameTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -65,12 +72,16 @@
             android:layout_below="@id/accountHolderNameTxtLayout"
             android:layout_marginTop="20dp"
             android:hint="Account number"
-            android:textColorHint="@color/white">
+            app:hintTextColor="@color/black"
+            app:boxStrokeColor="@color/black"
+            android:textColorHint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/accountNumberTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -80,13 +91,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            app:hintTextColor="@color/black"
             android:hint="Bank name"
-            android:textColorHint="@color/white">
+            app:boxStrokeColor="@color/black"
+            android:textColorHint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/bankNameEditTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -99,12 +114,16 @@
             android:layout_below="@id/accountNumberTxtLayout"
             android:layout_marginTop="20dp"
             android:hint="IFSC Code"
-            android:textColorHint="@color/white">
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="@color/black"
+            android:textColorHint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/ifscCodeTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -117,13 +136,17 @@
             android:layout_below="@id/ifscCodeLayout"
             android:layout_marginTop="20dp"
             android:hint="UPI Number"
-            android:textColorHint="@color/white">
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="@color/black"
+            android:textColorHint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
 
                 android:id="@+id/upiNumberTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -152,19 +175,17 @@
                 android:layout_below="@id/upiNumberTxtLayout"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@android:color/holo_red_dark"
                 android:text="Next"
-                android:textColor="@android:color/holo_red_dark" />
+                android:textColor="@android:color/white" />
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/skipTxt"
+        <Button
+            android:id="@+id/skipBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/montserrat"
-            android:text="SKIP"
-            android:textColor="@color/twitter_blue" />
+            android:layout_margin="10dp"
+            android:text="Skip"/>
+
     </LinearLayout>
 </ScrollView>

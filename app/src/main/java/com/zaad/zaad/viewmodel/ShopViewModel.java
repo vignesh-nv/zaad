@@ -31,12 +31,16 @@ public class ShopViewModel extends AndroidViewModel {
         return firestoreRepository.getOfflineShopByDistricts(districts);
     }
 
-    public MutableLiveData<List<Shop>> getOfflineShopByDistrictAndCategory(final String state, final List<String> districts, final String category) {
-        return firestoreRepository.getOfflineShopByDistrictsAndCategory(state, districts, category);
+//    public MutableLiveData<List<Shop>> getOfflineShopByDistrictAndCategory(final String state, final List<String> districts, final String category) {
+//        return firestoreRepository.getOfflineShopByDistrictsAndCategory(state, districts, category);
+//    }
+
+    public MutableLiveData<List<Shop>> getOfflineShopByDistrictAndCategory(final String state, final String district, final String category) {
+        return firestoreRepository.getOfflineShopByDistrictsAndCategory(state, district, category);
     }
 
     public MutableLiveData<List<Shop>> getOfflineShopByCategory(final String state,  final String category) {
-        return firestoreRepository.getOnlineShopListByCategory(state, category);
+        return firestoreRepository.getOfflineShopListByCategory(state, category);
     }
 
     public MutableLiveData<List<Shop>> getShopByCategory(final String availability,  final String category) {

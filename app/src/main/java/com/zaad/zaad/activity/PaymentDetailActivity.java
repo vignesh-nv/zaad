@@ -1,6 +1,5 @@
 package com.zaad.zaad.activity;
 
-import static com.zaad.zaad.constants.AppConstant.CHILD_MODE;
 import static com.zaad.zaad.constants.AppConstant.PAYMENT_COMPLETED;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 
@@ -13,7 +12,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.kittinunf.fuel.Fuel;
@@ -24,6 +25,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 import com.stripe.android.PaymentConfiguration;
@@ -43,24 +45,30 @@ import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 public class PaymentDetailActivity extends AppCompatActivity implements PaymentResultListener {
 
     Button payButton;
-    TextInputEditText referralCodeTxt;
+    TextInputEditText referralCodeTxt, referNameTxt;
     LoginRegisterViewModel loginRegisterViewModel;
     private User user;
-    private String referralCode, myReferralCode;
+    private String referralCode, myReferralCode, creditBy;
     FirebaseFirestore firestore;
 
     ReferralData referralData;
     PaymentSheet.CustomerConfiguration customerConfig;
 
     private PaymentSheet.FlowController flowController;
+
     String paymentIntentClientSecret;
 
     PaymentSheet paymentSheet;
+
+    TextView trailBtn;
+    Button skipBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +76,8 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
         setContentView(R.layout.activity_payment_detail);
         payButton = findViewById(R.id.payButton);
         referralCodeTxt = findViewById(R.id.referralCodeTxt);
+        referNameTxt = findViewById(R.id.referralNameTxt);
+        skipBtn = findViewById(R.id.btn_skip);
 
         firestore = FirebaseFirestore.getInstance();
 
@@ -81,16 +91,21 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
             }
         });
         paymentSheet = new PaymentSheet(this, this::onPaymentSheetResult);
-
+        skipBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(PaymentDetailActivity.this, HomeActivity.class);
+            saveUserDetails(false);
+            updatePaymentCompleted(false);
+            startActivity(intent);
+        });
     }
 
     private void showStripePaymentSheet() {
         final PaymentSheet.GooglePayConfiguration googlePayConfiguration =
                 new PaymentSheet.GooglePayConfiguration(
-                        PaymentSheet.GooglePayConfiguration.Environment.Test,
+                        PaymentSheet.GooglePayConfiguration.Environment.Production,
                         "IN"
                 );
-        final PaymentSheet.Configuration configuration = new PaymentSheet.Configuration.Builder("Example, Inc.")
+        final PaymentSheet.Configuration configuration = new PaymentSheet.Configuration.Builder("Khanzoplay")
                 .customer(customerConfig)
                 // Set `allowsDelayedPaymentMethods` to true if your business can handle payment methods
                 // that complete payment after a delay, like SEPA Debit and Sofort.
@@ -114,7 +129,7 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
             Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(PaymentDetailActivity.this, HomeActivity.class);
             saveUserDetails();
-            updatePaymentCompleted();
+            updatePaymentCompleted(true);
             startActivity(intent);
         }
     }
@@ -122,6 +137,8 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
     private void validateReferralCode() {
         // TODO: Call this logic once the payment is successful
         referralCode = referralCodeTxt.getText().toString();
+        creditBy = referNameTxt.getText().toString();
+
         if (referralCode.equals("KHANZO")) {
             createAndSaveReferralCode();
             startStripePayment();
@@ -146,10 +163,9 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
                     if (documentSnapshot.getDocuments().size() >= 2) {
                         Toast.makeText(this, "Referral Code cannot be used", Toast.LENGTH_SHORT).show();
                     } else {
-                        createAndSaveReferralCode();
+//                        createAndSaveReferralCode();
 //                        startPayment();
                         startStripePayment();
-
                     }
                 });
     }
@@ -173,17 +189,11 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
                     );
                     paymentIntentClientSecret = result.getString("paymentIntent");
                     PaymentConfiguration.init(getApplicationContext(), result.getString("publishableKey"));
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showStripePaymentSheet();
-                        }
-                    });
+                    runOnUiThread(() -> showStripePaymentSheet());
                 } catch (JSONException e) { /* handle error */
-                    Toast.makeText(PaymentDetailActivity.this, "Error Occured", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PaymentDetailActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void failure(@NonNull FuelError fuelError) {
                 Toast.makeText(PaymentDetailActivity.this, "Error O" + fuelError.getErrorData(), Toast.LENGTH_SHORT).show();
@@ -212,7 +222,7 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
         Toast.makeText(this, "Payment Success", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(PaymentDetailActivity.this, HomeActivity.class);
         saveUserDetails();
-        updatePaymentCompleted();
+        updatePaymentCompleted(true);
         startActivity(intent);
     }
 
@@ -242,10 +252,10 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
         return true;
     }
 
-    private void updatePaymentCompleted() {
+    private void updatePaymentCompleted(boolean completed) {
         SharedPreferences sharedPref = getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(PAYMENT_COMPLETED, true);
+        editor.putBoolean(PAYMENT_COMPLETED, completed);
         editor.apply();
     }
 
@@ -256,11 +266,33 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
         user.setJoinedDate(new Date());
         user.setPaymentCompleted(true);
         user.setLevel("A");
-        user.setAmount(121);
+        user.setAmount(100);
+        user.setCreditBy(creditBy);
         Date expiryDate = new Date();
         expiryDate.setYear(expiryDate.getYear() + 1);
         expiryDate = new Date(expiryDate.getTime() - MILLIS_IN_A_DAY);
         user.setExpiryDate(expiryDate);
+        user.setCreditByAmountEarned(0);
+        user.setCreditByReferralCount(0);
+        loginRegisterViewModel.saveUser(user);
+        addAmountToCreditBy();
+    }
+
+    private void saveUserDetails(final boolean paymentCompleted) {
+        long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
+        user.setReferralCode(myReferralCode);
+        user.setReferredByCode(referralCode);
+        user.setJoinedDate(new Date());
+        user.setPaymentCompleted(paymentCompleted);
+        user.setLevel("A");
+        user.setAmount(0);
+        user.setCreditBy(creditBy);
+        Date expiryDate = new Date();
+        expiryDate.setYear(expiryDate.getYear() + 1);
+        expiryDate = new Date(expiryDate.getTime() - MILLIS_IN_A_DAY);
+        user.setExpiryDate(expiryDate);
+        user.setCreditByAmountEarned(0);
+        user.setCreditByReferralCount(0);
         loginRegisterViewModel.saveUser(user);
     }
 
@@ -268,4 +300,24 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
         return value == null || value.equals("");
     }
 
+    private void addAmountToCreditBy() {
+        if (creditBy == null || creditBy.equals("")) {
+            return;
+        }
+        firestore.collection("user").whereEqualTo("referralCode", creditBy)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
+                        User user1 = snapshot.toObject(User.class);
+                        if (!Objects.equals(user1.getLevel(), "A")) {
+                            Map<String, Object> map = new HashMap<>();
+                            map.put("amount", user1.getAmount() + 50);
+                            map.put("creditByReferralCount", user1.getCreditByReferralCount() + 1);
+                            map.put("creditByAmountEarned", user1.getCreditByAmountEarned() + 50);
+                            loginRegisterViewModel.updateUserWithID(user1.getEmail(), map);
+                        }
+                    }
+                });
+
+    }
 }

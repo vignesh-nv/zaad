@@ -46,6 +46,7 @@ public class PasswordResetActivity extends AppCompatActivity {
                         Log.d("", "Email sent.");
                         Toast.makeText(PasswordResetActivity.this, "Mail has been sent. Check your inbox", Toast.LENGTH_SHORT).show();
                     } else {
+                        Exception e = task.getException();
                         Toast.makeText(this, "Error Occurred", Toast.LENGTH_SHORT).show();
                     }
                 });

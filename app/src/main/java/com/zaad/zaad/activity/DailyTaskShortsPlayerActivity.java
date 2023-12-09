@@ -25,6 +25,7 @@ import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.DailyTaskShortsVideoAdapter;
 import com.zaad.zaad.adapter.YoutubeShortsVideoAdapter;
 import com.zaad.zaad.listeners.ShortsPlayCompletedListener;
+import com.zaad.zaad.model.Coupon;
 import com.zaad.zaad.model.DailyTaskVideo;
 import com.zaad.zaad.model.User;
 import com.zaad.zaad.model.Video;
@@ -77,7 +78,7 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
             completedTaskIds.addAll(data);
         });
 
-        dailyTaskViewModel.getDailyTaskShorts(user.getLanguage()).observe(this, data -> {
+        dailyTaskViewModel.getDailyTaskShorts(user.getLanguage(), user).observe(this, data -> {
             dailyTaskShorts.clear();
             dailyTaskShorts.add(video);
             List<DailyTaskVideo> completedTasks = new ArrayList<>();
@@ -113,9 +114,18 @@ public class DailyTaskShortsPlayerActivity extends AppCompatActivity implements 
         SharedPreferences sharedPref = getSharedPreferences(ZAAD_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         int videoWatched = sharedPref.getInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
         SharedPreferences.Editor editor = sharedPref.edit();
-
+        if (video.getCouponId() != null && !video.getCouponId().equals("")) {
+            Toast.makeText(this, "You won a special coupon", Toast.LENGTH_SHORT).show();
+            editor.putBoolean(SHOW_REWARDS_BADGE, true);
+            editor.apply();
+            firestore.collection("coupons").document(video.getCouponId()).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        Coupon coupon = documentSnapshot.toObject(Coupon.class);
+                        dailyTaskViewModel.addCoupon(coupon);
+                    });
+        }
         if (videoWatched == 24) {
-            editor.putInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
+            editor.putInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, videoWatched + 1);
             editor.putBoolean(SHOW_REWARDS_BADGE, true);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String dateString = sdf.format(video.getExpiryDate());

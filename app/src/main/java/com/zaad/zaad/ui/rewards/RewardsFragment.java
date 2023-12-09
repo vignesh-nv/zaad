@@ -82,7 +82,6 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
 
         mViewModel.getUser().observe(getActivity(), data -> {
             user.setAvailableCoupons(data.getAvailableCoupons());
-            Log.i("RewardsFragment", user.toString());
             if (data.getAvailableCoupons() == 0) {
                 noAvailableCouponsTxt.setVisibility(View.VISIBLE);
                 availableCouponsRecyclerView.setVisibility(View.GONE);

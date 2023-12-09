@@ -68,19 +68,20 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Verify the Email", Toast.LENGTH_SHORT).show();
             return;
         }
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.collection("user").document(firebaseUser.getEmail())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    User user = documentSnapshot.toObject(User.class);
-                    if (user!=null && user.isPaymentCompleted()) {
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Intent intent = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
-                        startActivity(intent);
-                    }
-                });
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+//        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+//        firestore.collection("user").document(firebaseUser.getEmail())
+//                .get()
+//                .addOnSuccessListener(documentSnapshot -> {
+//                    User user = documentSnapshot.toObject(User.class);
+//                    if (user!=null && user.isPaymentCompleted()) {
+//
+//                    } else {
+//                        Intent intent = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
+//                        startActivity(intent);
+//                    }
+//                });
     }
 }

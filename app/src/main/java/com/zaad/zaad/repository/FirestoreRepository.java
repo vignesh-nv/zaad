@@ -19,6 +19,9 @@ import com.zaad.zaad.model.Coupon;
 import com.zaad.zaad.model.DailyTaskVideo;
 import com.zaad.zaad.model.HomeItem;
 import com.zaad.zaad.model.Shop;
+import com.zaad.zaad.model.ShoppingMenu;
+import com.zaad.zaad.model.ShoppingMenuItem;
+import com.zaad.zaad.model.User;
 import com.zaad.zaad.model.Video;
 
 import org.checkerframework.checker.index.qual.UpperBoundUnknown;
@@ -61,6 +64,8 @@ public class FirestoreRepository {
 
     MutableLiveData<List<Video>> kisVideosForMenuMutableLiveData = new MutableLiveData<>();
     MutableLiveData<List<Video>> kisVideosByCategoryMutableLiveData = new MutableLiveData<>();
+
+    MutableLiveData<List<ShoppingMenuItem>> shoppingMenuMutableLiveData = new MutableLiveData<>();
 
     MutableLiveData<Video> videoMutableLiveData;
 
@@ -145,7 +150,8 @@ public class FirestoreRepository {
     }
 
     public MutableLiveData<List<Shop>> getOfflineShopByDistricts(List<String> districts) {
-        mFirestore.collection("offlineShop")
+        mFirestore.collection("shops")
+                .whereEqualTo("availability", "OFFLINE")
                 .whereIn("district", districts)
                 .addSnapshotListener((value, error) -> {
                     List<Shop> videoList = new ArrayList<>();
@@ -159,11 +165,11 @@ public class FirestoreRepository {
         return offlineShopListMutableLiveData;
     }
 
-    public MutableLiveData<List<Shop>> getOfflineShopByDistrictsAndCategory(String state, List<String> districts, String category) {
-        mFirestore.collection("offlineShop")
-                .whereIn("district", districts)
-                .whereEqualTo("state", state)
+    public MutableLiveData<List<Shop>> getOfflineShopByDistrictsAndCategory(String state, String district, String category) {
+        mFirestore.collection("shops")
                 .whereEqualTo("category", category)
+                .whereEqualTo("availability", "OFFLINE")
+                .whereArrayContains("districts", district)
                 .addSnapshotListener((value, error) -> {
                     List<Shop> videoList = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : value) {
@@ -178,9 +184,10 @@ public class FirestoreRepository {
 
     public MutableLiveData<List<Shop>> getOfflineShopListByCategory(final String state, final String category) {
 
-        mFirestore.collection("offlineShop")
+        mFirestore.collection("shops")
                 .whereEqualTo("category", category)
                 .whereEqualTo("state", state)
+                .whereEqualTo("availability", "OFFLINE")
                 .addSnapshotListener((value, error) -> {
                     List<Shop> videoList = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : value) {
@@ -196,7 +203,8 @@ public class FirestoreRepository {
 
     public MutableLiveData<List<Shop>> getOnlineShopListByCategory(final String availability, final String category) {
 
-        mFirestore.collection(availability).whereEqualTo("category", category)
+        mFirestore.collection("shops").whereEqualTo("category", category)
+                .whereEqualTo("availability", availability)
                 .addSnapshotListener((value, error) -> {
                     List<Shop> videoList = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : value) {
@@ -224,10 +232,12 @@ public class FirestoreRepository {
         return childVideosListMutableLiveData;
     }
 
-    public MutableLiveData<List<DailyTaskVideo>> getDailyTasks(final String language) {
+    public MutableLiveData<List<DailyTaskVideo>> getDailyTasks(final String language, final User user) {
         mFirestore.collection("dailyTasks")
                 .whereEqualTo("category", "Video")
                 .whereEqualTo("language", language)
+                .whereEqualTo("state", user.getState())
+                .whereArrayContains("districts", user.getDistrict())
                 .whereGreaterThan("expiryDate", new Date())
                 .addSnapshotListener((value, error) -> {
                     Date currentDate = new Date();
@@ -317,10 +327,13 @@ public class FirestoreRepository {
         return youtubeVideosByCollectionMutableLiveData;
     }
 
-    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskShorts(final String language) {
+    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskShorts(final String language,
+                                                                    final User user) {
         mFirestore.collection("dailyTasks")
                 .whereEqualTo("category", "Shorts")
                 .whereEqualTo("language", language)
+                .whereEqualTo("state", user.getState())
+                .whereArrayContains("districts", user.getDistrict())
                 .whereGreaterThan("expiryDate", new Date())
                 .addSnapshotListener((value, error) -> {
                     Date currentDate = new Date();
@@ -342,8 +355,11 @@ public class FirestoreRepository {
         return dailyTaskShortsMutableLiveData;
     }
 
-    public MutableLiveData<List<AdBanner>> getVideoAdBanners() {
-        mFirestore.collection("videoAdBanner").get().addOnSuccessListener(queryDocumentSnapshots -> {
+    public MutableLiveData<List<AdBanner>> getVideoAdBanners(final User user) {
+        mFirestore.collection("videoAdBanner")
+                .whereEqualTo("state", user.getState())
+                .whereArrayContains("districts", user.getDistrict())
+                .get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<AdBanner> videos = new ArrayList<>();
             for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                 if (queryDocumentSnapshot != null) {
@@ -407,16 +423,24 @@ public class FirestoreRepository {
         return musicMenuMutableLiveData;
     }
 
-    public MutableLiveData<List<HomeItem>> getHomeMenus() {
-        mFirestore.collection("homeMenu").orderBy("order", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<HomeItem> items = new ArrayList<>();
-                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                    items.add(snapshot.toObject(HomeItem.class));
-                }
-                homeMenuMutableLiveData.postValue(items);
+    public MutableLiveData<List<ShoppingMenuItem>> getShoppingMenu() {
+        mFirestore.collection("shopMenu").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<ShoppingMenuItem> items = new ArrayList<>();
+            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                items.add(snapshot.toObject(ShoppingMenuItem.class));
             }
+            shoppingMenuMutableLiveData.postValue(items);
+        });
+        return shoppingMenuMutableLiveData;
+    }
+
+    public MutableLiveData<List<HomeItem>> getHomeMenus() {
+        mFirestore.collection("homeMenu").orderBy("order", Query.Direction.ASCENDING).get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<HomeItem> items = new ArrayList<>();
+            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                items.add(snapshot.toObject(HomeItem.class));
+            }
+            homeMenuMutableLiveData.postValue(items);
         });
         return homeMenuMutableLiveData;
     }

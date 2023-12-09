@@ -9,6 +9,7 @@
     <string name="title_rewards">Rewards</string>
     <string name="title_coupons">Coupons</string>
     <string name="title_music">Music</string>
+    <string name="title_shopping">Shopping</string>
     <string name="title_profile">Profile</string>
     <string name="title_my_level">My Level</string>
     <string name="title_earning">Earning</string>
@@ -28,4 +29,14 @@
     <string name="menu_slideshow">Slideshow</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Checkout activity -->
+    <string name="title_activity_checkout">CheckoutActivity</string>
+    <string name="checkout_item_description">Description</string>
+    <string name="googlepay_status_unavailable" translatable="false">Unfortunately, Google Pay is
+        not available on this phone.
+    </string>
+    <string name="payments_show_name" translatable="false">Successfully received payment data for
+        %s!
+    </string>
 </resources>

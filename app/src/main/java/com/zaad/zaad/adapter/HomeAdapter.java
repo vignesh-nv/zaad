@@ -2,10 +2,13 @@ package com.zaad.zaad.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,9 +21,15 @@ import com.zaad.zaad.R;
 import com.zaad.zaad.VideoType;
 import com.zaad.zaad.activity.FullYoutubeVideosActivity;
 import com.zaad.zaad.activity.ShoppingTimeActivity;
+import com.zaad.zaad.model.AdBanner;
 import com.zaad.zaad.model.HomeItem;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import coil.Coil;
+import coil.ImageLoader;
+import coil.request.ImageRequest;
 
 public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -28,21 +37,34 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<HomeItem> itemList;
     private Context context;
 
-    public HomeAdapter(List<HomeItem> itemList, Context context) {
+    private List<AdBanner> ads;
+
+    int adCount = 0;
+
+    public HomeAdapter(List<HomeItem> itemList, List<AdBanner> ads, Context context) {
         this.itemList = itemList;
         this.context = context;
+        this.ads = ads;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        if (i == 10) {
+            View view = LayoutInflater
+                    .from(viewGroup.getContext())
+                    .inflate(R.layout.home_ad_item,
+                            viewGroup, false);
 
-        View view = LayoutInflater
-                .from(viewGroup.getContext())
-                .inflate(R.layout.home_item,
-                        viewGroup, false);
+            return new AdViewHolder(view);
+        } else {
+            View view = LayoutInflater
+                    .from(viewGroup.getContext())
+                    .inflate(R.layout.home_item,
+                            viewGroup, false);
 
-        return new VideoViewHolder(view);
+            return new VideoViewHolder(view);
+        }
     }
 
     @Override
@@ -50,6 +72,37 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         int type = viewHolder.getItemViewType();
 
+        if (type == 10) {
+            AdViewHolder adViewHolder = (AdViewHolder) viewHolder;
+            if (adCount >= ads.size()) {
+                adViewHolder.imageView.setVisibility(View.GONE);
+                return;
+            }
+            AdBanner adBanner = ads.get(adCount);
+            adViewHolder.imageView.setVisibility(View.VISIBLE);
+
+            ImageLoader imageLoader = Coil.imageLoader(context);
+
+            ImageRequest request = new ImageRequest.Builder(context)
+                    .data(adBanner.getImageUrl())
+                    .crossfade(true)
+                    .target(adViewHolder.imageView)
+                    .build();
+            imageLoader.enqueue(request);
+            if (adBanner.getAdType().equals("SMALL_AD")) {
+                adViewHolder.imageView.getLayoutParams().height = 200;
+            }
+            adViewHolder.imageView.setOnClickListener(view -> {
+                if (adBanner.getLink() == null || adBanner.getLink().equals("") || !adBanner.getLink().startsWith("https:")) {
+                    return;
+                }
+                Uri uri = Uri.parse(adBanner.getLink());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                context.startActivity(intent);
+            });
+            adCount++;
+            return;
+        }
         if (type == 0 || type == 1 || type == 2) {
             VideoViewHolder videoViewHolder = (VideoViewHolder) viewHolder;
             HomeItem parentItem = itemList.get(position);
@@ -140,6 +193,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemViewType(int position) {
         HomeItem parentItem = itemList.get(position);
 
+        if (parentItem == null) {
+            return 10;
+        }
         String category = parentItem.getCategory();
         if (category.equals(VideoType.YOUTUBE_VIDEO.name())) {
             return 0;
@@ -169,6 +225,15 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             title = itemView.findViewById(R.id.parent_item_title);
             ChildRecyclerView = itemView.findViewById(R.id.item_recyclerView);
             moreBtn = itemView.findViewById(R.id.more_button);
+        }
+    }
+
+    class AdViewHolder extends RecyclerView.ViewHolder {
+        private ImageView imageView;
+
+        public AdViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.img_child_item);
         }
     }
 }

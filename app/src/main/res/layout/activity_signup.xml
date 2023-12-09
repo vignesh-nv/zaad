@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".activity.SignupActivity">
@@ -16,22 +16,27 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="300dp"
-            android:src="@drawable/app_logo" />
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/khanzo_play_1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
             android:text="Signup"
-            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/black"
             android:textSize="26sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
             app:placeholderText="john@email.com">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -39,6 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
+                android:textColor="@color/black"
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -47,6 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             app:passwordToggleEnabled="true"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
             app:placeholderText="john@123">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -54,19 +62,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Create new Password"
+                android:textColor="@color/black"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Password must meet the following requirements:"
-                android:textColor="@color/light_white"
+                android:textColor="@color/light_black"
                 android:textStyle="bold" />
 
             <TextView
@@ -74,21 +84,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" - At least 8 characters"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@color/light_black" />
 
             <TextView
                 android:id="@+id/password_requirement_uppercase"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" - At least 1 uppercase letter"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@color/light_black" />
 
             <TextView
                 android:id="@+id/password_requirement_special"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" - At least 1 special character (!@#$%^&amp;*)"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@color/light_black" />
 
         </LinearLayout>
 
@@ -108,7 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Note: Verification mail will be sent to your email"
-            android:textColor="@color/light_white"
+            android:textColor="@color/light_black"
             android:layout_marginBottom="30dp"/>
     </LinearLayout>
 </ScrollView>

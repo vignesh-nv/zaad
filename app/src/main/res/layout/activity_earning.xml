@@ -16,12 +16,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
-            android:src="@drawable/income2"/>
+            android:src="@drawable/income_1"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
-            android:src="@drawable/income1"/>
+            android:src="@drawable/income_2"/>
     </LinearLayout>
 </ScrollView>

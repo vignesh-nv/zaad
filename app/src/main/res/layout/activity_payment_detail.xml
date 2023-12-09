@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:background="@color/black"
+    android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".activity.PaymentDetailActivity">
@@ -13,13 +13,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical">
 
         <ImageView
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo_toolbar" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/khanzo_play_1"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,7 +29,8 @@
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/montserrat_bold"
             android:text="Payment Method"
-            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textSize="28sp" />
 
         <TextView
@@ -35,6 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/montserrat"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/light_black"
             android:text="Step 3 of 3"
             android:textSize="16sp" />
 
@@ -45,14 +50,39 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:hint="Referral Code"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
+            app:boxStrokeColor="@color/black"
             app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/referralCodeTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
                 android:inputType="text" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/referNameLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Credit By"
+                android:textColorHint="@color/black"
+                app:hintTextColor="@color/black"
+                app:boxStrokeColor="@color/black"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/referralNameTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.cardview.widget.CardView
@@ -113,7 +143,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="30dp"
-                        android:text="103.00"
+                        android:text="Rs. 206.00"
                         android:textColor="@color/white" />
                 </RelativeLayout>
 
@@ -127,7 +157,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="GST 18%"
+                        android:text="Discount 0.44%"
                         android:textColor="@color/white" />
 
                     <TextView
@@ -136,7 +166,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="30dp"
-                        android:text="18.54"
+                        android:text="Rs. 0.90"
                         android:textColor="@color/white" />
                 </RelativeLayout>
 
@@ -161,7 +191,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="30dp"
                         android:fontFamily="@font/montserrat_bold"
-                        android:text="121.54"
+                        android:text="Rs. 205.09"
                         android:textColor="@color/white" />
                 </RelativeLayout>
 
@@ -175,7 +205,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat"
-                        android:text="Discount"
+                        android:text="GST 18%"
                         android:textColor="@color/white" />
 
                     <TextView
@@ -185,7 +215,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="30dp"
                         android:fontFamily="@font/montserrat"
-                        android:text="- 0.54"
+                        android:text="Rs. 36.91"
                         android:textColor="@color/white" />
                 </RelativeLayout>
 
@@ -209,7 +239,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="30dp"
                         android:fontFamily="@font/montserrat_bold"
-                        android:text="121.00"
+                        android:text="Rs. 242.00"
                         android:textColor="@color/white" />
                 </RelativeLayout>
             </LinearLayout>
@@ -221,10 +251,21 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@android:color/holo_red_light"
             android:gravity="center_horizontal"
             android:text="Pay"
-            android:textColor="@android:color/holo_red_dark"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trail for 3 days"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/teal_700"
+            android:layout_gravity="center_horizontal"/>
+
     </LinearLayout>
 </ScrollView>

@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zaad.zaad.R;
-import com.zaad.zaad.activity.YoutubeVideoPlayerActivity;
 import com.zaad.zaad.listeners.OnSuggestionVideoClick;
 import com.zaad.zaad.model.Video;
 

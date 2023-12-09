@@ -28,8 +28,8 @@ public class AboutList extends MaterialAboutActivity {
 
         appCardBuilder.addItem(new MaterialAboutTitleItem.Builder()
                 .text("Khanzo Play")
-                .desc("© 2023 Khanzo Enterprises")
-                .icon(R.drawable.app_logo)
+                .desc("© 2023 Khanzo Media Company")
+                .icon(R.drawable.app_icon)
                 .build());
 
         appCardBuilder.addItem(ConvenienceBuilder.createVersionActionItem(c,
@@ -80,7 +80,6 @@ public class AboutList extends MaterialAboutActivity {
 
         developedByCardBuilder.addItem(new MaterialAboutActionItem.Builder()
                 .text("BAIRACORP")
-                .subText("Muvendhan Information and Technologies Pvt Ltd")
                 .icon(new IconicsDrawable(c)
                         .icon(CommunityMaterial.Icon.cmd_globe_model)
                         .color(c.getResources().getColor(R.color.white))

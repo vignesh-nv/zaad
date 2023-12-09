@@ -15,13 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.zaad.zaad.R;
-import com.zaad.zaad.VideoType;
-import com.zaad.zaad.adapter.ChildVideosAdapter;
+import com.zaad.zaad.adapter.ShoppingMenuAdapter;
 import com.zaad.zaad.model.HomeItem;
 import com.zaad.zaad.model.Video;
 import com.zaad.zaad.viewmodel.ChildModeHomeViewModel;
@@ -57,42 +54,42 @@ public class ChildModeHomeFragment extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
-        ChildVideosAdapter childVideosAdapter = new ChildVideosAdapter(kidsMenu, getContext());
-
-        recyclerView.setAdapter(childVideosAdapter);
-        recyclerView.setLayoutManager(layoutManager);
-
-        mViewModel.getKidsVideosForHome().observe(getViewLifecycleOwner(), data -> {
-            Log.i("ChildModeFragment", data.toString());
-            Log.i("ChildModeFragment", String.valueOf(data.size()));
-        });
-
-        mViewModel.getKidVideosMenu().observe(getViewLifecycleOwner(), data -> {
-//            kidsMenu.clear();
-//            kidsMenu.addAll(data);
-            for (HomeItem item : data) {
-                firestore.collection("childVideos").whereEqualTo("category", item.getCategory())
-                        .limit(10)
-                        .get()
-                        .addOnSuccessListener(queryDocumentSnapshots -> {
-                            List<Video> videos = new ArrayList<>();
-                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                videos.add(snapshot.toObject(Video.class));
-                            }
-                            if (videos.size()!=0) {
-                                Collections.sort(videos);
-                                item.setVideos(videos);
-                                kidsMenu.add(item);
-                            }
-                            childVideosAdapter.notifyDataSetChanged();
-                        });
-//                mViewModel.getVideosByCategory(item.getCategory()).observe(getViewLifecycleOwner(), videos -> {
-//                    item.setVideos(videos);
-//                    Log.i(item.getCategory(), videos.toString());
-//                    kidsMenu.add(item);
-//                });
-            }
-        });
+//        ShoppingMenuAdapter shoppingMenuAdapter = new ShoppingMenuAdapter(kidsMenu, getContext());
+//
+//        recyclerView.setAdapter(shoppingMenuAdapter);
+//        recyclerView.setLayoutManager(layoutManager);
+//
+//        mViewModel.getKidsVideosForHome().observe(getViewLifecycleOwner(), data -> {
+//            Log.i("ChildModeFragment", data.toString());
+//            Log.i("ChildModeFragment", String.valueOf(data.size()));
+//        });
+//
+//        mViewModel.getKidVideosMenu().observe(getViewLifecycleOwner(), data -> {
+////            kidsMenu.clear();
+////            kidsMenu.addAll(data);
+//            for (HomeItem item : data) {
+//                firestore.collection("childVideos").whereEqualTo("category", item.getCategory())
+//                        .limit(10)
+//                        .get()
+//                        .addOnSuccessListener(queryDocumentSnapshots -> {
+//                            List<Video> videos = new ArrayList<>();
+//                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+//                                videos.add(snapshot.toObject(Video.class));
+//                            }
+//                            if (videos.size()!=0) {
+//                                Collections.sort(videos);
+//                                item.setVideos(videos);
+//                                kidsMenu.add(item);
+//                            }
+//                            shoppingMenuAdapter.notifyDataSetChanged();
+//                        });
+////                mViewModel.getVideosByCategory(item.getCategory()).observe(getViewLifecycleOwner(), videos -> {
+////                    item.setVideos(videos);
+////                    Log.i(item.getCategory(), videos.toString());
+////                    kidsMenu.add(item);
+////                });
+//            }
+//        });
 //        mViewModel.getChildVideos().observe(getViewLifecycleOwner(), data -> {
 //            childVideosList.clear();
 //            childVideosList.addAll(data);

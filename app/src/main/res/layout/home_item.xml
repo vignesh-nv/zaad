@@ -19,7 +19,7 @@
             android:layout_marginStart="20dp"
             android:fontFamily="@font/roboto_medium"
             android:text="Category Title"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="16sp" />
 
         <Button
@@ -29,9 +29,9 @@
             android:layout_gravity="end"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
-            android:textColor="@color/twitter_blue"
+            android:textColor="@color/white"
+            android:backgroundTint="@android:color/holo_red_light"
             android:text="More" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -46,6 +46,5 @@
             tools:listitem="@layout/home_child_item"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-
 
 </LinearLayout>

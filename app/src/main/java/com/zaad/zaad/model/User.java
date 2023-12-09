@@ -37,6 +37,14 @@ public class User implements Serializable {
 
     private String language;
 
+    private String creditBy;
+
+    private int creditByReferralCount;
+
+    private int creditByAmountEarned;
+
+    private boolean notificationAvailable;
+
     public User() {
     }
 
@@ -190,6 +198,38 @@ public class User implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getCreditBy() {
+        return creditBy;
+    }
+
+    public void setCreditBy(String creditBy) {
+        this.creditBy = creditBy;
+    }
+
+    public int getCreditByReferralCount() {
+        return creditByReferralCount;
+    }
+
+    public void setCreditByReferralCount(int creditByReferralCount) {
+        this.creditByReferralCount = creditByReferralCount;
+    }
+
+    public int getCreditByAmountEarned() {
+        return creditByAmountEarned;
+    }
+
+    public void setCreditByAmountEarned(int creditByAmountEarned) {
+        this.creditByAmountEarned = creditByAmountEarned;
+    }
+
+    public boolean isNotificationAvailable() {
+        return notificationAvailable;
+    }
+
+    public void setNotificationAvailable(boolean notificationAvailable) {
+        this.notificationAvailable = notificationAvailable;
     }
 
     @Override

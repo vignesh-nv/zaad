@@ -13,6 +13,7 @@ import com.zaad.zaad.database.DailyTask;
 import com.zaad.zaad.database.VideoDetails;
 import com.zaad.zaad.model.Coupon;
 import com.zaad.zaad.model.DailyTaskVideo;
+import com.zaad.zaad.model.User;
 import com.zaad.zaad.model.Video;
 import com.zaad.zaad.repository.DatabaseRepository;
 import com.zaad.zaad.repository.FirestoreRepository;
@@ -39,8 +40,9 @@ public class DailyTaskViewModel extends AndroidViewModel {
         userRepository = new UserRepository();
     }
 
-    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskVideos(final String language) {
-        return firestoreRepository.getDailyTasks(language);
+    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskVideos(final String language,
+                                                                    final User user) {
+        return firestoreRepository.getDailyTasks(language, user);
     }
 
     public LiveData<List<DailyTask>> getCompletedTasks() {
@@ -51,8 +53,8 @@ public class DailyTaskViewModel extends AndroidViewModel {
         return databaseRepository.getAllCompletedTaskIds();
     }
 
-    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskShorts(final String language) {
-        return firestoreRepository.getDailyTaskShorts(language);
+    public MutableLiveData<List<DailyTaskVideo>> getDailyTaskShorts(final String language, final User user) {
+        return firestoreRepository.getDailyTaskShorts(language, user);
     }
 
     public void insertCompletedTask(DailyTaskVideo video) {

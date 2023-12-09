@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".activity.PersonalDetailsActivity">
@@ -18,14 +18,16 @@
         <ImageView
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo_toolbar"/>
+            android:src="@drawable/khanzo_play_1" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
             android:text="Step 1 of 3"
-            android:textSize="16sp" />
+            android:textColor="@color/light_black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/pageTitle"
@@ -34,8 +36,9 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat_medium"
             android:text="Personal Details"
-            android:textColor="@color/white"
-            android:textSize="26dp" />
+            android:textColor="@color/black"
+            android:textSize="26dp"
+            android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -43,13 +46,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:hint="Name"
+            app:boxStrokeColor="@color/black"
+            android:textColorHint="@color/black"
             app:errorEnabled="true"
-            android:textColorHint="@color/white">
+            app:hintTextColor="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nameTxt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,13 +66,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="Phone Number"
-            android:textColorHint="@color/white">
+            app:boxStrokeColor="@color/black"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/phoneNumberTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,17 +83,20 @@
             android:id="@+id/dateLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:focusable="false"
             android:hint="Date of birth"
+            android:textColorHint="@color/black"
             app:expandedHintEnabled="false"
-            android:layout_marginTop="20dp"
+            app:hintTextColor="@color/black"
             app:placeholderText="DD/MM/YYYY">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/dateField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false" />
+                android:focusable="false"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -96,9 +108,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:fontFamily="@font/montserrat"
-                android:textSize="18sp"
-                android:text="Gender"/>
+                android:text="Gender"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <RadioGroup
                 android:id="@+id/gender_rg"
@@ -111,17 +125,20 @@
                     android:id="@+id/male_rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Male"/>
+                    android:text="Male"
+                    android:textColor="@color/black" />
 
                 <RadioButton
                     android:id="@+id/female_rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:text="Female"/>
+                    android:text="Female"
+                    android:textColor="@color/black" />
             </RadioGroup>
 
         </LinearLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/accountNumberTxtLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -129,13 +146,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="Address"
-            android:textColorHint="@color/white">
+            app:boxStrokeColor="@color/black"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addressTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -144,19 +164,19 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:hint="State"
-            android:backgroundTint="@color/black"
-            android:textColorHint="@color/white"
-            app:hintTextColor="@color/white"
-            android:layout_marginTop="20dp">
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black">
 
-        <AutoCompleteTextView
-            android:id="@+id/state_drop_down"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
-            android:textColor="@color/white"
-            android:inputType="none"/>
+            <AutoCompleteTextView
+                android:id="@+id/state_drop_down"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/black"
+                android:inputType="none"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -164,19 +184,18 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:hint="District"
-            android:backgroundTint="@color/black"
-            android:textColorHint="@color/white"
-            app:hintTextColor="@color/white"
-            android:layout_marginTop="20dp">
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black">
 
             <AutoCompleteTextView
                 android:id="@+id/filled_exposed_dropdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/black"
-                android:textColor="@color/white"
-                android:inputType="none"/>
+                android:inputType="none"
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -187,13 +206,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="Pincode"
-            android:textColorHint="@color/white">
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/pincodeTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -202,20 +224,20 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Video Language"
+            android:layout_marginTop="20dp"
             android:backgroundTint="@color/black"
-            android:textColorHint="@color/white"
-            app:hintTextColor="@color/white"
-            app:placeholderTextColor="@color/white"
-            android:layout_marginTop="20dp">
+            android:hint="Video Language"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
+            app:placeholderTextColor="@color/black">
 
             <AutoCompleteTextView
                 android:id="@+id/language_dropdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/black"
-                android:textColor="@color/white"
-                android:inputType="none"/>
+                android:inputType="none"
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -225,10 +247,10 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:backgroundTint="@color/white"
+            android:layout_marginBottom="30dp"
+            android:backgroundTint="@android:color/holo_red_dark"
             android:text="Next"
-            android:textColor="@android:color/holo_red_dark"
-            android:textSize="18sp"
-            android:layout_marginBottom="30dp"/>
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
     </LinearLayout>
 </ScrollView>

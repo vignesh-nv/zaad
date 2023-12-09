@@ -88,16 +88,19 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
         if (category.equals(VideoType.YOUTUBE_VIDEO.name())) {
-            VideoViewHolder childViewHolder = (VideoViewHolder) viewHolder;
+            VideoViewHolder childViewHolder;
+            try {
+                childViewHolder = (VideoViewHolder) viewHolder;
+            } catch (Exception e) {
+                return;
+            }
             Video childItem = videoList.get(position);
 
             ImageLoader imageLoader = Coil.imageLoader(context);
 
             childViewHolder.imageView.setOnClickListener(view -> {
                 Intent intent = new Intent(context, YoutubeVideoPlayerActivity.class);
-                intent.putExtra("VIDEO_ID", childItem.getVideoUrl());
-                intent.putExtra("CATEGORY", childItem.getCategory());
-                intent.putExtra("TITLE", childItem.getTitle());
+                intent.putExtra("VIDEO", childItem);
                 context.startActivity(intent);
             });
             ImageRequest request = new ImageRequest.Builder(context)
@@ -107,7 +110,12 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .build();
             imageLoader.enqueue(request);
         } else if (category.equals(VideoType.FACEBOOK_VIDEOS.name())) {
-            VideoViewHolder childViewHolder = (VideoViewHolder) viewHolder;
+            VideoViewHolder childViewHolder;
+            try {
+                childViewHolder = (VideoViewHolder) viewHolder;
+            } catch (Exception e) {
+                return;
+            }
             Video childItem = videoList.get(position);
             ImageLoader imageLoader = Coil.imageLoader(context);
 
@@ -124,7 +132,12 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .build();
             imageLoader.enqueue(request);
         } else if (category.equals(VideoType.YOUTUBE_SHORTS.name())) {
-            ShortsViewHolder shortsViewHolder = (ShortsViewHolder) viewHolder;
+            ShortsViewHolder shortsViewHolder;
+            try {
+                shortsViewHolder = (ShortsViewHolder) viewHolder;
+            } catch (Exception e) {
+                return;
+            }
             Video childItem = videoList.get(position);
 
             ImageLoader imageLoader = Coil.imageLoader(context);
@@ -154,7 +167,12 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         } else if (category.equals(VideoType.IMAGE_AD.name())) {
 
-            VideoViewHolder childViewHolder = (VideoViewHolder) viewHolder;
+            VideoViewHolder childViewHolder;
+            try {
+                childViewHolder = (VideoViewHolder) viewHolder;
+            } catch (Exception e) {
+                return;
+            }
             Video childItem = videoList.get(position);
 
             ImageLoader imageLoader = Coil.imageLoader(context);
@@ -174,7 +192,12 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imageLoader.enqueue(request);
 
         } else {
-            ShortsViewHolder shortsViewHolder = (ShortsViewHolder) viewHolder;
+            ShortsViewHolder shortsViewHolder;
+            try {
+                shortsViewHolder = (ShortsViewHolder) viewHolder;
+            } catch (Exception e) {
+                return;
+            }
             Video childItem = videoList.get(position);
 
             ImageLoader imageLoader = Coil.imageLoader(context);

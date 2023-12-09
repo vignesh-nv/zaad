@@ -58,13 +58,10 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
 
     private FullVideosAdapter fullVideosAdapter;
 
-    private Chip entertainmentChip, cookingChip, unboxingChip, movieReviewChip, gamingChip, travelChip, comedyChip;
-    private Chip foodReviewChip, cinemaTalksChip, trailerChip, motivationChip, newsChip, liveChip, businessTalksChip;
+//    private Chip entertainmentChip, cookingChip, unboxingChip, movieReviewChip, gamingChip, travelChip, comedyChip;
+//    private Chip foodReviewChip, cinemaTalksChip, trailerChip, motivationChip, newsChip, liveChip, businessTalksChip;
 
     private boolean showCategory;
-
-    private ChipGroup chipGroup;
-
     private String videoCategory;
 
     private FirebaseUser firebaseUser;
@@ -81,7 +78,7 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
         youtubeVideosViewModel = new ViewModelProvider(this).get(YoutubeVideosViewModel.class);
 
         categories = Arrays.asList("Entertainment", "News", "Education", "comedy", "Trailers", "Movies", "Cinema");
-        setupChip();
+//        setupChip();
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
@@ -101,7 +98,7 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
 //        categoryRecyclerview = findViewById(R.id.youtube_video_category_recyclerview);
         recyclerView = findViewById(R.id.full_youtube_videos_recyclerview);
 
-        setupYoutubeCategory();
+//        setupYoutubeCategory();
         fullVideosAdapter = new FullVideosAdapter(videos, this);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
 
@@ -110,10 +107,6 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
         recyclerView.setAdapter(fullVideosAdapter);
 
         loadUser();
-
-        if (!showCategory) {
-            chipGroup.setVisibility(View.GONE);
-        }
     }
 
     private void loadUser() {
@@ -148,67 +141,67 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
                 });
     }
 
-    private void setupChip() {
-        entertainmentChip = findViewById(R.id.entertainment_chip);
-        cookingChip = findViewById(R.id.cooking_chip);
-        unboxingChip = findViewById(R.id.unboxing_chip);
-        movieReviewChip = findViewById(R.id.movie_review_chip);
-        gamingChip = findViewById(R.id.gaming_chip);
-        travelChip = findViewById(R.id.travel_chip);
-        foodReviewChip = findViewById(R.id.food_review_chip);
-        cinemaTalksChip = findViewById(R.id.cinema_talks_chip);
-        trailerChip = findViewById(R.id.trailer_chip);
-        motivationChip = findViewById(R.id.motivation_chip);
-        newsChip = findViewById(R.id.news_chip);
-        liveChip = findViewById(R.id.live_chip);
-        businessTalksChip = findViewById(R.id.business_talks_chip);
-        comedyChip = findViewById(R.id.comedy_chip);
-    }
+//    private void setupChip() {
+//        entertainmentChip = findViewById(R.id.entertainment_chip);
+//        cookingChip = findViewById(R.id.cooking_chip);
+//        unboxingChip = findViewById(R.id.unboxing_chip);
+//        movieReviewChip = findViewById(R.id.movie_review_chip);
+//        gamingChip = findViewById(R.id.gaming_chip);
+//        travelChip = findViewById(R.id.travel_chip);
+//        foodReviewChip = findViewById(R.id.food_review_chip);
+//        cinemaTalksChip = findViewById(R.id.cinema_talks_chip);
+//        trailerChip = findViewById(R.id.trailer_chip);
+//        motivationChip = findViewById(R.id.motivation_chip);
+//        newsChip = findViewById(R.id.news_chip);
+//        liveChip = findViewById(R.id.live_chip);
+//        businessTalksChip = findViewById(R.id.business_talks_chip);
+//        comedyChip = findViewById(R.id.comedy_chip);
+//    }
 
-    private void setupYoutubeCategory() {
-//        YoutubeCategoryAdapter youtubeCategoryAdapter = new YoutubeCategoryAdapter(generateCategoryList());
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-//
-//        categoryRecyclerview.setLayoutManager(linearLayoutManager);
-//        categoryRecyclerview.setAdapter(youtubeCategoryAdapter);
-        chipGroup = findViewById(R.id.youtube_category_chipgroup);
-        chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.size() == 0) {
-                loadAllVideos();
-                return;
-            }
-            int checkChipId = chipGroup.getCheckedChipId();
-            if (entertainmentChip.getId() == checkChipId) {
-                loadVideos("Entertainment");
-            } else if (cookingChip.getId() == checkChipId) {
-                loadVideos("Cooking");
-            } else if (unboxingChip.getId() == checkChipId) {
-                loadVideos("Unboxing");
-            } else if (movieReviewChip.getId() == checkChipId) {
-                loadVideos("MovieReview");
-            } else if (gamingChip.getId() == checkChipId) {
-                loadVideos("Gaming");
-            } else if (travelChip.getId() == checkChipId) {
-                loadVideos("Travel");
-            } else if (foodReviewChip.getId() == checkChipId) {
-                loadVideos("FoodReview");
-            } else if (cinemaTalksChip.getId() == checkChipId) {
-                loadVideos("CinemaTalks");
-            } else if (trailerChip.getId() == checkChipId) {
-                loadVideos("Trailer");
-            } else if (motivationChip.getId() == checkChipId) {
-                loadVideos("Motivation");
-            } else if (newsChip.getId() == checkChipId) {
-                loadVideos("News");
-            } else if (liveChip.getId() == checkChipId) {
-                loadVideos("Live");
-            } else if (businessTalksChip.getId() == checkChipId) {
-                loadVideos("BusinessTalks");
-            } else if (comedyChip.getId() == checkChipId) {
-                loadVideos("Comedy");
-            }
-        });
-    }
+//    private void setupYoutubeCategory() {
+////        YoutubeCategoryAdapter youtubeCategoryAdapter = new YoutubeCategoryAdapter(generateCategoryList());
+////        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+////
+////        categoryRecyclerview.setLayoutManager(linearLayoutManager);
+////        categoryRecyclerview.setAdapter(youtubeCategoryAdapter);
+//        chipGroup = findViewById(R.id.youtube_category_chipgroup);
+//        chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
+//            if (checkedIds.size() == 0) {
+//                loadAllVideos();
+//                return;
+//            }
+//            int checkChipId = chipGroup.getCheckedChipId();
+//            if (entertainmentChip.getId() == checkChipId) {
+//                loadVideos("Entertainment");
+//            } else if (cookingChip.getId() == checkChipId) {
+//                loadVideos("Cooking");
+//            } else if (unboxingChip.getId() == checkChipId) {
+//                loadVideos("Unboxing");
+//            } else if (movieReviewChip.getId() == checkChipId) {
+//                loadVideos("MovieReview");
+//            } else if (gamingChip.getId() == checkChipId) {
+//                loadVideos("Gaming");
+//            } else if (travelChip.getId() == checkChipId) {
+//                loadVideos("Travel");
+//            } else if (foodReviewChip.getId() == checkChipId) {
+//                loadVideos("FoodReview");
+//            } else if (cinemaTalksChip.getId() == checkChipId) {
+//                loadVideos("CinemaTalks");
+//            } else if (trailerChip.getId() == checkChipId) {
+//                loadVideos("Trailer");
+//            } else if (motivationChip.getId() == checkChipId) {
+//                loadVideos("Motivation");
+//            } else if (newsChip.getId() == checkChipId) {
+//                loadVideos("News");
+//            } else if (liveChip.getId() == checkChipId) {
+//                loadVideos("Live");
+//            } else if (businessTalksChip.getId() == checkChipId) {
+//                loadVideos("BusinessTalks");
+//            } else if (comedyChip.getId() == checkChipId) {
+//                loadVideos("Comedy");
+//            }
+//        });
+//    }
 
     private void loadAllVideos() {
         firestore.collection("youtube")

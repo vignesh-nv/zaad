@@ -16,4 +16,9 @@ public class AppConstant {
     public static String PAYMENT_COMPLETED = "PAYMENT_COMPLETED";
 
     public static String SUBSCRIBED_TO_TOPIC = "SUBSCRIBED_TO_TOPIC";
+
+    public static String SELECTED_STATE_FILTER = "SELECTED_STATE_FILTER";
+
+    public static String SELECTED_DISTRICT_FILTER = "SELECTED_DISTRICT_FILTER";
+
 }

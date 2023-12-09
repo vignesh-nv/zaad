@@ -119,6 +119,12 @@ public class YoutubeShortsVideoAdapter extends RecyclerView.Adapter<YoutubeShort
                 }, true, iFramePlayerOptions);
 
             } catch (IllegalStateException e) {
+
+                if (currentVisiblePosition != currentVisibleItem) {
+                    player.cueVideo(video.getVideoUrl(), 0);
+                } else {
+                    player.loadVideo(video.getVideoUrl(), 0);
+                }
                 return;
             }
             youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {

@@ -6,12 +6,15 @@ import static com.zaad.zaad.constants.AppConstant.DAILY_TASK_VIDEO_COMPLETED_COU
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,9 +28,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.zaad.zaad.adapter.DailyTaskShortsAdapter;
 import com.zaad.zaad.adapter.DailyTasksAdapter;
+import com.zaad.zaad.adapter.ShoppingMenuAdapter;
 import com.zaad.zaad.databinding.FragmentDailyTaskBinding;
+import com.zaad.zaad.model.AdBanner;
 import com.zaad.zaad.model.DailyTaskVideo;
 import com.zaad.zaad.model.User;
 
@@ -38,6 +44,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import coil.Coil;
+import coil.ImageLoader;
+import coil.request.ImageRequest;
 
 public class DailyTaskFragment extends Fragment {
 
@@ -62,6 +72,11 @@ public class DailyTaskFragment extends Fragment {
 
     private FirebaseFirestore firestore;
 
+    View shortsCountView, videosCountView;
+    TextView shortsCompletedTxt, videosCompletedTxt;
+
+    ImageView imageADView;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dailyTaskViewModel =
@@ -77,6 +92,11 @@ public class DailyTaskFragment extends Fragment {
         shortsRecyclerView = binding.dailyTaskShortsRecyclerview;
         shortsWatchedCount = binding.shortsWatchedCount;
         videosWatchedCount = binding.videosWatchedCount;
+        shortsCompletedTxt = binding.shortsDoneTxt;
+        shortsCountView = binding.shortsCountLayout;
+        videosCompletedTxt = binding.videosDoneTxt;
+        videosCountView = binding.videosCountLayout;
+        imageADView = binding.imageAd;
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager shortsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -109,7 +129,7 @@ public class DailyTaskFragment extends Fragment {
             shortsAdapter.notifyDataSetChanged();
         });
 
-        dailyTaskViewModel.getDailyTaskVideos(user.getLanguage()).observe(getViewLifecycleOwner(), data -> {
+        dailyTaskViewModel.getDailyTaskVideos(user.getLanguage(), user).observe(getViewLifecycleOwner(), data -> {
             dailyTasksList.clear();
             List<DailyTaskVideo> tasks = new ArrayList<>();
             for (DailyTaskVideo video : data) {
@@ -122,7 +142,7 @@ public class DailyTaskFragment extends Fragment {
             dailyTasksList.addAll(tasks);
             dailyTasksAdapter.notifyDataSetChanged();
         });
-        dailyTaskViewModel.getDailyTaskShorts(user.getLanguage()).observe(getViewLifecycleOwner(), data -> {
+        dailyTaskViewModel.getDailyTaskShorts(user.getLanguage(), user).observe(getViewLifecycleOwner(), data -> {
             dailyTaskShorts.clear();
             List<DailyTaskVideo> tasks = new ArrayList<>();
             for (DailyTaskVideo video : data) {
@@ -135,6 +155,40 @@ public class DailyTaskFragment extends Fragment {
             dailyTaskShorts.addAll(tasks);
             shortsAdapter.notifyDataSetChanged();
         });
+
+        firestore.collection("ads")
+                .whereEqualTo("adType", "DAILY_TASK_AD")
+                .whereArrayContains("districts", user.getDistrict())
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<AdBanner> banners = new ArrayList<>();
+                    for (DocumentSnapshot snapshot: queryDocumentSnapshots) {
+                        banners.add(snapshot.toObject(AdBanner.class));
+                    }
+                    if (banners.size() == 0) {
+                        return;
+                    }
+                    AdBanner banner = banners.get(0);
+                    ImageLoader imageLoader = Coil.imageLoader(getActivity());
+
+                    ImageRequest request = new ImageRequest.Builder(getActivity())
+                            .data(banners.get(0).getImageUrl())
+                            .crossfade(true)
+                            .target(imageADView)
+                            .build();
+                    imageLoader.enqueue(request);
+
+                    imageADView.setOnClickListener(view -> {
+                        if (banner.getLink() == null || banner.getLink().equals("") || !banner.getLink().startsWith("https:")) {
+                            return;
+                        }
+                        Uri uri = Uri.parse(banner.getLink());
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        getActivity().startActivity(intent);
+                    });
+                });
+
+
     }
 
     @Override
@@ -156,6 +210,14 @@ public class DailyTaskFragment extends Fragment {
         int shortsWatched = sharedPreferences.getInt(DAILY_TASK_SHORTS_COMPLETED_COUNT, 0);
         videosWatchedCount.setText(String.valueOf(videoWatched));
         shortsWatchedCount.setText(String.valueOf(shortsWatched));
+        if (videoWatched >= 10) {
+           videosCountView.setVisibility(View.GONE);
+           videosCompletedTxt.setVisibility(View.VISIBLE);
+        }
+        if (shortsWatched >= 25) {
+            shortsCountView.setVisibility(View.GONE);
+            shortsCompletedTxt.setVisibility(View.VISIBLE);
+        }
     }
 
     private void updateWatchedCountOnDayEnd() {

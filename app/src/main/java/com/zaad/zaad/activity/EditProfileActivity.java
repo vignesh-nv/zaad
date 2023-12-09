@@ -108,7 +108,6 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void setupDistrictDropDown() {
-        Log.i("StateDistrict", stateDistrictMap.toString());
         districtList.addAll(stateDistrictMap.get(user.getState()));
         districtAdapter =
                 new ArrayAdapter<>(

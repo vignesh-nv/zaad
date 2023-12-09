@@ -19,6 +19,12 @@ public class Shop {
 
     private String websiteName;
 
+    private String price;
+
+    private String mapUrl;
+
+    private String rating;
+
     public Shop() {
     }
 
@@ -93,5 +99,29 @@ public class Shop {
 
     public void setWebsiteName(String websiteName) {
         this.websiteName = websiteName;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getMapUrl() {
+        return mapUrl;
+    }
+
+    public void setMapUrl(String mapUrl) {
+        this.mapUrl = mapUrl;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 }

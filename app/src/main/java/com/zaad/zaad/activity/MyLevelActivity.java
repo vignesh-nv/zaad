@@ -34,6 +34,8 @@ public class MyLevelActivity extends AppCompatActivity {
     TextView referral2NameTxt, referral2EmailTxt, referral2JoinedDataTxt, referral2LevelTxt, active1, active2;
     View referral1Layout, referral2Layout;
 
+    TextView creditByReferralCountTxt, amountEarnedTxt;
+
     private List<User> myReferrals = new ArrayList<>();
 
     FirebaseFirestore firestore;
@@ -47,6 +49,9 @@ public class MyLevelActivity extends AppCompatActivity {
         shareBtn = findViewById(R.id.shareBtn);
         referralCodeTxt = findViewById(R.id.referralCodeTxt);
         myLevelTxt = findViewById(R.id.my_level_text);
+        creditByReferralCountTxt = findViewById(R.id.creditByReferralCountTxt);
+        amountEarnedTxt = findViewById(R.id.amountEarnedTxt);
+
         myLevelViewModel = new ViewModelProvider(this).get(MyLevelViewModel.class);
 
         setupUI();
@@ -55,6 +60,8 @@ public class MyLevelActivity extends AppCompatActivity {
             user = data;
             referralCodeTxt.setText(user.getReferralCode());
             myLevelTxt.setText(user.getLevel());
+            creditByReferralCountTxt.setText(String.valueOf(user.getCreditByReferralCount()));
+            amountEarnedTxt.setText(String.valueOf(user.getCreditByAmountEarned()));
             getMyReferrals();
         });
 
@@ -65,7 +72,7 @@ public class MyLevelActivity extends AppCompatActivity {
             sharingIntent.setType("text/plain");
 
             // Body of the content
-            String shareBody = "Hi, install Khanzoplay app to win rewards on watching videos, click this link to install the app. " + "https://khanzoplay.com/" + "\n"
+            String shareBody = "Hi, install Khanzoplay app to win rewards on watching videos, click this link to install the app. " + "https://play.google.com/store/apps/details?id=com.zaad.zaad" + "\n"
                     + "Use My Referral code: " + user.getReferralCode();
 
             // subject of the content. you can share anything
@@ -97,6 +104,9 @@ public class MyLevelActivity extends AppCompatActivity {
     }
 
     private void getMyReferrals() {
+        if (user.getReferralCode() == null || user.getReferralCode().equals("")) {
+            return;
+        }
         myLevelViewModel.getMyReferrals(user.getReferralCode()).observe(this, data -> {
             myReferrals.clear();
             myReferrals.addAll(data);

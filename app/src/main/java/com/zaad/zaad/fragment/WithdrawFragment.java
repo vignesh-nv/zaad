@@ -69,7 +69,7 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                     return;
                 }
                 withdrawalAmountTxt.setText(String.valueOf(charSequence));
-                int serviceCharge = (2 * amount / 100);
+                int serviceCharge = (15 * amount / 100);
                 serviceChargeTxt.setText(String.valueOf(serviceCharge));
                 int total = amount - serviceCharge;
                 totalAmountTxt.setText(String.valueOf(total));
@@ -87,6 +87,10 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
             }
         });
         withdrawBtn.setOnClickListener(view1 -> {
+            if (amountTxt.getText() == null || amountTxt.getText().toString().equals("")) {
+                Toast.makeText(getContext(), "Amount the amount", Toast.LENGTH_SHORT).show();
+                return;
+            }
             int amount = Integer.parseInt(amountTxt.getText().toString());
             if (amount < 500) {
                 Toast.makeText(getContext(), "Amount is lesser than 500", Toast.LENGTH_SHORT).show();

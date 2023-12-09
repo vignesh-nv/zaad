@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "476717573881",
+    "project_id": "zaad-cb167",
+    "storage_bucket": "zaad-cb167.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476717573881:android:92aae1fda8449ad0002428",
+        "android_client_info": {
+          "package_name": "com.zaad.zaad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "476717573881-aeua9hua48a1s26h5euj3mr4fmk2o50g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zaad.zaad",
+            "certificate_hash": "cf2fb9da43eb482f2756c9d612d44fd6e6bf82fb"
+          }
+        },
+        {
+          "client_id": "476717573881-8g9o7dk1nnlpk4etj8fpofrsipoeef67.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsmslO4swhcQQO8evnXHUGfgR05Xyubbg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "476717573881-8g9o7dk1nnlpk4etj8fpofrsipoeef67.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

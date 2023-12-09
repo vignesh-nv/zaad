@@ -40,7 +40,6 @@ class DailyTaskYoutubePlayer(private val youTubePlayerView: YouTubePlayerView, p
     private val progressBar: ProgressBar = rootView.findViewById(R.id.progress)
     private val menuButton: ImageView = rootView.findViewById(R.id.menu_button)
     private val playPauseButton: ImageView = rootView.findViewById(R.id.play_pause_button)
-    private val fullScreenButton: ImageView = rootView.findViewById(R.id.fullscreen_button)
 
     private val customActionLeft: ImageView = rootView.findViewById(R.id.custom_action_left_button)
     private val customActionRight: ImageView = rootView.findViewById(R.id.custom_action_right_button)
@@ -111,9 +110,6 @@ class DailyTaskYoutubePlayer(private val youTubePlayerView: YouTubePlayerView, p
         youtubePlayerSeekBar.seekBar.isEnabled = false;
         panel.setOnClickListener { fadeControlsContainer.toggleVisibility() }
         playPauseButton.setOnClickListener { onPlayButtonPressed() }
-        fullScreenButton.setOnClickListener {
-            onFullScreenButtonListener.onClick(fullScreenButton)
-        }
     }
 
     override fun showVideoTitle(show: Boolean): PlayerUiController {
@@ -215,7 +211,6 @@ class DailyTaskYoutubePlayer(private val youTubePlayerView: YouTubePlayerView, p
     }
 
     override fun showFullscreenButton(show: Boolean): PlayerUiController {
-        fullScreenButton.visibility = if (show) View.VISIBLE else View.GONE
         return this
     }
 

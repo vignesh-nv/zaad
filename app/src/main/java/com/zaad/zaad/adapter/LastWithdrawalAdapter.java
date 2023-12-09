@@ -53,7 +53,7 @@ public class LastWithdrawalAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String date = simpleDateFormat.format(withdrawal.getRequestedDate());
 
-        lastWithdrawalViewHolder.withdrawalAmountTxt.setText(String.valueOf(withdrawal.getAmount()));
+        lastWithdrawalViewHolder.withdrawalAmountTxt.setText(String.valueOf(withdrawal.getAmount() - withdrawal.getServiceCharge()));
         lastWithdrawalViewHolder.withdrawalDate.setText(date);
         lastWithdrawalViewHolder.withdrawlStatus.setText(withdrawal.getStatus());
         lastWithdrawalViewHolder.upiIdTxt.setText(withdrawal.getUpiId());

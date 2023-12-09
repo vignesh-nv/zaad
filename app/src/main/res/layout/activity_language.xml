@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/black"
+    android:background="@color/white"
     android:padding="20dp"
     android:gravity="center_horizontal"
     tools:context=".activity.LanguageActivity">
@@ -14,9 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserrat"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:layout_gravity="start"
-        android:text="Select your preferred Language"/>
+        android:text="Select your preferred video Language"/>
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
@@ -44,9 +44,9 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/twitter_blue"
         android:text="Save"
-        android:textColor="@color/twitter_blue"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:layout_marginBottom="30dp"/>
 </LinearLayout>

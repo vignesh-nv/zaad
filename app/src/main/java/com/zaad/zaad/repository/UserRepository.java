@@ -29,6 +29,7 @@ import com.zaad.zaad.model.Withdrawal;
 import java.sql.Ref;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +66,14 @@ public class UserRepository {
 
         String userId = getUserId();
         mFirestore.collection("user").document(userId).update(updateMap).addOnSuccessListener(unused -> {
+
+        });
+    }
+
+    public void updateUserWithID(final String id, final Map<String, Object> updateMap) {
+
+        String userId = getUserId();
+        mFirestore.collection("user").document(id).update(updateMap).addOnSuccessListener(unused -> {
 
         });
     }
@@ -138,10 +147,11 @@ public class UserRepository {
     }
 
     public MutableLiveData<List<Coupon>> getMyCoupons() {
-
         String userId = getUserId();
         mFirestore.collection("user").document(userId)
-                .collection("coupons").addSnapshotListener((value, error) -> {
+                .collection("coupons")
+                .whereGreaterThan("expiryDate", new Date())
+                .addSnapshotListener((value, error) -> {
                     List<Coupon> coupons = new ArrayList<>();
                     for (QueryDocumentSnapshot data : value) {
                         coupons.add(data.toObject(Coupon.class));
@@ -149,14 +159,15 @@ public class UserRepository {
                     couponsMutableLiveData.postValue(coupons);
                 });
         return couponsMutableLiveData;
-
     }
 
     public void redeemCoupon(final Coupon coupon) {
         String userId = getUserId();
 
         mFirestore.collection("user").document(userId).collection("coupons")
-                .add(coupon).addOnSuccessListener(documentReference -> {
+                .document(coupon.getCouponId())
+                .set(coupon)
+                .addOnSuccessListener(documentReference -> {
                     Log.i(TAG, "Coupon Added");
                 });
     }

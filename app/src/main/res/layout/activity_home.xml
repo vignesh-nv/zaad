@@ -50,6 +50,8 @@
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:contentInsetLeft="0dp"
                 app:contentInsetStart="0dp"
+                app:menu="@menu/toolbar_menu"
+                android:layout_gravity="end"
                 app:contentInsetStartWithNavigation="0dp">
 
                 <RelativeLayout
@@ -61,7 +63,7 @@
                         android:layout_width="160dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentStart="true"
-                        android:src="@drawable/tool_bar_logo" />
+                        android:src="@drawable/khanzo_play_1" />
 
                 </RelativeLayout>
             </androidx.appcompat.widget.Toolbar>
@@ -81,9 +83,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 app:itemIconTint="@color/tab_selector"
+                app:itemTextColor="@color/black"
                 android:background="?android:attr/windowBackground"
                 app:menu="@menu/bottom_nav_menu" />
-
         </LinearLayout>
 
         <!-- gives navDrawer material look-->
@@ -96,6 +98,7 @@
             app:menu="@menu/nav_menu"
             app:headerLayout="@layout/nav_header"
             android:itemTextAppearance="@style/NavDrawerTextStyle"
+            app:itemIconTint="#000000"
             style="@style/Widget.Design.NavigationView" />
     </androidx.drawerlayout.widget.DrawerLayout>
 

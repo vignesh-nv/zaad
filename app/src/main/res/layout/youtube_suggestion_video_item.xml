@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/video_thumbnail"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
+        android:layout_width="220dp"
+        android:layout_height="130dp"
         android:background="@color/colorPrimary"
         android:scaleType="centerCrop" />
 </androidx.cardview.widget.CardView>

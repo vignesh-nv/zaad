@@ -9,8 +9,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.CouponsAdapter;
 import com.zaad.zaad.listeners.CouponOnClickListener;
@@ -32,9 +38,12 @@ public class CouponsActivity extends AppCompatActivity implements CouponOnClickL
     private List<String> onlineCouponsCategory = new ArrayList<>();
 
     private String category, availability;
-    ChipGroup chipGroup;
 
-    Chip fashionChip, electronicsChip, foodChip, ecommerceChip, furnitureChip;
+    private FirebaseFirestore firestore;
+    List<String> myRedeemedCouponsID = new ArrayList<>();
+//    ChipGroup chipGroup;
+
+//    Chip fashionChip, electronicsChip, foodChip, ecommerceChip, furnitureChip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,30 +55,30 @@ public class CouponsActivity extends AppCompatActivity implements CouponOnClickL
         onlineCouponsCategory = Arrays.asList("", "");
         couponsRecyclerview = findViewById(R.id.coupons_recyclerView);
         couponsViewModel = new ViewModelProvider(this).get(CouponsViewModel.class);
+        firestore = FirebaseFirestore.getInstance();
 
-        fashionChip = findViewById(R.id.fashionChip);
-        electronicsChip = findViewById(R.id.electronicsChip);
-        foodChip = findViewById(R.id.foodChip);
-        ecommerceChip = findViewById(R.id.ecommerceChip);
-        furnitureChip = findViewById(R.id.furnitureChip);
-        chipGroup = findViewById(R.id.online_coupons_category);
+//        fashionChip = findViewById(R.id.fashionChip);
+//        electronicsChip = findViewById(R.id.electronicsChip);
+//        foodChip = findViewById(R.id.foodChip);
+//        ecommerceChip = findViewById(R.id.ecommerceChip);
+//        furnitureChip = findViewById(R.id.furnitureChip);
+//        chipGroup = findViewById(R.id.online_coupons_category);
 
         setupUI();
-        if (availability.equals("ONLINE"))
-            setupCategory();
-        else
-            chipGroup.setVisibility(View.GONE);
+//        if (availability.equals("ONLINE"))
+//            setupCategory();
+//        else
+//            chipGroup.setVisibility(View.GONE);
     }
 
     private void setupUI() {
-        couponsAdapter = new CouponsAdapter(couponList, this, this);
+        couponsAdapter = new CouponsAdapter(couponList, myRedeemedCouponsID, this, this);
         GridLayoutManager layoutManager = new GridLayoutManager(this,2);
 
         couponsRecyclerview.setLayoutManager(layoutManager);
         couponsRecyclerview.setHasFixedSize(true);
         couponsRecyclerview.setAdapter(couponsAdapter);
-
-        loadAllCoupons();
+        loadMyCoupons();
 //        couponsViewModel.getCoupons(availability).observe(this, data -> {
 //            couponList.clear();
 //            couponList.addAll(data);
@@ -77,27 +86,39 @@ public class CouponsActivity extends AppCompatActivity implements CouponOnClickL
 //        });
     }
 
-    private void setupCategory() {
-        chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.size() == 0) {
-                loadAllCoupons();
-                return;
-            }
-            int checkChipId = chipGroup.getCheckedChipId();
-            if (fashionChip.getId() == checkChipId) {
-                loadCoupons("Fashion");
-            } else if (electronicsChip.getId() == checkChipId) {
-                loadCoupons("Electronics");
-            } else if (foodChip.getId() == checkChipId) {
-                loadCoupons("Food");
-            } else if (ecommerceChip.getId() == checkChipId) {
-                loadCoupons("Ecommerce");
-            } else if (furnitureChip.getId() == checkChipId) {
-                loadCoupons("Furniture");
-            }
-        });
-    }
+//    private void setupCategory() {
+//        chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
+//            if (checkedIds.size() == 0) {
+//                loadAllCoupons();
+//                return;
+//            }
+//            int checkChipId = chipGroup.getCheckedChipId();
+//            if (fashionChip.getId() == checkChipId) {
+//                loadCoupons("Fashion");
+//            } else if (electronicsChip.getId() == checkChipId) {
+//                loadCoupons("Electronics");
+//            } else if (foodChip.getId() == checkChipId) {
+//                loadCoupons("Food");
+//            } else if (ecommerceChip.getId() == checkChipId) {
+//                loadCoupons("Ecommerce");
+//            } else if (furnitureChip.getId() == checkChipId) {
+//                loadCoupons("Furniture");
+//            }
+//        });
+//    }
 
+    private void loadMyCoupons() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        firestore.collection("user").document(user.getEmail())
+                .collection("coupons")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot snapshot: queryDocumentSnapshots) {
+                        myRedeemedCouponsID.add(snapshot.toObject(Coupon.class).getCouponId());
+                    }
+                    loadAllCoupons();
+                });
+    }
     @Override
     public void onclick(Coupon coupon) {
 //        if (coupon.getAvailability().equals("OFFLINE")) {
@@ -114,6 +135,7 @@ public class CouponsActivity extends AppCompatActivity implements CouponOnClickL
 //        }
         couponsViewModel.redeemCoupon(coupon);
         couponsViewModel.decrementAvailableCoupons();
+        Toast.makeText(this, "Redeemed", Toast.LENGTH_SHORT).show();
         finish();
     }
 

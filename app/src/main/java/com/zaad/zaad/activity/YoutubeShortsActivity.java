@@ -17,6 +17,7 @@ import com.zaad.zaad.listeners.ShortsPlayCompletedListener;
 import com.zaad.zaad.model.Video;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class YoutubeShortsActivity extends AppCompatActivity {
@@ -55,6 +56,7 @@ public class YoutubeShortsActivity extends AppCompatActivity {
                         }
                         shortsList.add(snapshot.toObject(Video.class));
                     }
+                    Collections.sort(shortsList);
                     shorts.addAll(shortsList);
                     videoAdapter.notifyDataSetChanged();
                 });
