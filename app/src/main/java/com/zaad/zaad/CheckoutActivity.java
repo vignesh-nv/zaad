@@ -15,9 +15,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wallet.AutoResolveHelper;
 import com.google.android.gms.wallet.PaymentData;
 
+import com.phonepe.intent.sdk.api.PhonePe;
+import com.phonepe.intent.sdk.api.PhonePeInitException;
+import com.phonepe.intent.sdk.api.UPIApplicationInfo;
+import com.phonepe.intent.sdk.api.models.PhonePeEnvironment;
 import com.zaad.zaad.R;
 import com.zaad.zaad.viewmodel.CheckoutViewModel;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONException;
@@ -48,8 +53,9 @@ public class CheckoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initializeUi();
 
-        model = new ViewModelProvider(this).get(CheckoutViewModel.class);
-        model.canUseGooglePay.observe(this, this::setGooglePayAvailable);
+//        model = new ViewModelProvider(this).get(CheckoutViewModel.class);
+//        model.canUseGooglePay.observe(this, this::setGooglePayAvailable);
+
     }
 
     private void initializeUi() {

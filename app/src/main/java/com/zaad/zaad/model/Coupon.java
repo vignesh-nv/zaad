@@ -26,6 +26,8 @@ public class Coupon implements Serializable {
 
     private boolean productPurchased;
 
+    private Date redeemedDate;
+
     public Coupon() {
     }
 
@@ -131,5 +133,13 @@ public class Coupon implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Date getRedeemedDate() {
+        return redeemedDate;
+    }
+
+    public void setRedeemedDate(Date redeemedDate) {
+        this.redeemedDate = redeemedDate;
     }
 }

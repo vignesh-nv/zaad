@@ -39,7 +39,7 @@ public class LoginRegisterViewModel extends AndroidViewModel {
     }
 
     public void updateUserWithID(final String id, final Map<String, Object> userMap) {
-        userRepository.updateUser(userMap);
+        userRepository.updateUserWithID(id, userMap);
     }
 }
 

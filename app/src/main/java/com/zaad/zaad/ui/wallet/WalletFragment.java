@@ -105,10 +105,10 @@ public class WalletFragment extends Fragment {
                     Toast.makeText(getContext(), "Insufficient balance", Toast.LENGTH_SHORT).show();
                     return;
                 }
-//                if (!checkWithdrawEligibility()) {
-//                    Toast.makeText(getContext(), "Complete Daily Task to withdraw", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+                if (!checkWithdrawEligibility()) {
+                    Toast.makeText(getContext(), "Complete Daily Task to withdraw", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (user.getAccountDetails() == null || user.getAccountDetails().getAccountNumber()==null
                         || user.getAccountDetails().getBankName() == null || user.getAccountDetails().getAccountNumber().equals("")) {
                     Toast.makeText(getContext(), "Add your account details in your profile page, before you make withdrawal", Toast.LENGTH_SHORT).show();

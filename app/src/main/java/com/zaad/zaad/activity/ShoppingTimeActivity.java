@@ -38,15 +38,19 @@ import com.zaad.zaad.adapter.ShoppingAdapter;
 import com.zaad.zaad.dialog.OnlineShopFilterBottomSheet;
 import com.zaad.zaad.listeners.OnContactClickListener;
 import com.zaad.zaad.listeners.OnDistrictFilterSelectedListener;
+import com.zaad.zaad.model.Coupon;
 import com.zaad.zaad.model.Shop;
 import com.zaad.zaad.model.State;
 import com.zaad.zaad.model.User;
+import com.zaad.zaad.ui.rewards.RewardsFragment;
 import com.zaad.zaad.utils.AppUtils;
 import com.zaad.zaad.viewmodel.ShopViewModel;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ShoppingTimeActivity extends AppCompatActivity implements OnContactClickListener {
@@ -86,7 +90,7 @@ public class ShoppingTimeActivity extends AppCompatActivity implements OnContact
         filterLayout = findViewById(R.id.filter_layout);
 
         loadSelectedStateAndDistrict();
-        bannerImageView = findViewById(R.id.banner_image);
+//        bannerImageView = findViewById(R.id.banner_image);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
@@ -119,11 +123,6 @@ public class ShoppingTimeActivity extends AppCompatActivity implements OnContact
 //            startActivity(intent);
 //        });
 
-        bannerImageView.setOnClickListener(view -> {
-
-        });
-
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
                 false);
         recyclerView.setLayoutManager(layoutManager);
@@ -146,6 +145,7 @@ public class ShoppingTimeActivity extends AppCompatActivity implements OnContact
     private void loadOnlineShopsByCategory(final String category) {
         shopViewModel.getShopByCategory("ONLINE", category).observe(this, data -> {
             shopList.clear();
+            Collections.sort(data, new ShopComparator());
             shopList.addAll(data);
             shoppingAdapter.notifyDataSetChanged();
         });
@@ -155,12 +155,14 @@ public class ShoppingTimeActivity extends AppCompatActivity implements OnContact
         if (selectedState != null && selectedDistrict != null) {
             shopViewModel.getOfflineShopByDistrictAndCategory(selectedState, selectedDistrict, category).observe(this, data -> {
                 shopList.clear();
+                Collections.sort(data, new ShopComparator());
                 shopList.addAll(data);
                 shoppingAdapter.notifyDataSetChanged();
             });
         } else {
             shopViewModel.getOfflineShopByCategory(user.getState(), category).observe(this, data -> {
                 shopList.clear();
+                Collections.sort(data, new ShopComparator());
                 shopList.addAll(data);
                 shoppingAdapter.notifyDataSetChanged();
             });
@@ -229,5 +231,12 @@ public class ShoppingTimeActivity extends AppCompatActivity implements OnContact
         selectedState = sharedPref.getString(SELECTED_STATE_FILTER, null);
         selectedDistrict = sharedPref.getString(SELECTED_DISTRICT_FILTER, null);
         districtNameText.setText(selectedDistrict);
+    }
+
+    class ShopComparator implements Comparator<Shop> {
+        @Override
+        public int compare(Shop o1, Shop o2) {
+            return o2.getUploadDate().compareTo(o1.getUploadDate()); // Reverse order for descending
+        }
     }
 }

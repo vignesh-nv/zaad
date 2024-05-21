@@ -1,9 +1,11 @@
 package com.zaad.zaad.activity;
 
+import static com.google.common.hash.Hashing.sha256;
 import static com.zaad.zaad.constants.AppConstant.PAYMENT_COMPLETED;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +29,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.phonepe.intent.sdk.api.B2BPGRequest;
+import com.phonepe.intent.sdk.api.B2BPGRequestBuilder;
+import com.phonepe.intent.sdk.api.PhonePe;
+import com.phonepe.intent.sdk.api.PhonePeInitException;
+import com.phonepe.intent.sdk.api.UPIApplicationInfo;
+import com.phonepe.intent.sdk.api.models.PhonePeEnvironment;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 import com.stripe.android.PaymentConfiguration;
@@ -34,6 +43,7 @@ import com.stripe.android.paymentsheet.PaymentSheet;
 import com.stripe.android.paymentsheet.PaymentSheetResult;
 import com.stripe.android.paymentsheet.PaymentSheetResultCallback;
 import com.zaad.zaad.R;
+import com.zaad.zaad.model.PaymentStatus;
 import com.zaad.zaad.model.ReferralData;
 import com.zaad.zaad.model.User;
 import com.zaad.zaad.viewmodel.LoginRegisterViewModel;
@@ -41,9 +51,14 @@ import com.zaad.zaad.viewmodel.LoginRegisterViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -93,11 +108,19 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
         paymentSheet = new PaymentSheet(this, this::onPaymentSheetResult);
         skipBtn.setOnClickListener(view -> {
             Intent intent = new Intent(PaymentDetailActivity.this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             saveUserDetails(false);
             updatePaymentCompleted(false);
             startActivity(intent);
+            finish();
+
         });
+
+//        PhonePe.init(this, PhonePeEnvironment.RELEASE, "M1H7XF81UMQX", "66264b911fb38bcaec6bae21ddc16");
+//        String string_signature = PhonePe.getPackageSignature();
+//        System.out.println(string_signature);
     }
+
 
     private void showStripePaymentSheet() {
         final PaymentSheet.GooglePayConfiguration googlePayConfiguration =
@@ -128,6 +151,7 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
             // Display for example, an order confirmation screen
             Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(PaymentDetailActivity.this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             saveUserDetails();
             updatePaymentCompleted(true);
             startActivity(intent);
@@ -141,7 +165,9 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
 
         if (referralCode.equals("KHANZO")) {
             createAndSaveReferralCode();
-            startStripePayment();
+//            startPhonePePayment();
+            startPayment();
+//            startStripePayment();
             return;
         }
         firestore.collection("referralCode").document(referralCode)
@@ -163,11 +189,45 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
                     if (documentSnapshot.getDocuments().size() >= 2) {
                         Toast.makeText(this, "Referral Code cannot be used", Toast.LENGTH_SHORT).show();
                     } else {
-//                        createAndSaveReferralCode();
-//                        startPayment();
-                        startStripePayment();
+                        createAndSaveReferralCode();
+                        startPayment();
+//                        startStripePayment();
+//                        startPhonePePayment();
                     }
                 });
+    }
+
+    private void startPhonePePayment() {
+        JSONObject paymentData = new JSONObject();
+        try {
+            paymentData.put("merchantId", "M1H7XF81UMQX"); // Prod
+//            paymentData.put("merchantId", "PGTESTPAYUAT");
+            paymentData.put("merchantTransactionId", "vignesh@gmail.com");
+            paymentData.put("merchantUserId", "wdscdswa");
+            paymentData.put("amount", 200);
+            paymentData.put("callbackUrl", "https://asia-south1-zaad-cb167.cloudfunctions.net/phonePeWebhook");
+            paymentData.put("mobileNumber", "6381511648");
+
+            JSONObject paymentInstrument = new JSONObject();
+            paymentInstrument.put("type", "PAY_PAGE");
+
+            paymentData.put("paymentInstrument", paymentInstrument);
+
+            String base64Body = Base64.encodeToString(paymentData.toString().getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
+            String checksum = generateSHA256Hash(base64Body + "/pg/v1/pay" + "abfd7a4b-73e6-4cd9-ae76-ea710ed4211e") + "###1"; // Prod
+//            String checksum = generateSHA256Hash(base64Body + "/pg/v1/pay" + "099eb0cd-02cf-4e2a-8aca-3e6c6aff0399") + "###1";
+            B2BPGRequest b2BPGRequest = new B2BPGRequestBuilder()
+                    .setData(base64Body)
+                    .setChecksum(checksum)
+                    .setUrl("/pg/v1/pay")
+                    .build();
+            PaymentDetailActivity.this.startActivityForResult(PhonePe.getImplicitIntent(
+                    PaymentDetailActivity.this, b2BPGRequest, ""), 123);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void saveReferralData(final String code) {
@@ -194,6 +254,7 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
                     Toast.makeText(PaymentDetailActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void failure(@NonNull FuelError fuelError) {
                 Toast.makeText(PaymentDetailActivity.this, "Error O" + fuelError.getErrorData(), Toast.LENGTH_SHORT).show();
@@ -203,14 +264,14 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
 
     private void startPayment() {
         Checkout checkout = new Checkout();
-        checkout.setImage(R.drawable.new_app_logo);
+        checkout.setImage(R.drawable.app_icon);
 
-        checkout.setKeyID("rzp_test_qhd4HWdr10XmWx");
+        checkout.setKeyID("rzp_live_1OlrQvIpReRBV6");
         try {
             JSONObject options = new JSONObject();
             options.put("name", "Khanzoplay");
             options.put("currency", "INR");
-            options.put("amount", 12100);
+            options.put("amount", 24200);
             checkout.open(this, options);
         } catch (Exception e) {
             Log.e("PaymentDetail", e.toString());
@@ -221,9 +282,11 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
     public void onPaymentSuccess(String s) {
         Toast.makeText(this, "Payment Success", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(PaymentDetailActivity.this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         saveUserDetails();
         updatePaymentCompleted(true);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -307,7 +370,7 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
         firestore.collection("user").whereEqualTo("referralCode", creditBy)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
+                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
                         User user1 = snapshot.toObject(User.class);
                         if (!Objects.equals(user1.getLevel(), "A")) {
                             Map<String, Object> map = new HashMap<>();
@@ -319,5 +382,47 @@ public class PaymentDetailActivity extends AppCompatActivity implements PaymentR
                     }
                 });
 
+    }
+
+    private String generateSHA256Hash(String data) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] bytes = data.getBytes();
+        digest.update(bytes, 0, bytes.length);
+        byte[] hash = digest.digest();
+
+        // Convert byte array to hex string
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (byte b : hash) {
+            hexString.append(String.format("%02x", b));
+        }
+
+        return hexString.toString();
+    }
+
+    // Phonepe
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 123) {
+            firestore.collection("payments").document("vignesh@gmail.com").get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        PaymentStatus paymentStatus = documentSnapshot.toObject(PaymentStatus.class);
+                        if (paymentStatus == null) {
+                            Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (paymentStatus.getStatus().equals("SUCCESS")) {
+                            Toast.makeText(this, "Payment Completed", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(PaymentDetailActivity.this, HomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            saveUserDetails();
+                            updatePaymentCompleted(true);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 }

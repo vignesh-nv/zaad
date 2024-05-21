@@ -168,6 +168,7 @@ public class HomeActivity extends AppCompatActivity {
                     .setCancelable(cancellable)
                     .setPositiveButton("Subscribe", (dialogInterface, i) -> {
                         Intent intent = new Intent(this, PostPaymentActivity.class);
+                        intent.putExtra("USER", user);
                         startActivity(intent);
                         finish();
                     })
@@ -182,6 +183,7 @@ public class HomeActivity extends AppCompatActivity {
                     .setCancelable(cancellable)
                     .setPositiveButton("Subscribe", (dialogInterface, i) -> {
                         Intent intent = new Intent(this, PostPaymentActivity.class);
+                        intent.putExtra("USER", user);
                         startActivity(intent);
                         finish();
                     })

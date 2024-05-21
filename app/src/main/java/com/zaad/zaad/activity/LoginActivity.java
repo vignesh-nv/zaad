@@ -1,6 +1,7 @@
 package com.zaad.zaad.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.util.StringUtil;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,11 +43,11 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser() {
         String email = emailTxt.getText().toString();
         String password = passwordTxt.getText().toString();
-        if (email.equals("")) {
+        if (email.isEmpty()) {
             Toast.makeText(this, "Enter email address", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (password.equals("")) {
+        if (password.isEmpty()) {
             Toast.makeText(this, "Enter password", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -68,20 +69,26 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Verify the Email", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-        startActivity(intent);
-        finish();
-//        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-//        firestore.collection("user").document(firebaseUser.getEmail())
-//                .get()
-//                .addOnSuccessListener(documentSnapshot -> {
-//                    User user = documentSnapshot.toObject(User.class);
-//                    if (user!=null && user.isPaymentCompleted()) {
-//
-//                    } else {
-//                        Intent intent = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
-//                        startActivity(intent);
-//                    }
-//                });
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("user").document(firebaseUser.getEmail())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    User user = documentSnapshot.toObject(User.class);
+                    if (user!=null && user.isPaymentCompleted()) {
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else if (user != null) {
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
     }
 }

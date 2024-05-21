@@ -4,6 +4,7 @@ import static com.zaad.zaad.constants.AppConstant.PAYMENT_COMPLETED;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.github.kittinunf.fuel.Fuel;
 import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,11 +29,19 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.phonepe.intent.sdk.api.B2BPGRequest;
+import com.phonepe.intent.sdk.api.B2BPGRequestBuilder;
+import com.phonepe.intent.sdk.api.PhonePe;
+import com.phonepe.intent.sdk.api.PhonePeInitException;
+import com.phonepe.intent.sdk.api.UPIApplicationInfo;
+import com.phonepe.intent.sdk.api.models.PhonePeEnvironment;
+import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
 import com.stripe.android.paymentsheet.PaymentSheetResult;
 import com.zaad.zaad.R;
+import com.zaad.zaad.model.PaymentStatus;
 import com.zaad.zaad.model.ReferralData;
 import com.zaad.zaad.model.User;
 import com.zaad.zaad.viewmodel.LoginRegisterViewModel;
@@ -38,9 +49,13 @@ import com.zaad.zaad.viewmodel.LoginRegisterViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -61,6 +76,7 @@ public class PostPaymentActivity extends AppCompatActivity  implements PaymentRe
     PaymentSheet.CustomerConfiguration customerConfig;
 
     private PaymentSheet.FlowController flowController;
+
     String paymentIntentClientSecret;
 
     PaymentSheet paymentSheet;
@@ -76,6 +92,7 @@ public class PostPaymentActivity extends AppCompatActivity  implements PaymentRe
         referralCodeTxt = findViewById(R.id.referralCodeTxt);
         referNameTxt = findViewById(R.id.referralNameTxt);
         firestore = FirebaseFirestore.getInstance();
+        Checkout.preload(getApplicationContext());
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         loginRegisterViewModel = new ViewModelProvider(this).get(LoginRegisterViewModel.class);
@@ -84,7 +101,11 @@ public class PostPaymentActivity extends AppCompatActivity  implements PaymentRe
                 validateReferralCode();
             }
         });
+        user = (User) getIntent().getSerializableExtra("USER");
         paymentSheet = new PaymentSheet(this, this::onPaymentSheetResult);
+//        PhonePe.init(this, PhonePeEnvironment.RELEASE, "M1H7XF81UMQX", "66264b911fb44238bcaec6bae21ddc16");
+//        String string_signature = PhonePe.getPackageSignature();
+//        System.out.println("Signature: " + string_signature);
     }
 
     private void validateReferralCode() {
@@ -94,7 +115,8 @@ public class PostPaymentActivity extends AppCompatActivity  implements PaymentRe
 
         if (referralCode.equals("KHANZO")) {
             createAndSaveReferralCode();
-            startStripePayment();
+//            startStripePayment();
+            startPayment();
             return;
         }
         firestore.collection("referralCode").document(referralCode)
@@ -117,9 +139,9 @@ public class PostPaymentActivity extends AppCompatActivity  implements PaymentRe
                         Toast.makeText(this, "Referral Code cannot be used", Toast.LENGTH_SHORT).show();
                     } else {
                         createAndSaveReferralCode();
-//                        startPayment();
-                        startStripePayment();
-
+                        startPayment();
+//                        startStripePayment();
+//                        startPhonePePayment();
                     }
                 });
     }
@@ -171,6 +193,7 @@ public class PostPaymentActivity extends AppCompatActivity  implements PaymentRe
             // Display for example, an order confirmation screen
             Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(PostPaymentActivity.this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             saveUserDetails(true);
             updatePaymentCompleted(true);
             startActivity(intent);
@@ -252,9 +275,11 @@ public class PostPaymentActivity extends AppCompatActivity  implements PaymentRe
     public void onPaymentSuccess(String s) {
         Toast.makeText(this, "Payment Success", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(PostPaymentActivity.this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         saveUserDetails(true);
         updatePaymentCompleted(true);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -277,5 +302,107 @@ public class PostPaymentActivity extends AppCompatActivity  implements PaymentRe
                     }
                 });
 
+    }
+
+    private void startPhonePePayment() {
+        try {
+            PhonePe.setFlowId("39285639131"); // Recommended, not mandatory , An alphanumeric string without any special character
+            List<UPIApplicationInfo> upiApps = PhonePe.getUpiApps();
+            for (UPIApplicationInfo info : upiApps) {
+                Log.d("CheckoutActivityApp", info.getApplicationName());
+            }
+        } catch (PhonePeInitException exception) {
+            exception.printStackTrace();
+        }
+        JSONObject paymentData = new JSONObject();
+        try {
+            paymentData.put("merchantId", "M1H7XF81UMQX");
+//            paymentData.put("merchantId", "PGTESTPAYUAT");
+            paymentData.put("merchantTransactionId", "vignesh@gmail.com");
+            paymentData.put("merchantUserId", "wdscdswa");
+            paymentData.put("amount", 24200);
+            paymentData.put("callbackUrl", "https://asia-south1-zaad-cb167.cloudfunctions.net/phonePeWebhook");
+            paymentData.put("mobileNumber", "6381511648");
+
+            JSONObject paymentInstrument = new JSONObject();
+            paymentInstrument.put("type", "PAY_PAGE");
+
+            paymentData.put("paymentInstrument", paymentInstrument);
+
+            String base64Body = Base64.encodeToString(paymentData.toString().getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
+            String checksum = generateSHA256Hash(base64Body + "/pg/v1/pay" + "abfd7a4b-73e6-4cd9-ae76-ea710ed4211e") + "###1"; // Prod
+//            String checksum = generateSHA256Hash(base64Body + "/pg/v1/pay" + "099eb0cd-02cf-4e2a-8aca-3e6c6aff0399") + "###1";
+            B2BPGRequest b2BPGRequest = new B2BPGRequestBuilder()
+                    .setData(base64Body)
+                    .setChecksum(checksum)
+                    .setUrl("/pg/v1/pay")
+                    .build();
+            PostPaymentActivity.this.startActivityForResult(PhonePe.getImplicitIntent(
+                    PostPaymentActivity.this, b2BPGRequest, ""), 123);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private String generateSHA256Hash(String data) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] bytes = data.getBytes();
+        digest.update(bytes, 0, bytes.length);
+        byte[] hash = digest.digest();
+
+        // Convert byte array to hex string
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (byte b : hash) {
+            hexString.append(String.format("%02x", b));
+        }
+
+        return hexString.toString();
+    }
+
+    private void startPayment() {
+        Checkout checkout = new Checkout();
+        checkout.setImage(R.drawable.app_icon);
+
+        checkout.setKeyID("rzp_live_1OlrQvIpReRBV6");
+        try {
+            JSONObject options = new JSONObject();
+            options.put("name", "Khanzoplay");
+            options.put("currency", "INR");
+            options.put("amount", 24200);
+            checkout.open(this, options);
+        } catch (Exception e) {
+            Log.e("PaymentDetail", e.toString());
+        }
+    }
+
+    //Phonepe
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        firestore.collection("payments").document("vignesh@gmail.com").get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    PaymentStatus paymentStatus = documentSnapshot.toObject(PaymentStatus.class);
+                    if (paymentStatus==null) {
+                        Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (paymentStatus.getStatus().equals("SUCCESS")) {
+                        Toast.makeText(this, "Payment Completed", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(PostPaymentActivity.this, HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        saveUserDetails(true);
+                        updatePaymentCompleted(true);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(PostPaymentActivity.this, "Payment Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

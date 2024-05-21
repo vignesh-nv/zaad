@@ -60,6 +60,7 @@
             app:hintTextColor="@color/black"
             android:textColorHint="@color/black"
             app:boxStrokeColor="@color/black"
+            app:passwordToggleTint="@color/black"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText

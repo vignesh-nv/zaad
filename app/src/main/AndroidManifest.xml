@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.zaad.zaad">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-feature
         android:name="android.hardware.telephony"
@@ -21,17 +20,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Zaad"
         android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
         <activity
             android:name=".CheckoutActivity"
             android:exported="true"
             android:label="@string/title_activity_checkout"
             android:theme="@style/Theme.Zaad">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <!-- This element is required to enable Google Pay in your app. -->
@@ -47,7 +42,8 @@
         <activity
             android:name=".activity.PostPaymentActivity"
             android:exported="true"
-            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+            android:theme="@style/Theme.Material3.Dark.NoActionBar">
+        </activity>
         <activity
             android:name=".activity.ShoppingMenuActivity"
             android:exported="false" />
@@ -154,7 +150,12 @@
         <activity
             android:name=".activity.SplashScreenActivity"
             android:exported="true"
-            android:theme="@style/Theme.Zaad.NoActionBar"></activity>
+            android:theme="@style/Theme.Zaad.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.ChildModeActivity"
             android:exported="true"

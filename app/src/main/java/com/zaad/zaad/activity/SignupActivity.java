@@ -133,13 +133,14 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void showEmailSentDialog() {
-        AlertDialog builder = new MaterialAlertDialogBuilder(this)
+        AlertDialog builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
                 .setTitle("Khanzo Play")
                 .setMessage("Verification mail has been sent to your mail")
                 .setPositiveButton("ok", (dialogInterface, i) -> {
                     startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                     finish();
-                }).show();
+                })
+                .show();
     }
 
     private void saveEmailToSharedPreference(final String email) {

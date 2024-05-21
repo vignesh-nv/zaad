@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/navigation_music"
-        android:name="com.zaad.zaad.ui.music.ShoppingFragment"
+        android:name="com.zaad.zaad.ui.shopping.ShoppingFragment"
         android:label="@string/title_music"
         tools:layout="@layout/fragment_music" />
 

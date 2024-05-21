@@ -25,6 +25,8 @@ public class Shop {
 
     private String rating;
 
+    private Date uploadDate;
+
     public Shop() {
     }
 
@@ -123,5 +125,13 @@ public class Shop {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public Date getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
     }
 }

@@ -40,6 +40,8 @@ import com.zaad.zaad.model.User;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class RewardsFragment extends Fragment implements CouponOnClickListener {
@@ -107,11 +109,13 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),2);
 
         redeemedCouponsRecyclerView.setLayoutManager(layoutManager);
-        redeemedCouponsRecyclerView.setHasFixedSize(true);
+//        redeemedCouponsRecyclerView.setHasFixedSize(true);
         redeemedCouponsRecyclerView.setAdapter(redeemedCouponsAdapter);
 
         mViewModel.getMyCoupons().observe(getActivity(), data -> {
             couponList.clear();
+            Collections.sort(data, new CouponComparator());
+
             couponList.addAll(data);
             if (data.size() == 0) {
                 noRedeemedCouponsTxt.setVisibility(View.VISIBLE);
@@ -132,5 +136,12 @@ public class RewardsFragment extends Fragment implements CouponOnClickListener {
     public void onclick(Coupon coupon) {
         CouponSelectFragment couponSelectFragment = new CouponSelectFragment();
         couponSelectFragment.show(getFragmentManager(), " CouponSelectFragment");
+    }
+
+    class CouponComparator implements Comparator<Coupon> {
+        @Override
+        public int compare(Coupon o1, Coupon o2) {
+            return o2.getRedeemedDate().compareTo(o1.getRedeemedDate()); // Reverse order for descending
+        }
     }
 }

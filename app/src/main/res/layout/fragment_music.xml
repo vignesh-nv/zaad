@@ -7,7 +7,7 @@
     android:backgroundTint="@color/white"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".ui.music.ShoppingFragment">
+    tools:context=".ui.shopping.ShoppingFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"

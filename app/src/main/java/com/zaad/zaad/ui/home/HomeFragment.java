@@ -23,7 +23,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.core.OrderBy;
 import com.zaad.zaad.BuildConfig;
 import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.HomeAdBannerVideosAdapter;
@@ -211,6 +213,7 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
                         if (categoryFilter == null) {
                             firestore.collection(item.getCollection())
                                     .whereEqualTo("language", user.getLanguage())
+                                    .orderBy("uploadDate", Query.Direction.DESCENDING)
                                     .limit(10)
                                     .get()
                                     .addOnFailureListener(new OnFailureListener() {
@@ -240,6 +243,7 @@ public class HomeFragment extends Fragment implements AdCompleteListener {
                             firestore.collection(item.getCollection())
                                     .whereEqualTo("language", user.getLanguage())
                                     .whereNotIn("category", categoryFilter)
+                                    .orderBy("uploadDate", Query.Direction.DESCENDING)
                                     .get()
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override

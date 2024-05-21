@@ -24,9 +24,14 @@ import com.zaad.zaad.R;
 import com.zaad.zaad.listeners.OnContactClickListener;
 import com.zaad.zaad.model.Shop;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import coil.Coil;
 import coil.ImageLoader;
@@ -93,6 +98,13 @@ public class ShoppingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Date openingTime = shop.getOpeningTime();
             Date closingTime = shop.getClosingTime();
             Date currentTime = Calendar.getInstance().getTime();
+            if (openingTime != null && closingTime != null) {
+                SimpleDateFormat formatter = new SimpleDateFormat("h a", Locale.getDefault());
+                String openingFormattedTime = formatter.format(openingTime);
+                String closingFormattedTime = formatter.format(closingTime);
+                String timing = openingFormattedTime + " - " + closingFormattedTime;
+                offlineShoppingViewHolder.shopTiming.setText(timing);
+            }
 
             if (openingTime.getHours() <= currentTime.getHours() &&
                     currentTime.getHours() < closingTime.getHours()) {
@@ -159,10 +171,11 @@ public class ShoppingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     class OfflineShoppingViewHolder extends RecyclerView.ViewHolder {
         ImageView shopImage;
-        TextView shopNameTxt, shopAddressTxt, shopStatus;
+        TextView shopNameTxt, shopAddressTxt, shopStatus, shopTiming;
 
         Button contactBtn, mapBtn;
         View addressLayout, timingLayout;
+
 
         OfflineShoppingViewHolder(View itemView) {
             super(itemView);
@@ -174,6 +187,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mapBtn = itemView.findViewById(R.id.map_btn);
             addressLayout = itemView.findViewById(R.id.addressLayout);
             timingLayout = itemView.findViewById(R.id.timingLayout);
+            shopTiming = itemView.findViewById(R.id.shop_timing);
         }
     }
 

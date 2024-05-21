@@ -1,10 +1,9 @@
-package com.zaad.zaad.ui.music;
+package com.zaad.zaad.ui.shopping;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.zaad.zaad.model.HomeItem;
-import com.zaad.zaad.model.ShoppingMenu;
 import com.zaad.zaad.model.ShoppingMenuItem;
 import com.zaad.zaad.repository.FirestoreRepository;
 

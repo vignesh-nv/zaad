@@ -71,8 +71,6 @@ public class UserRepository {
     }
 
     public void updateUserWithID(final String id, final Map<String, Object> updateMap) {
-
-        String userId = getUserId();
         mFirestore.collection("user").document(id).update(updateMap).addOnSuccessListener(unused -> {
 
         });
@@ -163,7 +161,7 @@ public class UserRepository {
 
     public void redeemCoupon(final Coupon coupon) {
         String userId = getUserId();
-
+        coupon.setRedeemedDate(new Date());
         mFirestore.collection("user").document(userId).collection("coupons")
                 .document(coupon.getCouponId())
                 .set(coupon)

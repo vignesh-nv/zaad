@@ -136,7 +136,6 @@ public class PaymentsUtil {
     private static JSONObject getBaseCardPaymentMethod() throws JSONException {
         JSONObject cardPaymentMethod = new JSONObject();
         cardPaymentMethod.put("type", "CARD");
-        WalletConstants.CARD_NETWORK_INTERAC
         JSONObject parameters = new JSONObject();
         parameters.put("allowedAuthMethods", getAllowedCardAuthMethods());
         parameters.put("allowedCardNetworks", getAllowedCardNetworks());

@@ -20,10 +20,11 @@
 
             <ImageView
                 android:id="@+id/coupon_imageview"
-                android:layout_width="300dp"
-                android:layout_height="150dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:background="@color/colorPrimary"
-                android:scaleType="centerCrop" />
+                android:src="@drawable/coupon_new"
+                android:scaleType="fitXY" />
 
             <Button
                 android:id="@+id/redeem_button"

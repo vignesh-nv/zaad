@@ -260,7 +260,8 @@ public class FirestoreRepository {
     }
 
     public MutableLiveData<List<Coupon>> getCoupons(final String availability) {
-        mFirestore.collection("coupons").whereEqualTo("availability", availability).get().addOnSuccessListener(queryDocumentSnapshots -> {
+        mFirestore.collection("coupons").whereEqualTo("availability", availability)
+                .whereGreaterThan("expiryDate", new Date()).get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<Coupon> coupons = new ArrayList<>();
             for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                 if (queryDocumentSnapshot != null) {

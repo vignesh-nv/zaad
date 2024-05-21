@@ -41,6 +41,7 @@ import org.checkerframework.checker.units.qual.C;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.CheckedInputStream;
 
@@ -126,18 +127,17 @@ public class FullYoutubeVideosActivity extends AppCompatActivity {
         firestore.collection("youtube")
                 .whereEqualTo("language", user.getLanguage())
                 .whereEqualTo("category", category)
+                .whereArrayContains("districts", user.getDistrict())
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<Video> videoList = new ArrayList<>();
-                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                            videoList.add(snapshot.toObject(Video.class));
-                        }
-                        videos.clear();
-                        videos.addAll(videoList);
-                        fullVideosAdapter.notifyDataSetChanged();
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Video> videoList = new ArrayList<>();
+                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                        videoList.add(snapshot.toObject(Video.class));
                     }
+                    videos.clear();
+                    videos.addAll(videoList);
+                    Collections.sort(videos);
+                    fullVideosAdapter.notifyDataSetChanged();
                 });
     }
 

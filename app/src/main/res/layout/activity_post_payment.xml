@@ -41,12 +41,16 @@
             android:layout_marginTop="50dp"
             android:hint="Referral Code"
             android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
+            app:boxStrokeColor="@color/black"
             app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/referralCodeTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,12 +62,16 @@
             android:layout_marginTop="10dp"
             android:hint="Credit By"
             android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
+            app:boxStrokeColor="@color/black"
             app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/referralNameTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -125,7 +133,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="30dp"
-                        android:text="206.00"
+                        android:text="Rs. 206.00"
                         android:textColor="@color/white" />
                 </RelativeLayout>
 
@@ -139,7 +147,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="GST 18%"
+                        android:text="Discount 0.44%"
                         android:textColor="@color/white" />
 
                     <TextView
@@ -148,7 +156,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="30dp"
-                        android:text="37.08"
+                        android:text="Rs. 0.90"
                         android:textColor="@color/white" />
                 </RelativeLayout>
 
@@ -173,7 +181,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="30dp"
                         android:fontFamily="@font/montserrat_bold"
-                        android:text="243.08"
+                        android:text="Rs. 205.09"
                         android:textColor="@color/white" />
                 </RelativeLayout>
 
@@ -187,7 +195,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat"
-                        android:text="Discount"
+                        android:text="GST 18%"
                         android:textColor="@color/white" />
 
                     <TextView
@@ -197,7 +205,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="30dp"
                         android:fontFamily="@font/montserrat"
-                        android:text="- 1.08"
+                        android:text="Rs. 36.91"
                         android:textColor="@color/white" />
                 </RelativeLayout>
 
@@ -221,12 +229,11 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="30dp"
                         android:fontFamily="@font/montserrat_bold"
-                        android:text="242.00"
+                        android:text="Rs. 242.00"
                         android:textColor="@color/white" />
                 </RelativeLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
         <Button
             android:id="@+id/payButton"
             style="@style/Widget.Material3.Button.ElevatedButton"

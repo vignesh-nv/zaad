@@ -35,8 +35,11 @@ import org.checkerframework.checker.units.qual.A;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +113,17 @@ public class PersonalDetailsActivity extends AppCompatActivity {
                             .setTitleText("Date Of Birth")
                             .build();
             datePicker.show(getSupportFragmentManager(), "DOB");
+
             datePicker.addOnPositiveButtonClickListener(selection -> {
+                Date tempAge = new Date(selection);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(tempAge);
+                int age = Period.between(LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE)), LocalDate.now()).getYears();
+                if (age < 18) {
+                    Toast.makeText(this, "Age cannot be lesser than 18", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 String date = sdf.format(selection);
                 dateTxt.setText(date);

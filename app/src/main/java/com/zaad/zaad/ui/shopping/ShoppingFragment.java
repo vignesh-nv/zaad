@@ -1,6 +1,5 @@
-package com.zaad.zaad.ui.music;
+package com.zaad.zaad.ui.shopping;
 
-import static com.zaad.zaad.constants.AppConstant.CHILD_MODE;
 import static com.zaad.zaad.constants.AppConstant.SELECTED_DISTRICT_FILTER;
 import static com.zaad.zaad.constants.AppConstant.SELECTED_STATE_FILTER;
 import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
@@ -8,7 +7,6 @@ import static com.zaad.zaad.constants.AppConstant.ZAAD_SHARED_PREFERENCE;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.net.wifi.aware.PublishDiscoverySession;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -27,24 +24,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zaad.zaad.R;
 import com.zaad.zaad.adapter.ShoppingMenuAdapter;
 import com.zaad.zaad.databinding.FragmentMusicBinding;
 import com.zaad.zaad.model.AdBanner;
-import com.zaad.zaad.model.HomeItem;
 import com.zaad.zaad.model.ShoppingMenu;
 import com.zaad.zaad.model.ShoppingMenuItem;
 import com.zaad.zaad.model.State;
 import com.zaad.zaad.model.User;
-import com.zaad.zaad.model.Video;
 import com.zaad.zaad.utils.AppUtils;
 
 import java.lang.reflect.Type;
@@ -106,7 +99,7 @@ public class ShoppingFragment extends Fragment {
         if (!loadSelectedStateAndDistrict()){
             getUserData();
         } else {
-            loadBannerAds(selectedState, selectedDistrict);
+            getUserDataAndLoadAd();
         }
         return root;
     }
@@ -206,6 +199,7 @@ public class ShoppingFragment extends Fragment {
                 districtList.addAll(strings);
                 districtAdapter.notifyDataSetChanged();
                 selectedState = stateList.get(i);
+                selectedDistrict = strings.get(0);
             }
 
             @Override
@@ -264,6 +258,18 @@ public class ShoppingFragment extends Fragment {
                     districtNameText.setText(selectedDistrict);
                     saveSelectedFilter();
                     loadBannerAds(selectedState, selectedDistrict);
+                });
+    }
+
+    private void getUserDataAndLoadAd() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        final String email = firebaseUser.getEmail();
+
+        firestore.collection("user").document(email)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    user = documentSnapshot.toObject(User.class);
+                    loadBannerAds(user.getState(), user.getDistrict());
                 });
     }
 
